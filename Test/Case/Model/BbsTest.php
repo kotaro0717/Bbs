@@ -7,12 +7,12 @@
 * @license  http://www.netcommons.org/license.txt NetCommons License
  */
 
-App::uses('Bb', 'Bbs.Model');
+App::uses('Bbs', 'Bbses.Model');
 
 /**
  * Summary for Bb Test Case
  */
-class BbTest extends CakeTestCase {
+class BbsTest extends CakeTestCase {
 
 /**
  * Fixtures
@@ -20,7 +20,7 @@ class BbTest extends CakeTestCase {
  * @var array
  */
 	public $fixtures = array(
-		'plugin.bbs.bb'
+		'plugin.bbses.bbs'
 	);
 
 /**
@@ -30,7 +30,7 @@ class BbTest extends CakeTestCase {
  */
 	public function setUp() {
 		parent::setUp();
-		$this->Bb = ClassRegistry::init('Bbs.Bb');
+		$this->Bbs = ClassRegistry::init('Bbses.Bbs');
 	}
 
 /**
@@ -39,7 +39,7 @@ class BbTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
-		unset($this->Bb);
+		unset($this->Bbs);
 
 		parent::tearDown();
 	}

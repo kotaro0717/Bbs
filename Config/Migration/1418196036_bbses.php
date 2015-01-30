@@ -1,12 +1,12 @@
 <?php
-class Bbs extends CakeMigration {
+class Bbses extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'bbs';
+	public $description = 'bbses';
 
 /**
  * Actions to be performed
@@ -16,7 +16,7 @@ class Bbs extends CakeMigration {
 	public $migration = array(
 		'up' => array(
 			'create_table' => array(
-				'bbs' => array(
+				'bbses' => array(
 					'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary', 'comment' => 'ID | | | '),
 					'frame_key' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 					'key' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'bbs key | 掲示板キー | Hash値 | ', 'charset' => 'utf8'),
@@ -119,7 +119,7 @@ class Bbs extends CakeMigration {
 		),
 		'down' => array(
 			'drop_table' => array(
-				'bbs', 'bbs_frame_settings', 'bbs_post_contents', 'bbs_posts', 'bbs_posts_users', 'bbs_topics'
+				'bbses', 'bbs_frame_settings', 'bbs_post_contents', 'bbs_posts', 'bbs_posts_users', 'bbs_topics'
 			),
 		),
 	);

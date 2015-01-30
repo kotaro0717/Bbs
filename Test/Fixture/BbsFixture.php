@@ -1,6 +1,6 @@
 <?php
 /**
- * BbFixture
+ * BbsFixture
  *
 * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
 * @link     http://www.netcommons.org NetCommons Project
@@ -10,7 +10,7 @@
 /**
  * Summary for BbFixture
  */
-class BbFixture extends CakeTestFixture {
+class BbsFixture extends CakeTestFixture {
 
 /**
  * Fields
