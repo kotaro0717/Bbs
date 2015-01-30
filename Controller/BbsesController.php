@@ -83,7 +83,7 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-//	public function view() {
+	public function view() {
 //		//BbsPostデータを取得
 //		$bbs_post = $this->BbsPost->getAnnouncement(
 //				$this->viewVars['frameId'],
@@ -96,8 +96,25 @@ class BbsesController extends BbsesAppController {
 //		if (! $announcement) {
 //			$this->autoRender = false;
 //		}
-//	}
+		$this->render('Bbses/view');
+	}
 
+/**
+ * view method
+ *
+ * @return void
+ */
+	public function commentView() {
+		$this->render('Bbses/commentView');
+	}
+/**
+ * add method
+ *
+ * @return void
+ */
+	public function add() {
+		$this->render('Bbses/add');
+	}
 /**
  * setting method
  *
