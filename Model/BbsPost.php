@@ -1,6 +1,6 @@
 <?php
 /**
- * Bbs Model
+ * BbsPost Model
  *
  * @property Block $Block
  *
@@ -13,20 +13,13 @@
 App::uses('BbsesAppModel', 'Bbses.Model');
 
 /**
- * Bbs Model
+ * BbsPost Model
  *
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
  * @package NetCommons\Bbses\Model
  */
-class Bbs extends BbsesAppModel {
+class BbsPost extends BbsesAppModel {
 
-/**
- * use tables
- *
- * @var string
- */
-
-	public $useTable = 'bbses';
 /**
  * use behaviors
  *
@@ -50,21 +43,18 @@ class Bbs extends BbsesAppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Block' => array(
-			'className' => 'Blocks.Block',
-			'foreignKey' => 'block_id',
+		'Bbs' => array(
+			'className' => 'Bbses.Bbs',
+			'foreignKey' => 'bbs_key',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
-		'CreatedUser' => array(
-			'className' => 'Users.UserAttributesUser',
-			'foreignKey' => false,
-			'conditions' => array(
-				'Bbs.created_user = CreatedUser.user_id',
-				'CreatedUser.key' => 'nickname'
-			),
-			'fields' => array('CreatedUser.key', 'CreatedUser.value'),
+		'BbsPost' => array(
+			'className' => 'BbsPosts.BbsPost',
+			'foreignKey' => 'parent_key',
+			'conditions' => '',
+			'fields' => '',
 			'order' => ''
 		)
 	);
@@ -77,7 +67,7 @@ class Bbs extends BbsesAppModel {
 	public $hasMany = array(
 		'BbsPost' => array(
             'className' => 'BbsPosts.BbsPost',
-            'foreignKey' => 'bbs_key',
+            'foreignKey' => 'parent_key',
             //'conditions' => array('Comment.status' => '1'),
             //'order' => 'Comment.created DESC',
             //'limit' => '5',

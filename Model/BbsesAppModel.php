@@ -1,6 +1,8 @@
 <?php
 /**
- * BbsesApp Controller
+ * Bbses App Model
+ *
+ * @property Block $Block
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
@@ -9,22 +11,14 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
-App::uses('AppController', 'Controller');
+App::uses('AppModel', 'Model');
 
 /**
- * BbsesApp Controller
+ * Bbses App Model
  *
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
- * @package NetCommons\Bbses\Controller
+ * @package NetCommons\Bbses\Model
  */
-class BbsesAppController extends AppController {
+class BbsesAppModel extends AppModel {
 
-/**
- * use component
- *
- * @var array
- */
-	public $components = array(
-		//'Security'
-	);
 }

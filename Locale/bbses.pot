@@ -1,0 +1,119 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-02-02 05:32+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: /View/Bbses/add.ctp:3
+#: /View/Bbses/commentView.ctp:3
+#: /View/Bbses/view.ctp:3
+msgid "Bbs name"
+msgstr ""
+
+#: /View/Bbses/add.ctp:4
+#: /View/Bbses/commentView.ctp:4
+#: /View/Bbses/view.ctp:4
+msgid "Post title"
+msgstr ""
+
+#: /View/Bbses/add.ctp:11;17
+msgid "Title"
+msgstr ""
+
+#: /View/Bbses/add.ctp:21;29
+msgid "Content"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:16
+#: /View/Bbses/index.ctp:10
+#: /View/Bbses/view.ctp:15
+msgid "Latest posts order"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:22
+#: /View/Bbses/index.ctp:16
+#: /View/Bbses/view.ctp:21
+msgid "Latest post order"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:23
+#: /View/Bbses/index.ctp:17
+#: /View/Bbses/view.ctp:22
+msgid "Older post order"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:25
+#: /View/Bbses/index.ctp:20
+#: /View/Bbses/view.ctp:24
+msgid "Status order"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:31;39
+#: /View/Bbses/index.ctp:27;35
+#: /View/Bbses/view.ctp:30;38
+msgid "10"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:37
+#: /View/Bbses/index.ctp:33
+#: /View/Bbses/view.ctp:36
+msgid "1"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:38
+#: /View/Bbses/index.ctp:34
+#: /View/Bbses/view.ctp:37
+msgid "5"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:40
+#: /View/Bbses/index.ctp:36
+#: /View/Bbses/view.ctp:39
+msgid "20"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:41
+#: /View/Bbses/index.ctp:37
+#: /View/Bbses/view.ctp:40
+msgid "50"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:42
+#: /View/Bbses/index.ctp:38
+#: /View/Bbses/view.ctp:41
+msgid "100"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:60;100
+#: /View/Bbses/view.ctp:59;99
+msgid "Write comment"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:61;101
+#: /View/Bbses/view.ctp:60;100
+msgid "Edit post"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:62;102
+#: /View/Bbses/view.ctp:61;101
+msgid "Delete post"
+msgstr ""
+
+#: /View/Bbses/index.ctp:18
+msgid "Descending order of comments"
+msgstr ""
+
+#: /View/Bbses/index.ctp:46
+msgid "Add post"
+msgstr ""
+
