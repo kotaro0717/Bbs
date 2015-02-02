@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 /**
  * BbsesApp Controller
@@ -28,3 +29,12 @@ class BbsesAppController extends AppController {
 		//'Security'
 	);
 }
+=======
+<?php
+
+App::uses('AppController', 'Controller');
+
+class BbsesAppController extends AppController {
+
+}
+>>>>>>> dbcca531b4145062e2121fed45bb9e86490bea6f
