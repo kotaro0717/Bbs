@@ -50,29 +50,29 @@ class BbsPost extends BbsesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'BbsPost' => array(
-			'className' => 'BbsPosts.BbsPost',
-			'foreignKey' => 'parent_key',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
+//		'BbsPost' => array(
+//			'className' => 'Bbses.BbsPost',
+//			'foreignKey' => 'parent_key',
+//			'conditions' => '',
+//			'fields' => '',
+//			'order' => ''
+//		)
 	);
 
 /**
  * hasMany associations
- *
+ *s
  * @var array
  */
 	public $hasMany = array(
-		'BbsPost' => array(
-            'className' => 'BbsPosts.BbsPost',
-            'foreignKey' => 'parent_key',
-            //'conditions' => array('Comment.status' => '1'),
-            //'order' => 'Comment.created DESC',
-            //'limit' => '5',
-            'dependent' => true
-        )
+//		'BbsPost' => array(
+//            'className' => 'Bbses.BbsPost',
+//            'foreignKey' => 'parent_key',
+//            //'conditions' => array('Comment.status' => '1'),
+//            //'order' => 'Comment.created DESC',
+//            //'limit' => '5',
+//            'dependent' => true
+//        )
 	);
 
 /**
@@ -86,15 +86,21 @@ class BbsPost extends BbsesAppModel {
  */
 	public function beforeValidate($options = array()) {
 		$this->validate = Hash::merge($this->validate, array(
-			'block_id' => array(
-				'numeric' => array(
-					'rule' => array('numeric'),
+			'key' => array(
+				'notEmpty' => array(
+					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
-					'allowEmpty' => false,
 					'required' => true,
 				)
 			),
-			'key' => array(
+			'bbs_key' => array(
+				'notEmpty' => array(
+					'rule' => array('notEmpty'),
+					'message' => __d('net_commons', 'Invalid request.'),
+					'required' => true,
+				)
+			),
+			'parent_key' => array(
 				'notEmpty' => array(
 					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
@@ -108,10 +114,17 @@ class BbsPost extends BbsesAppModel {
 					'message' => __d('net_commons', 'Invalid request.'),
 				)
 			),
-			'name' => array(
+			'title' => array(
 				'notEmpty' => array(
 					'rule' => array('notEmpty'),
-					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('bbses', 'Bbs name')),
+					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('bbses', 'Title')),
+					'required' => true
+				),
+			),
+			'content' => array(
+				'notEmpty' => array(
+					'rule' => array('notEmpty'),
+					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('bbses', 'Content')),
 					'required' => true
 				),
 			),
@@ -126,75 +139,55 @@ class BbsPost extends BbsesAppModel {
  * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getBbs($blockId) {
+	public function getPosts($bbs_key, $visiblePostRow, $contentEditable) {
 		$conditions = array(
-			'block_id' => $blockId,
+			'bbs_key' => $bbs_key,
+			'parent_key' => '0',
 		);
-		$bbses = $this->find('first', array(
-				'recursive' => 1,
+		if (! $contentEditable) {
+			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+		}
+		$bbs_posts = $this->find('all', array(
+				'recursive' => -1,
 				'conditions' => $conditions,
-				'order' => 'Bbs.id DESC',
+				'order' => 'BbsPost.created DESC',
+				'limit' => $visiblePostRow,
 			)
 		);
-		return $bbses;
+		$bbs_posts = $this->__setDateTime($bbs_posts);
+		//var_dump($bbs_posts);
+		return $bbs_posts;
 	}
 
 /**
- * save bbs
+ * __setDateTime method
  *
- * @param array $data received post data
- * @return mixed On success Model::$data if its not empty or true, false on failure
- * @throws InternalErrorException
+ * @return void
  */
-	public function saveBbs($data) {
-//		//モデル定義
-//		$this->setDataSource('master');
-//		$models = array(
-//			'Block' => 'Blocks.Block',
-//			'Comment' => 'Comments.Comment',
-//		);
-//		foreach ($models as $model => $class) {
-//			$this->$model = ClassRegistry::init($class);
-//			$this->$model->setDataSource('master');
-//		}
-//		//トランザクションBegin
-//		$dataSource = $this->getDataSource();
-//		$dataSource->begin();
-//		try {
-//			//ブロックの登録
-//			$block = $this->Block->saveByFrameId($data['Frame']['id'], false);
-//			//お知らせの登録
-//			$this->data['Bbs']['block_id'] = (int)$block['Block']['id'];
-//			$bbs = $this->save(null, false);
-//			if (! $bbs) {
-//				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-//			}
-//			//コメントの登録
-//			if ($this->Comment->data) {
-//				if (! $this->Comment->save(null, false)) {
-//					throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-//				}
-//			}
-//			//トランザクションCommit
-//			$dataSource->commit();
-//			return $bbs;
-//		} catch (Exception $ex) {
-//			//トランザクションRollback
-//			$dataSource->rollback();
-//			//エラー出力
-//			CakeLog::write(LOG_ERR, $ex);
-//			throw $ex;
-//		}
-	}
-/**
- * validate bbs
- *
- * @param array $data received post data
- * @return bool|array True on success, validation errors array on error
- */
-	public function validateBbs($data) {
-//		$this->set($data);
-//		$this->validates();
-//		return $this->validationErrors ? $this->validationErrors : true;
+	private function __setDateTime($bbs_posts) {
+		$today = date("Y-m-d");
+		$year = date("Y");
+		$i = 0;
+		//再フォーマット
+		foreach ($bbs_posts as $post) {
+			$date = $post['BbsPost']['created'];
+			//日付切り出し
+			$createdDay = substr($post['BbsPost']['created'], 0, 10);
+			//年切り出し
+			$createdYear = substr($post['BbsPost']['created'], 0, 4);
+			//変換
+			if ($today === $createdDay) {
+				//今日
+				$bbs_posts[$i]['BbsPost']['created'] = date('G:i', strtotime($date));
+			} else if ($year !== $createdYear) {
+				//昨年以前
+				$bbs_posts[$i]['BbsPost']['created'] =  date('Y/m/d', strtotime($date));
+			} else if ($today > $createdDay) {
+				//今日より前 かつ 今年
+				$bbs_posts[$i]['BbsPost']['created'] =  date('m/d', strtotime($date));
+			}
+			$i++;
+		}
+		return $bbs_posts;
 	}
 }

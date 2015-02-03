@@ -4,99 +4,64 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-02 05:32+0000\n"
-"PO-Revision-Date: 2015-02-02 14:41+0900\n"
+"POT-Creation-Date: 2015-02-03 02:54+0000\n"
+"PO-Revision-Date: 2015-02-03 11:58+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: Poedit 1.6.9\n"
-"Language: ja_JP\n"
 
-#: /View/Bbses/add.ctp:3 /View/Bbses/commentView.ctp:3 /View/Bbses/view.ctp:3
+#: /Model/Bbs.php:124 /View/Bbses/add.ctp:3 /View/Bbses/commentView.ctp:3
+#: /View/Bbses/view.ctp:3
 msgid "Bbs name"
 msgstr "掲示板名称"
+
+#: /Model/BbsPost.php:120 /View/Bbses/add.ctp:11;17
+msgid "Title"
+msgstr "タイトル"
+
+#: /Model/BbsPost.php:127 /View/Bbses/add.ctp:21;29
+msgid "Content"
+msgstr "本文"
 
 #: /View/Bbses/add.ctp:4 /View/Bbses/commentView.ctp:4 /View/Bbses/view.ctp:4
 msgid "Post title"
 msgstr "記事タイトル"
 
-#: /View/Bbses/add.ctp:11;17
-msgid "Title"
-msgstr "タイトル"
-
-#: /View/Bbses/add.ctp:21;29
-msgid "Content"
-msgstr "本文"
-
-#: /View/Bbses/commentView.ctp:16 /View/Bbses/index.ctp:10
-#: /View/Bbses/view.ctp:15
-msgid "Latest posts order"
-msgstr "最新の投稿順"
-
-#: /View/Bbses/commentView.ctp:22 /View/Bbses/index.ctp:16
+#: /View/Bbses/commentView.ctp:22 /View/Bbses/index.ctp:17
 #: /View/Bbses/view.ctp:21
 msgid "Latest post order"
 msgstr "最新の投稿順"
 
-#: /View/Bbses/commentView.ctp:23 /View/Bbses/index.ctp:17
+#: /View/Bbses/commentView.ctp:23 /View/Bbses/index.ctp:18
 #: /View/Bbses/view.ctp:22
 msgid "Older post order"
 msgstr "古い投稿順"
 
-#: /View/Bbses/commentView.ctp:25 /View/Bbses/index.ctp:20
+#: /View/Bbses/commentView.ctp:25 /View/Bbses/index.ctp:21
 #: /View/Bbses/view.ctp:24
 msgid "Status order"
 msgstr "ステータス順"
-
-#: /View/Bbses/commentView.ctp:31;39 /View/Bbses/index.ctp:27;35
-#: /View/Bbses/view.ctp:30;38
-msgid "10"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:37 /View/Bbses/index.ctp:33
-#: /View/Bbses/view.ctp:36
-msgid "1"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:38 /View/Bbses/index.ctp:34
-#: /View/Bbses/view.ctp:37
-msgid "5"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:40 /View/Bbses/index.ctp:36
-#: /View/Bbses/view.ctp:39
-msgid "20"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:41 /View/Bbses/index.ctp:37
-#: /View/Bbses/view.ctp:40
-msgid "50"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:42 /View/Bbses/index.ctp:38
-#: /View/Bbses/view.ctp:41
-msgid "100"
-msgstr ""
 
 #: /View/Bbses/commentView.ctp:60;100 /View/Bbses/view.ctp:59;99
 msgid "Write comment"
 msgstr "コメントを書く"
 
 #: /View/Bbses/commentView.ctp:61;101 /View/Bbses/view.ctp:60;100
-msgid "Edit post"
-msgstr "編集する"
+msgid "Edit"
+msgstr "編集"
 
 #: /View/Bbses/commentView.ctp:62;102 /View/Bbses/view.ctp:61;101
-msgid "Delete post"
-msgstr "削除する"
+msgid "Delete"
+msgstr "削除"
 
-#: /View/Bbses/index.ctp:18
+#: /View/Bbses/index.ctp:19
 msgid "Descending order of comments"
 msgstr "コメントの多い順"
 
-#: /View/Bbses/index.ctp:46
-msgid "Add post"
+#: /View/Bbses/index.ctp:47
+msgid "Create post"
 msgstr "記事を作成する"
