@@ -8,13 +8,11 @@
 
 <!-- パンくずリスト -->
 <ol class="breadcrumb">
-  <li><!--<a href="<?php //echo $this->Html->url(
-				//'/bbses/bbses/index/' . $frameId) ?>">
-		<?php //echo $dataForView['bbses']['name']; ?></a>-->
-		<!-- TODO:いつか上に戻す -->
-		<a ng-click="cancel()"><?php echo $dataForView['bbses']['name']; ?></a>
-  </li>
-  <li class="active"><?php echo __d('bbses', 'Create post'); ?></li>
+	<li><a href="<?php echo $this->Html->url(
+				'/bbses/bbses/index/' . $frameId) ?>">
+		<?php echo $dataForView['bbses']['name']; ?></a>
+	</li>
+	<li class="active"><?php echo __d('bbses', 'Create post'); ?></li>
 </ol>
 
 <div class="panel panel-default">

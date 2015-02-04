@@ -27,7 +27,8 @@ class BbsPost extends BbsesAppModel {
  */
 	public $actsAs = array(
 		// TODO: disabled for debug
-		/* 'NetCommons.Publishable' */
+		/* 'NetCommons.Publishable', */
+		'Containable'
 	);
 
 /**
@@ -45,7 +46,7 @@ class BbsPost extends BbsesAppModel {
 	public $belongsTo = array(
 //		'Bbs' => array(
 //			'className' => 'Bbses.Bbs',
-//			'foreignKey' => 'bbs_key',
+//			'foreignKey' => 'bbs_id',
 //			'conditions' => '',
 //			'fields' => '',
 //			'order' => ''
@@ -93,7 +94,7 @@ class BbsPost extends BbsesAppModel {
 					'required' => true,
 				)
 			),
-			'bbs_key' => array(
+			'bbs_id' => array(
 				'notEmpty' => array(
 					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
@@ -118,7 +119,8 @@ class BbsPost extends BbsesAppModel {
 				'notEmpty' => array(
 					'rule' => array('notEmpty'),
 					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('bbses', 'Title')),
-					'required' => true
+					'required'
+					=> true
 				),
 			),
 			'content' => array(
@@ -139,12 +141,11 @@ class BbsPost extends BbsesAppModel {
  * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getPosts($bbsKey, $visiblePostRow, $contentEditable, $postId) {
+	public function getPosts($bbsId, $visiblePostRow, $contentEditable, $postId) {
 		$conditions = array(
-			'bbs_key' => $bbsKey,
-			//TODO:parent_keyが0なら親記事、それ以外はコメントに
-			'parent_id' => '0',
+			'bbs_id' => $bbsId,
 		);
+
  		if (! $contentEditable) {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
@@ -162,11 +163,22 @@ class BbsPost extends BbsesAppModel {
 			$bbs_posts = $this->__setDateTime($bbs_posts);
 			return $bbs_posts;
 		}
+
+		//containableビヘイビアでコメントを指定
+		//再帰的な呼び出しなため考える必要あり
+		$contains = array(
+			'BbsPost' => array(
+				'BbsPost' => array(
+				)
+			)
+		);
+		$conditions['parent_id'] = $postId;
 		$bbs_posts = $this->find('all', array(
 				'recursive' => -1,
 				'conditions' => $conditions,
 				'order' => 'BbsPost.created DESC',
 				'limit' => $visiblePostRow,
+				'contain' => $contains,
 			)
 		);
 		$bbs_posts = $this->__setDateTime($bbs_posts);

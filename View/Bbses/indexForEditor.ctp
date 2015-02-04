@@ -10,7 +10,7 @@
 		<div class="text-right" style="float:right;">
 
 			<!-- 記事件数の表示 -->
-			<div class="glyphicon glyphicon-duplicate"><?php echo "30"; ?></div>
+			<div class="glyphicon glyphicon-duplicate"><?php echo $bbsPostNum; ?>&nbsp;</div>
 
 			<!-- ソート用のプルダウン -->
 			<div class="btn-group">
@@ -65,7 +65,7 @@
 						'action' => 'view/' . $frameId,
 						$post['id'])); ?>
 					</span>
-					<span class="glyphicon glyphicon-comment"></span><?php echo $post['upVoteNum'];?>
+					<span class="glyphicon glyphicon-comment"></span><?php echo $post['commentNum'];?>
 					<span><?php echo $this->element('NetCommons.status_label',
 						array('status' => $post['status'])); ?></span>
 				</td>

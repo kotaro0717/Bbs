@@ -1,10 +1,10 @@
 <!-- パンくずリスト -->
 <ol class="breadcrumb">
-  <li><a href="<?php echo $this->Html->url(
+	<li><a href="<?php echo $this->Html->url(
 				'/bbses/bbses/index/' . $frameId) ?>">
 		<?php echo $dataForView['bbses']['name']; ?></a>
-  </li>
-  <li class="active"><?php echo $dataForView['bbsPosts'][0]['title']; ?></li>
+	</li>
+	<li class="active"><?php echo $dataForView['bbsPosts'][0]['title']; ?></li>
 </ol>
 
 <!-- 記事タイトル -->

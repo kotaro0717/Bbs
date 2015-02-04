@@ -1,7 +1,7 @@
 <div><strong><?php echo $dataForView['bbses']['name']; ?></strong></div>
 <div class="text-right">
 	<!-- 記事件数の表示 -->
-	<div class="glyphicon glyphicon-duplicate"><?php echo "30"; ?></div>
+	<div class="glyphicon glyphicon-duplicate"><?php echo $bbsPostNum; ?>&nbsp;</div>
 
 	<!-- ソート用のプルダウン -->
 	<div class="btn-group">
@@ -47,7 +47,7 @@
 						'action' => 'view/' . $frameId,
 						$post['id'])); ?>
 					</span>
-					<span class="glyphicon glyphicon-comment"></span><?php echo $post['upVoteNum'];?>
+					<span class="glyphicon glyphicon-comment"></span><?php echo $post['commentNum'];?>
 				</td>
 			<td class="text-right col-md-3">
 				<div><?php echo $post['created']; ?>

@@ -64,6 +64,7 @@ class BbsesController extends BbsesAppController {
  */
 	public function index() {
 		$this->view = 'Bbses/index';
+
 		$this->__initBbs();
 		if (!isset($this->viewVars['bbses'])) {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
@@ -74,7 +75,8 @@ class BbsesController extends BbsesAppController {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		$this->__setPost($postId = false);
+		//引数0:親記事取得
+		$this->__setPost($postId = 0);
 		if (!isset($this->viewVars['bbsPosts'])) {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
@@ -169,6 +171,7 @@ class BbsesController extends BbsesAppController {
 		//camelize
 		$results = array(
 			'bbses' => $bbses['Bbs'],
+			'bbsPostNum' => count($bbses['BbsPost'])
 		);
 		$this->set($this->camelizeKeyRecursive($results));
 	}
@@ -197,7 +200,7 @@ class BbsesController extends BbsesAppController {
  */
 	private function __setPost($postId) {
 		$bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['key'],
+				$this->viewVars['bbses']['id'],
 				$this->viewVars['bbsSettings']['visiblePostRow'],
 				$this->viewVars['contentEditable'],
 				$postId

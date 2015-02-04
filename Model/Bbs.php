@@ -34,7 +34,8 @@ class Bbs extends BbsesAppModel {
  */
 	public $actsAs = array(
 		// TODO: disabled for debug
-		/* 'NetCommons.Publishable' */
+		/* 'NetCommons.Publishable', */
+		'Containable'
 	);
 
 /**
@@ -77,7 +78,7 @@ class Bbs extends BbsesAppModel {
 	public $hasMany = array(
 		'BbsPost' => array(
             'className' => 'Bbses.BbsPost',
-            'foreignKey' => 'bbs_key',
+            'foreignKey' => 'bbs_id',
 //            'conditions' => array('BbsPost.status' => '1'),
 //            'order' => 'BbsPost.created DESC',
 //            'limit' => '5',
@@ -140,10 +141,18 @@ class Bbs extends BbsesAppModel {
 		$conditions = array(
 			'block_id' => $blockId,
 		);
+		//containableビヘイビアで親記事を取得
+		$contains = array(
+			'BbsPost' => array(
+				'conditions' => array(
+					'BbsPost.parent_id =' => 0
+				)
+			)
+		);
 		$bbses = $this->find('first', array(
-				'recursive' => -1,
 				'conditions' => $conditions,
 				'order' => 'Bbs.id DESC',
+				'contain' => $contains,
 			)
 		);
 		return $bbses;
