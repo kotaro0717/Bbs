@@ -43,16 +43,16 @@ class BbsPost extends BbsesAppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Bbs' => array(
-			'className' => 'Bbses.Bbs',
-			'foreignKey' => 'bbs_key',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
+//		'Bbs' => array(
+//			'className' => 'Bbses.Bbs',
+//			'foreignKey' => 'bbs_key',
+//			'conditions' => '',
+//			'fields' => '',
+//			'order' => ''
+//		),
 //		'BbsPost' => array(
 //			'className' => 'Bbses.BbsPost',
-//			'foreignKey' => 'parent_key',
+//			'foreignKey' => 'parent_id',
 //			'conditions' => '',
 //			'fields' => '',
 //			'order' => ''
@@ -65,14 +65,14 @@ class BbsPost extends BbsesAppModel {
  * @var array
  */
 	public $hasMany = array(
-//		'BbsPost' => array(
-//            'className' => 'Bbses.BbsPost',
-//            'foreignKey' => 'parent_key',
-//            //'conditions' => array('Comment.status' => '1'),
-//            //'order' => 'Comment.created DESC',
-//            //'limit' => '5',
-//            'dependent' => true
-//        )
+		'BbsPost' => array(
+            'className' => 'Bbses.BbsPost',
+            'foreignKey' => 'parent_id',
+            //'conditions' => array('Comment.status' => '1'),
+            'order' => 'BbsPost.created DESC',
+            //'limit' => '5',
+            'dependent' => true
+        )
 	);
 
 /**
@@ -100,7 +100,7 @@ class BbsPost extends BbsesAppModel {
 					'required' => true,
 				)
 			),
-			'parent_key' => array(
+			'parent_id' => array(
 				'notEmpty' => array(
 					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
@@ -139,13 +139,28 @@ class BbsPost extends BbsesAppModel {
  * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getPosts($bbs_key, $visiblePostRow, $contentEditable) {
+	public function getPosts($bbsKey, $visiblePostRow, $contentEditable, $postId) {
 		$conditions = array(
-			'bbs_key' => $bbs_key,
-			'parent_key' => '0',
+			'bbs_key' => $bbsKey,
+			//TODO:parent_keyが0なら親記事、それ以外はコメントに
+			'parent_id' => '0',
 		);
-		if (! $contentEditable) {
+ 		if (! $contentEditable) {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+		}
+		if ($postId) {
+			//view表示のために記事指定
+			$conditions['id'] = $postId;
+
+			//対象記事のみ取得
+			$bbs_posts = $this->find('all', array(
+					'recursive' => 1,
+					'conditions' => $conditions,
+					'order' => 'BbsPost.created DESC',
+				)
+			);
+			$bbs_posts = $this->__setDateTime($bbs_posts);
+			return $bbs_posts;
 		}
 		$bbs_posts = $this->find('all', array(
 				'recursive' => -1,
@@ -155,8 +170,67 @@ class BbsPost extends BbsesAppModel {
 			)
 		);
 		$bbs_posts = $this->__setDateTime($bbs_posts);
-		//var_dump($bbs_posts);
 		return $bbs_posts;
+	}
+
+/**
+ * save post
+ *
+ * @param array $data received post data
+ * @return mixed On success Model::$data if its not empty or true, false on failure
+ * @throws InternalErrorException
+ */
+	public function savePost($data) {
+//		//モデル定義
+//		$this->setDataSource('master');
+//		$models = array(
+//			'Block' => 'Blocks.Block',
+//			'Comment' => 'Comments.Comment',
+//		);
+//		foreach ($models as $model => $class) {
+//			$this->$model = ClassRegistry::init($class);
+//			$this->$model->setDataSource('master');
+//		}
+//		//トランザクションBegin
+//		$dataSource = $this->getDataSource();
+//		$dataSource->begin();
+//		try {
+//			//ブロックの登録
+//			$block = $this->Block->saveByFrameId($data['Frame']['id'], false);
+//			//お知らせの登録
+//			$this->data['Announcement']['block_id'] = (int)$block['Block']['id'];
+//			$announcement = $this->save(null, false);
+//			if (! $announcement) {
+//				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+//			}
+//			//コメントの登録
+//			if ($this->Comment->data) {
+//				if (! $this->Comment->save(null, false)) {
+//					throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+//				}
+//			}
+//			//トランザクションCommit
+//			$dataSource->commit();
+//			return $announcement;
+//		} catch (Exception $ex) {
+//			//トランザクションRollback
+//			$dataSource->rollback();
+//			//エラー出力
+//			CakeLog::write(LOG_ERR, $ex);
+//			throw $ex;
+//		}
+	}
+
+/**
+ * validate post
+ *
+ * @param array $data received post data
+ * @return bool|array True on success, validation errors array on error
+ */
+	public function validatePost($data) {
+		$this->set($data);
+		$this->validates();
+		return $this->validationErrors ? $this->validationErrors : true;
 	}
 
 /**

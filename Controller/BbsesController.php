@@ -63,17 +63,38 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	public function index() {
+		$this->view = 'Bbses/index';
 		$this->__initBbs();
-		$this->render('Bbses/index');
-		//ToDo: bbsのframeKeyを元に、関連する記事のリストを取得する->モデルで
-		//if ($this->viewVars['bbs']) {
-//			$bbs_post_list = $this->Bbs->find('first', array(
-//					'frame_key' => $this->viewVars['frameKey'],
-//					'order' => 'Bbs.id DESC',
-//				));
-//			$this->set('bbs_post_list', $bbs_post_list);
-//			$this->render('Bbs/index');
-		//}
+		if (!isset($this->viewVars['bbses'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+
+		$this->__setBbsSetting();
+		if (!isset($this->viewVars['bbsSettings'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+
+		$this->__setPost($postId = false);
+		if (!isset($this->viewVars['bbsPosts'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+
+//		if ($this->request->is('ajax')) {
+//			$tokenFields = Hash::flatten($this->request->data);
+//			$hiddenFields = array(
+//				'Announcement.block_id',
+//				'Announcement.key'
+//			);
+//			$this->set('tokenFields', $tokenFields);
+//			$this->set('hiddenFields', $hiddenFields);
+//		}
+
+		if ($this->viewVars['contentEditable']) {
+			$this->view = 'Bbses/indexForEditor';
+		}
+		if (! $this->viewVars['bbses']) {
+			$this->autoRender = false;
+		}
 	}
 
 /**
@@ -81,20 +102,23 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	public function view() {
-//		//BbsPostデータを取得
-//		$bbs_post = $this->BbsPost->getBbs(
-//				$this->viewVars['frameId'],
-//				$this->viewVars['blockId'],
-//				$this->viewVars['contentEditable']
-//			);
-//
-//		//Bbsデータをviewにセット
-//		$this->set('announcement', $announcement);
-//		if (! $announcement) {
-//			$this->autoRender = false;
-//		}
-		$this->render('Bbses/view');
+	public function view($frameId, $postId) {
+		$this->view = 'Bbses/view';
+		$this->__initBbs();
+		if (!isset($this->viewVars['bbses'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+
+		$this->__setBbsSetting();
+		if (!isset($this->viewVars['bbsSettings'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+
+		$this->__setPost($postId);
+		if (!isset($this->viewVars['bbsPosts'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+		//debug($this->viewVars);
 	}
 
 /**
@@ -111,7 +135,23 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	public function add() {
-		$this->render('Bbses/add');
+		$this->view = 'Bbses/add';
+		$this->__initBbs();
+		if (!isset($this->viewVars['bbses'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+		//記事追加の場合、ステータスを別途セットする（とりあえず）
+		$this->set($this->camelizeKeyRecursive(array('contentStatus' => '0')));
+
+	}
+
+/**
+ * edit method
+ *
+ * @return void
+ */
+	public function edit() {
+		//
 	}
 
 /**
@@ -120,34 +160,62 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	private function __initBbs() {
-		//掲示板フレーム設定を取得
-		$bbs_settings = $this->BbsFrameSetting->getBbsSetting(
-										$this->viewVars['frameKey']);
-		$this->set($bbs_settings);
-
-		//掲示板関連データを取得
+		//掲示板データを取得
 		if (!$bbses = $this->Bbs->getBbs($this->viewVars['blockId'])
 		) {
 			$bbses = $this->Bbs->create();
 		}
-		$this->set($bbses);
-		$this->set('bbs', $bbses);
 
-		$bbs_posts = $this->BbsPost->getPosts(
-				$this->viewVars['Bbs']['key'],
-				$this->viewVars['BbsFrameSetting']['visible_post_row'],
-				$this->viewVars['contentEditable']
+		//camelize
+		$results = array(
+			'bbses' => $bbses['Bbs'],
+		);
+		$this->set($this->camelizeKeyRecursive($results));
+	}
+
+/**
+ * __initBbs method
+ *
+ * @return void
+ */
+	private function __setBbsSetting() {
+		//掲示板の表示設定情報を取得
+		$bbsSettings = $this->BbsFrameSetting->getBbsSetting(
+										$this->viewVars['frameKey']);
+
+		//camelize
+		$results = array(
+			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
+		);
+		$this->set($this->camelizeKeyRecursive($results));
+	}
+
+/**
+ * __setPost method
+ *
+ * @return void
+ */
+	private function __setPost($postId) {
+		$bbsPosts = $this->BbsPost->getPosts(
+				$this->viewVars['bbses']['key'],
+				$this->viewVars['bbsSettings']['visiblePostRow'],
+				$this->viewVars['contentEditable'],
+				$postId
 			);
-		$this->set('bbs_posts', $bbs_posts);
 
-		//debug_info
-		//var_dump($this->viewVars);
+		//camelize
+		foreach ($bbsPosts as $bbsPost) {
+			$key = array(
+				'bbsPosts' => $bbsPost['BbsPost'],
+			);
+			$posts[] = $this->camelizeKeyRecursive($key);
+		}
 
-//		$results = array(
-//			'bbses' => $bbses['Bbs'],
-			//'bbsSettings' => $bbs_settings['BbsFrameSetting'],
-			//'contentStatus' => $bbses['BbsPost']['status'],
-//		);
-		//$results = $this->camelizeKeyRecursive($results);
+		//配列の再構成 TODO:スリムじゃない
+		foreach ($posts as $post) {
+			$result[] = $post['bbsPosts'];
+		}
+		$results['bbsPosts'] = $result;
+		$this->set($results);
 	}
 }

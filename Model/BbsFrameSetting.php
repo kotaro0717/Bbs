@@ -99,7 +99,6 @@ class BbsFrameSetting extends BbsesAppModel {
 		$conditions = array(
 			'frame_key' => $frameKey,
 		);
-
 		if (!$bbsSetting = $this->find('first', array(
 				'recursive' => -1,
 				'conditions' => $conditions,
@@ -111,7 +110,6 @@ class BbsFrameSetting extends BbsesAppModel {
 			$bbsSetting['BbsFrameSetting']['frame_key'] = $frameKey;
 			$bbsSetting['BbsFrameSetting']['id'] = '0';
 		}
-
 		return $bbsSetting;
 	}
 }
