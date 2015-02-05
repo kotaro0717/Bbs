@@ -115,6 +115,11 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	public function edit() {
+		$this->__setBbsSetting();
+		if (!isset($this->viewVars['bbsSettings'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+
 		//記事追加の場合、ステータスを別途セットする（とりあえず）
 		$this->set(array('contentStatus' => '0'));
 	}

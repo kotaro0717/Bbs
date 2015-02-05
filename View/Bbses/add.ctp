@@ -12,7 +12,7 @@
 				'/bbses/bbses/index/' . $frameId) ?>">
 		<?php echo $dataForView['bbses']['name']; ?></a>
 	</li>
-	<li class="active"><?php echo __d('bbses', 'Create post'); ?></li>
+	<li class="active"><?php //echo __d('bbses', 'Create'); ?></li>
 </ol>
 
 <div class="panel panel-default">

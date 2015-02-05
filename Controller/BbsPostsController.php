@@ -118,28 +118,42 @@ class BbsPostsController extends BbsesAppController {
  *
  * @return void
  */
-	public function edit() {
-		//登録処理
-		if ($this->request->isPost()) {
-			if ($matches = preg_grep('/^save_\d/', array_keys($this->data))) {
-				list(, $status) = explode('_', array_shift($matches));
-			}
-			$data = array_merge_recursive(
-				$this->data,
-				['BbsPost' => ['status' => $status]]
-			);
-
-			$bbsPost = $this->BbsPost->savePost($data);
-			$this->redirect(isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
-			return;
+	public function edit($frameId, $postId) {
+		$this->view = 'Bbses/add';
+		$this->__setBbs();
+		if (!isset($this->viewVars['bbses'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		//最新データ取得
-		$this->__setBbsSetting();
-		$this->__setBbs();
-		$this->__setPost();
+		$this->__setPost($postId);
+		if (!isset($this->viewVars['bbsPosts'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
 
-		$this->set('backUrl', isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
+		//記事追加の場合、ステータスを別途セットする（とりあえず）
+		$this->set(array('contentStatus' => '0'));
+
+		//登録処理
+//		if ($this->request->isPost()) {
+//			if ($matches = preg_grep('/^save_\d/', array_keys($this->data))) {
+//				list(, $status) = explode('_', array_shift($matches));
+//			}
+//			$data = array_merge_recursive(
+//				$this->data,
+//				['BbsPost' => ['status' => $status]]
+//			);
+//
+//			$bbsPost = $this->BbsPost->savePost($data);
+//			$this->redirect(isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
+//			return;
+//		}
+
+		//最新データ取得
+//		$this->__setBbsSetting();
+//		$this->__setBbs();
+//		$this->__setPost();
+
+		//$this->set('backUrl', isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
 	}
 
 /**

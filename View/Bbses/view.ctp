@@ -60,9 +60,11 @@
 	<div class="text-left">
 		<div class="text-left" style="float:right;">
 			<?php if ($contentCreatable && $dataForView['bbses']['commentFlag'] /*&& $dataForView['bbsPosts']['status']*/) : ?>
-				<a href="#" tooltip="<?php echo __d('bbses', 'Write comment'); ?>"><span class="glyphicon glyphicon-comment"></span></a>
+				<a href="<?php echo $this->Html->url(
+					'/bbses/bbsPosts/add' . '/' . $frameId); ?>" tooltip="<?php echo __d('bbses', 'Write comment'); ?>"><span class="glyphicon glyphicon-comment"></span></a>
 			<?php endif; ?>
-			<a href="#" tooltip="<?php echo __d('bbses', 'Edit'); ?>"><span class="glyphicon glyphicon-edit"></span></a>
+			<a href="<?php echo $this->Html->url(
+					'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $dataForView['bbsPosts']['id']); ?>" tooltip="<?php echo __d('bbses', 'Edit'); ?>"><span class="glyphicon glyphicon-edit"></span></a>
 			<a href="#" tooltip="<?php echo __d('bbses', 'Delete'); ?>"><span class="glyphicon glyphicon-trash"></span></a>
 		</div>
 		<span class="glyphicon glyphicon-thumbs-up"><?php echo $dataForView['bbsPosts']['upVoteNum']; ?></span>

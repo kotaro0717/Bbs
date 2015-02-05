@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-05 10:55+0000\n"
+"POT-Creation-Date: 2015-02-05 12:24+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -25,28 +25,28 @@ msgid "Older comment order"
 msgstr ""
 
 #: /Controller/BbsPostsController.php:279
-#: /Controller/BbsesController.php:263
+#: /Controller/BbsesController.php:269
 #: /View/Bbses/commentView.ctp:25
 #: /View/Bbses/indexForEditor.ctp:37
 #: /View/Bbses/view.ctp:27
 msgid "Status order"
 msgstr ""
 
-#: /Controller/BbsesController.php:248
+#: /Controller/BbsesController.php:254
 #: /View/Bbses/commentView.ctp:16;22
 #: /View/Bbses/index.ctp:15
 #: /View/Bbses/indexForEditor.ctp:31
 msgid "Latest post order"
 msgstr ""
 
-#: /Controller/BbsesController.php:253
+#: /Controller/BbsesController.php:259
 #: /View/Bbses/commentView.ctp:23
 #: /View/Bbses/index.ctp:17
 #: /View/Bbses/indexForEditor.ctp:33
 msgid "Older post order"
 msgstr ""
 
-#: /Controller/BbsesController.php:258
+#: /Controller/BbsesController.php:264
 #: /View/Bbses/index.ctp:19
 #: /View/Bbses/indexForEditor.ctp:35
 msgid "Descending order of comments"
@@ -54,6 +54,7 @@ msgstr ""
 
 #: /Model/Bbs.php:125
 #: /View/Bbses/commentView.ctp:3
+#: /View/Elements/edit_form.ctp:3
 msgid "Bbs name"
 msgstr ""
 
@@ -112,15 +113,39 @@ msgstr ""
 msgid "There are not posts"
 msgstr ""
 
-#: /View/Elements/edit_form.ctp:3
-msgid "Bbs title"
-msgstr ""
-
 #: /View/Elements/edit_form.ctp:30
 msgid "Can comments"
 msgstr ""
 
 #: /View/Elements/edit_form.ctp:42
 msgid "Can votes"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:54
+msgid "Visible post row"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:75
+msgid "Visible comment row"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:95
+msgid "Post authority"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:97
+msgid "Room administrator"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:104
+msgid "Cheif editor"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:111
+msgid "Editor"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:118
+msgid "General"
 msgstr ""
 

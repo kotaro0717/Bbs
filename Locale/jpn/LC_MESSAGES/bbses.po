@@ -5,14 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2015-02-05 08:31+0000\n"
-"PO-Revision-Date: 2015-02-05 19:58+0900\n"
+"PO-Revision-Date: 2015-02-05 21:27+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.7.4\n"
+"Language: ja_JP\n"
 
 #: /Controller/BbsPostsController.php:270 /View/Bbses/view.ctp:18;24
 msgid "Latest comment order"
@@ -102,3 +103,31 @@ msgstr "コメント投稿有無"
 #: /View/Elements/edit_form.ctp:42
 msgid "Can votes"
 msgstr "投票有無"
+
+#: /View/Elements/edit_form.ctp:54
+msgid "Visible post row"
+msgstr "記事表示件数"
+
+#: /View/Elements/edit_form.ctp:75
+msgid "Visible comment row"
+msgstr "コメント表示件数"
+
+#: /View/Elements/edit_form.ctp:95
+msgid "Post authority"
+msgstr "記事投稿権限"
+
+#: /View/Elements/edit_form.ctp:97
+msgid "Room administrator"
+msgstr "ルーム管理者"
+
+#: /View/Elements/edit_form.ctp:104
+msgid "Cheif editor"
+msgstr "編集長"
+
+#: /View/Elements/edit_form.ctp:111
+msgid "Editor"
+msgstr "編集者"
+
+#: /View/Elements/edit_form.ctp:118
+msgid "General"
+msgstr "一般"

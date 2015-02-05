@@ -4,7 +4,7 @@
 
 <div id="nc-bbs-<?php echo (int)$frameId; ?>">
 	<p class="text-right">
-		<span class="nc-tooltip" tooltip="<?php echo __d('net_commons', 'Manage'); ?>">
+		フレームに移動予定です。⇒<span class="nc-tooltip" tooltip="<?php echo __d('net_commons', 'Manage'); ?>">
 			<a href="<?php echo $this->Html->url(
 				'/bbses/bbses/edit/' . $frameId) ?>" class="btn btn-primary">
 				<span class="glyphicon glyphicon-cog"> </span>
@@ -81,7 +81,7 @@
 					<a href="<?php echo $this->Html->url(
 						'/bbses/bbsPosts/view/' . $frameId. '/' . $post['id']); ?>">
 					<?php echo $post['title']; ?></a>
-					<span class="glyphicon glyphicon-comment"></span><?php echo $post['commentNum'];?>
+					<span class="glyphicon glyphicon-comment"><?php echo $post['commentNum'];?></span>
 					<span><?php echo $this->element('NetCommons.status_label',
 						array('status' => $post['status'])); ?></span>
 				</td>
