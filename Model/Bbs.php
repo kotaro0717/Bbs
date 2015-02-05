@@ -137,17 +137,14 @@ class Bbs extends BbsesAppModel {
  * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getBbs($blockId) {
+	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $is_post_list) {
+		//$contentEditable = false; //TODO:debug用
+		$contains = false;
+		if ($is_post_list) {
+			$contains = $this->__setContainableParams($userId, $contentCreatable, $contentEditable);
+		}
 		$conditions = array(
 			'block_id' => $blockId,
-		);
-		//containableビヘイビアで親記事を取得
-		$contains = array(
-			'BbsPost' => array(
-				'conditions' => array(
-					'BbsPost.parent_id =' => 0
-				)
-			)
 		);
 		$bbses = $this->find('first', array(
 				'conditions' => $conditions,
@@ -166,44 +163,6 @@ class Bbs extends BbsesAppModel {
  * @throws InternalErrorException
  */
 	public function saveBbs($data) {
-//		//モデル定義
-//		$this->setDataSource('master');
-//		$models = array(
-//			'Block' => 'Blocks.Block',
-//			'Comment' => 'Comments.Comment',
-//		);
-//		foreach ($models as $model => $class) {
-//			$this->$model = ClassRegistry::init($class);
-//			$this->$model->setDataSource('master');
-//		}
-//		//トランザクションBegin
-//		$dataSource = $this->getDataSource();
-//		$dataSource->begin();
-//		try {
-//			//ブロックの登録
-//			$block = $this->Block->saveByFrameId($data['Frame']['id'], false);
-//			//お知らせの登録
-//			$this->data['Bbs']['block_id'] = (int)$block['Block']['id'];
-//			$bbs = $this->save(null, false);
-//			if (! $bbs) {
-//				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-//			}
-//			//コメントの登録
-//			if ($this->Comment->data) {
-//				if (! $this->Comment->save(null, false)) {
-//					throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-//				}
-//			}
-//			//トランザクションCommit
-//			$dataSource->commit();
-//			return $bbs;
-//		} catch (Exception $ex) {
-//			//トランザクションRollback
-//			$dataSource->rollback();
-//			//エラー出力
-//			CakeLog::write(LOG_ERR, $ex);
-//			throw $ex;
-//		}
 	}
 /**
  * validate bbs
@@ -215,5 +174,67 @@ class Bbs extends BbsesAppModel {
 //		$this->set($data);
 //		$this->validates();
 //		return $this->validationErrors ? $this->validationErrors : true;
+	}
+
+/**
+ * __setContainableParams method
+ *
+ * @return void
+ */
+	private function __setContainableParams($userId, $contentCreatable, $contentEditable) {
+		//containableビヘイビア用の条件
+
+		//親記事のみ取得
+		$containConditions['BbsPost.parent_id ='] = 0;
+
+		//作成権限あり:自分で書いた記事のみ取得
+		if ($contentCreatable && ! $contentEditable) {
+			$containConditions['BbsPost.created_user ='] = $userId;
+		}
+
+		//作成・編集権限なし:公開中の記事のみ取得
+		if (! $contentCreatable && ! $contentEditable) {
+			$containConditions['BbsPost.status ='] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+		}
+		$contains = array(
+			'BbsPost' => array(
+				'conditions' => $containConditions,
+				'order' => 'BbsPost.created DESC',
+				//'limit' => $visiblePostRow,
+			)
+		);
+		return $contains;
+	}
+
+/**
+ * __setDateTime method
+ *
+ * @return void
+ */
+	private function __setDateTime($bbs_posts) {
+		$today = date("Y-m-d");
+		$year = date("Y");
+		$i = 0;
+		//再フォーマット
+		foreach ($bbs_posts as $post) {
+			$date = $post['created'];
+			//日付切り出し
+			$createdDay = substr($post['created'], 0, 10);
+			//年切り出し
+			$createdYear = substr($post['created'], 0, 4);
+			//変換
+			if ($today === $createdDay) {
+				//今日
+				$bbs_posts[$i]['created'] = date('G:i', strtotime($date));
+			} else if ($year !== $createdYear) {
+				//昨年以前
+				$bbs_posts[$i]['created'] =  date('Y/m/d', strtotime($date));
+			} else if ($today > $createdDay) {
+				//今日より前 かつ 今年
+				$bbs_posts[$i]['created'] =  date('m/d', strtotime($date));
+			}
+			$i++;
+		}
+		return $bbs_posts;
 	}
 }

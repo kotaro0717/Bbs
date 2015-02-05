@@ -136,17 +136,21 @@ class BbsPost extends BbsesAppModel {
 /**
  * get bbs data
  *
- * @param int $frameId frames.id
- * @param int $blockId blocks.id
+ * @param int $bbsId bbses.id
+ * @param
+ * @param
+ * @param
+ * @param
+ * @param
  * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getPosts($bbsId, $visiblePostRow, $contentEditable, $postId) {
+	public function getPosts($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder) {
 		$conditions = array(
 			'bbs_id' => $bbsId,
 		);
 
- 		if (! $contentEditable) {
+ 		if (! $contentCreatable) {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
 		if ($postId) {
@@ -169,6 +173,8 @@ class BbsPost extends BbsesAppModel {
 		$contains = array(
 			'BbsPost' => array(
 				'BbsPost' => array(
+					'BbsPost' => array(
+					)
 				)
 			)
 		);
@@ -176,8 +182,8 @@ class BbsPost extends BbsesAppModel {
 		$bbs_posts = $this->find('all', array(
 				'recursive' => -1,
 				'conditions' => $conditions,
-				'order' => 'BbsPost.created DESC',
-				'limit' => $visiblePostRow,
+				'order' => $sortOrder,
+				'limit' => $visibleRow,
 				'contain' => $contains,
 			)
 		);
@@ -193,7 +199,8 @@ class BbsPost extends BbsesAppModel {
  * @throws InternalErrorException
  */
 	public function savePost($data) {
-//		//モデル定義
+		debug($data);
+		//モデル定義
 //		$this->setDataSource('master');
 //		$models = array(
 //			'Block' => 'Blocks.Block',
@@ -208,18 +215,12 @@ class BbsPost extends BbsesAppModel {
 //		$dataSource->begin();
 //		try {
 //			//ブロックの登録
-//			$block = $this->Block->saveByFrameId($data['Frame']['id'], false);
+//			$bbsId = $this->Block->saveByFrameId($data['Frame']['id'], false);
 //			//お知らせの登録
 //			$this->data['Announcement']['block_id'] = (int)$block['Block']['id'];
-//			$announcement = $this->save(null, false);
-//			if (! $announcement) {
+//			$bbsPost = $this->save(null, false);
+//			if (! $bbsPost) {
 //				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-//			}
-//			//コメントの登録
-//			if ($this->Comment->data) {
-//				if (! $this->Comment->save(null, false)) {
-//					throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-//				}
 //			}
 //			//トランザクションCommit
 //			$dataSource->commit();

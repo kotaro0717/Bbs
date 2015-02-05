@@ -33,7 +33,6 @@
 								'autofocus' => true,
 							)) ?>
 			</div>
-{{bbses.title}}
 			<div class="has-error">
 				<?php if ($this->validationErrors['Bbs']): ?>
 				<?php foreach ($this->validationErrors['Bbs']['title'] as $message): ?>
@@ -64,7 +63,6 @@
 								'required' => 'required',
 							)) ?>
 			</div>
-{{bbses.content}}
 			<div class="has-error">
 				<?php if ($this->validationErrors['Bbs']): ?>
 				<?php foreach ($this->validationErrors['Bbs']['content'] as $message): ?>

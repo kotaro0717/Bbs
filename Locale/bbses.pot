@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-03 02:54+0000\n"
+"POT-Creation-Date: 2015-02-05 10:55+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,73 +14,113 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Model/Bbs.php:124
-#: /View/Bbses/add.ctp:3
-#: /View/Bbses/commentView.ctp:3
-#: /View/Bbses/view.ctp:3
-msgid "Bbs name"
+#: /Controller/BbsPostsController.php:269
+#: /View/Bbses/view.ctp:18;24
+msgid "Latest comment order"
 msgstr ""
 
-#: /Model/BbsPost.php:120
-#: /View/Bbses/add.ctp:11;17
-msgid "Title"
+#: /Controller/BbsPostsController.php:274
+#: /View/Bbses/view.ctp:25
+msgid "Older comment order"
 msgstr ""
 
-#: /Model/BbsPost.php:127
-#: /View/Bbses/add.ctp:21;29
-msgid "Content"
-msgstr ""
-
-#: /View/Bbses/add.ctp:4
-#: /View/Bbses/commentView.ctp:4
-#: /View/Bbses/view.ctp:4
-msgid "Post title"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:16
-#: /View/Bbses/index.ctp:11
-#: /View/Bbses/view.ctp:15
-msgid "Latest posts order"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:22
-#: /View/Bbses/index.ctp:17
-#: /View/Bbses/view.ctp:21
-msgid "Latest post order"
-msgstr ""
-
-#: /View/Bbses/commentView.ctp:23
-#: /View/Bbses/index.ctp:18
-#: /View/Bbses/view.ctp:22
-msgid "Older post order"
-msgstr ""
-
+#: /Controller/BbsPostsController.php:279
+#: /Controller/BbsesController.php:263
 #: /View/Bbses/commentView.ctp:25
-#: /View/Bbses/index.ctp:21
-#: /View/Bbses/view.ctp:24
+#: /View/Bbses/indexForEditor.ctp:37
+#: /View/Bbses/view.ctp:27
 msgid "Status order"
 msgstr ""
 
+#: /Controller/BbsesController.php:248
+#: /View/Bbses/commentView.ctp:16;22
+#: /View/Bbses/index.ctp:15
+#: /View/Bbses/indexForEditor.ctp:31
+msgid "Latest post order"
+msgstr ""
+
+#: /Controller/BbsesController.php:253
+#: /View/Bbses/commentView.ctp:23
+#: /View/Bbses/index.ctp:17
+#: /View/Bbses/indexForEditor.ctp:33
+msgid "Older post order"
+msgstr ""
+
+#: /Controller/BbsesController.php:258
+#: /View/Bbses/index.ctp:19
+#: /View/Bbses/indexForEditor.ctp:35
+msgid "Descending order of comments"
+msgstr ""
+
+#: /Model/Bbs.php:125
+#: /View/Bbses/commentView.ctp:3
+msgid "Bbs name"
+msgstr ""
+
+#: /Model/BbsPost.php:121
+#: /View/Bbses/add.ctp:22
+msgid "Title"
+msgstr ""
+
+#: /Model/BbsPost.php:129
+#: /View/Bbses/add.ctp:51
+msgid "Content"
+msgstr ""
+
+#: /View/Bbses/add.ctp:15
+#: /View/Bbses/indexForEditor.ctp:67
+#: /View/Bbses/notCreatePost.ctp:6
+msgid "Create post"
+msgstr ""
+
+#: /View/Bbses/commentView.ctp:4
+msgid "Post title"
+msgstr ""
+
 #: /View/Bbses/commentView.ctp:60;100
-#: /View/Bbses/view.ctp:59;99
+#: /View/Bbses/view.ctp:63
 msgid "Write comment"
 msgstr ""
 
 #: /View/Bbses/commentView.ctp:61;101
-#: /View/Bbses/view.ctp:60;100
+#: /View/Bbses/view.ctp:65
 msgid "Edit"
 msgstr ""
 
 #: /View/Bbses/commentView.ctp:62;102
-#: /View/Bbses/view.ctp:61;101
+#: /View/Bbses/view.ctp:66
 msgid "Delete"
 msgstr ""
 
-#: /View/Bbses/index.ctp:19
-msgid "Descending order of comments"
+#: /View/Bbses/edit.ctp:12
+msgid "Plugin name"
 msgstr ""
 
-#: /View/Bbses/index.ctp:47
-msgid "Create post"
+#: /View/Bbses/edit.ctp:18
+msgid "Bbs edit"
+msgstr ""
+
+#: /View/Bbses/indexForEditor.ctp:38
+msgid "Do not read"
+msgstr ""
+
+#: /View/Bbses/notCreateBbs.ctp:2
+msgid "There are not published bbs"
+msgstr ""
+
+#: /View/Bbses/notCreatePost.ctp:17
+msgid "There are not posts"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:3
+msgid "Bbs title"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:30
+msgid "Can comments"
+msgstr ""
+
+#: /View/Elements/edit_form.ctp:42
+msgid "Can votes"
 msgstr ""
 

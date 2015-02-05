@@ -1,6 +1,6 @@
 <?php
 /**
- * Bbses Controller
+ * BbsPosts Controller
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
@@ -17,7 +17,7 @@ App::uses('BbsesAppController', 'Bbses.Controller');
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
  * @package NetCommons\Bbses\Controller
  */
-class BbsesController extends BbsesAppController {
+class BbsPostsController extends BbsesAppController {
 
 /**
  * use models
@@ -25,7 +25,6 @@ class BbsesController extends BbsesAppController {
  * @var array
  */
 	public $uses = array(
-		'Frames.Frame',
 		'Bbses.Bbs',
 		'Bbses.BbsFrameSetting',
 		'Bbses.BbsPost',
@@ -59,45 +58,33 @@ class BbsesController extends BbsesAppController {
 	);
 
 /**
- * index method
+ * view method
  *
  * @return void
  */
-	public function index($frameId, $key = '', $params = '') {
-		$this->view = 'Bbses/index';
-
-		$this->__setBbsSetting();
-		if (!isset($this->viewVars['bbsSettings'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
+	public function view($frameId, $postId) {
+		$this->view = 'Bbses/view';
 
 		$this->__setBbs();
 		if (!isset($this->viewVars['bbses'])) {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		//フレーム置いただけの場合
-		if (!isset($this->viewVars['bbses']['key'])) {
-			$this->view = 'Bbses/notCreateBbs';
-			return;
+		$this->__setBbsSetting();
+		if (!isset($this->viewVars['bbsSettings'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		if ($this->viewVars['bbsPostNum']) {
-			$this->__setPost($postId = 0, $key, $params);
-			if (!isset($this->viewVars['bbsPosts'])) {
-				throw new NotFoundException(__d('net_commons', 'Not Found'));
-			}
-		} else {
-			$this->view = 'Bbses/notCreatePost';
-			return;
+		$this->__setPost($postId);
+		if (!isset($this->viewVars['bbsPosts'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		if ($this->viewVars['contentEditable']) {
-			$this->view = 'Bbses/indexForEditor';
-		}
-		if (! $this->viewVars['bbses']) {
-			$this->autoRender = false;
-		}
+		$this->__setComment($postId, $key = '', $params = '');
+//		if (!isset($this->viewVars['bbsComments'])) {
+//			throw new NotFoundException(__d('net_commons', 'Not Found'));
+//		}
+
 	}
 
 /**
@@ -105,8 +92,25 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	public function commentView() {
-		$this->render('Bbses/commentView');
+	public function add() {
+		$this->view = 'Bbses/add';
+		$this->__setBbs();
+		if (!isset($this->viewVars['bbses'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+		//記事追加の場合、ステータスを別途セットする（とりあえず）
+		$this->set(array('contentStatus' => '0'));
+
+//		if ($this->request->is('ajax')) {
+//			$tokenFields = Hash::flatten($this->request->data);
+//			$hiddenFields = array(
+//				'BbsPost.bbs_id',
+//				'BbsPost.parent_id',
+//				'BbsPost.key'
+//			);
+//			$this->set('tokenFields', $tokenFields);
+//			$this->set('hiddenFields', $hiddenFields);
+//		}
 	}
 
 /**
@@ -115,8 +119,27 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	public function edit() {
-		//記事追加の場合、ステータスを別途セットする（とりあえず）
-		$this->set(array('contentStatus' => '0'));
+		//登録処理
+		if ($this->request->isPost()) {
+			if ($matches = preg_grep('/^save_\d/', array_keys($this->data))) {
+				list(, $status) = explode('_', array_shift($matches));
+			}
+			$data = array_merge_recursive(
+				$this->data,
+				['BbsPost' => ['status' => $status]]
+			);
+
+			$bbsPost = $this->BbsPost->savePost($data);
+			$this->redirect(isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
+			return;
+		}
+
+		//最新データ取得
+		$this->__setBbsSetting();
+		$this->__setBbs();
+		$this->__setPost();
+
+		$this->set('backUrl', isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
 	}
 
 /**
@@ -153,40 +176,17 @@ class BbsesController extends BbsesAppController {
 				$this->viewVars['userId'],
 				$this->viewVars['contentCreatable'],
 				$this->viewVars['contentEditable'],
-				$is_post_list = true
+				$is_post_list = false
 			)
 		) {
 			$bbses = $this->Bbs->create();
-				$results = array(
-				'bbses' => $bbses['Bbs'],
-				'bbsPostNum' => 0
-			);
-			$results = $this->camelizeKeyRecursive($results);
-			$this->set($results);
-			return;
 		}
 		//camelize
 		$results = array(
 			'bbses' => $bbses['Bbs'],
-			'bbsPostNum' => count($bbses['BbsPost'])
 		);
 		$results = $this->camelizeKeyRecursive($results);
 		$this->set($results);
-
-		//記事をcamelize（配列のため別途行う）
-//		foreach ($bbses['BbsPost'] as $bbsPost) {
-//			$results = array(
-//				'bbsPosts' => $bbsPost,
-//			);
-//			$posts[] = $this->camelizeKeyRecursive($results);
-//		}
-//
-//		//配列の再構成 TODO:スリムじゃない
-//		foreach ($posts as $post) {
-//			$result[] = $post['bbsPosts'];
-//		}
-//		$results['bbsPosts'] = $result;
-//		$this->set($results);
 	}
 
 /**
@@ -194,42 +194,62 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	private function __setPost($postId, $key, $params) {
+	private function __setPost($postId) {
+		$bbsPost = $this->BbsPost->find('first', array(
+				'recursive' => -1,
+				'conditions' => array(
+					'id' => $postId,
+				),
+			)
+		);
+		//camelize
+		$results = array(
+			'bbsPosts' => $bbsPost['BbsPost'],
+		);
+		$this->set($this->camelizeKeyRecursive($results));
+	}
+
+/**
+ * __setPost method
+ *
+ * @return void
+ */
+	private function __setComment($postId, $key, $params) {
 		//TODO:Modelとの切り分け考える
 		//初期設定
-		$visiblePostRow = $this->viewVars['bbsSettings']['visiblePostRow'];
+		$visibleCommentRow = $this->viewVars['bbsSettings']['visibleCommentRow'];
 		$sortOrder = $this->__setSortOrder($params);
-		//key(1):ソート順、key(2):表示件数
+		//key(2):表示件数
 		if ($key === '2') {
-			$visiblePostRow = $params;
+			$visibleCommentRow = $params;
 			$results = array(
-				'currentVisiblePostRow' => $visiblePostRow
+				'currentVisibleCommentRow' => $visibleCommentRow
 
 			);
 			$this->set($results);
 		}
 
-		$bbsPosts = $this->BbsPost->getPosts(
+		$bbsCommnets = $this->BbsPost->getPosts(
 				$this->viewVars['bbses']['id'],
-				$visiblePostRow,
+				$visibleCommentRow,
 				$this->viewVars['contentCreatable'],
 				$postId,
 				$sortOrder
 			);
 
 		//camelize
-		foreach ($bbsPosts as $bbsPost) {
+		foreach ($bbsCommnets as $bbsComment) {
 			$results = array(
-				'bbsPosts' => $bbsPost['BbsPost'],
+				'bbsComments' => $bbsComment['BbsPost'],
 			);
-			$posts[] = $this->camelizeKeyRecursive($results);
+			$comments[] = $this->camelizeKeyRecursive($results);
 		}
 
 		//配列の再構成 TODO:スリムじゃない
-		foreach ($posts as $post) {
-			$result[] = $post['bbsPosts'];
+		foreach ($comments as $comment) {
+			$result[] = $comment['bbsComments'];
 		}
-		$results['bbsPosts'] = $result;
+		$results['bbsComments'] = $result;
 
 		$this->set($results);
 
@@ -246,24 +266,21 @@ class BbsesController extends BbsesAppController {
 		case '':
 		default :
 			//最新の投稿順
-			$sortStr = __d('bbses', 'Latest post order');
-			$this->set('currentPostSortOrder', $sortStr);
+			$sortStr = __d('bbses', 'Latest comment order');
+			$this->set('currentCommentSortOrder', $sortStr);
 			return 'BbsPost.created DESC';
 		case '2':
 			//古い投稿順
-			$sortStr = __d('bbses', 'Older post order');
-			$this->set('currentPostSortOrder', $sortStr);
+			$sortStr = __d('bbses', 'Older comment order');
+			$this->set('currentCommentSortOrder', $sortStr);
 			return 'BbsPost.created ASC';
 		case '3':
-			//コメントの多い順
-			$sortStr = __d('bbses', 'Descending order of comments');
-			$this->set('currentPostSortOrder', $sortStr);
-			return 'BbsPost.comment_num DESC';
-		case '4':
 			//ステータス順
 			$sortStr = __d('bbses', 'Status order');
-			$this->set('currentPostSortOrder', $sortStr);
+			$this->set('currentCommentSortOrder', $sortStr);
 			return 'BbsPost.status DESC';
 		}
 	}
+
+
 }

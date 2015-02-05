@@ -4,64 +4,101 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-03 02:54+0000\n"
-"PO-Revision-Date: 2015-02-04 13:56+0900\n"
+"POT-Creation-Date: 2015-02-05 08:31+0000\n"
+"PO-Revision-Date: 2015-02-05 19:58+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.7.4\n"
 
-#: /Model/Bbs.php:124 /View/Bbses/add.ctp:3 /View/Bbses/commentView.ctp:3
-#: /View/Bbses/view.ctp:3
-msgid "Bbs name"
-msgstr "掲示板名称"
+#: /Controller/BbsPostsController.php:270 /View/Bbses/view.ctp:18;24
+msgid "Latest comment order"
+msgstr "最新のコメント順"
 
-#: /Model/BbsPost.php:120 /View/Bbses/add.ctp:11;17
-msgid "Title"
-msgstr "タイトル"
+#: /Controller/BbsPostsController.php:275 /View/Bbses/view.ctp:25
+msgid "Older comment order"
+msgstr "古いコメント順"
 
-#: /Model/BbsPost.php:127 /View/Bbses/add.ctp:21;29
-msgid "Content"
-msgstr "本文"
-
-#: /View/Bbses/add.ctp:4 /View/Bbses/commentView.ctp:4 /View/Bbses/view.ctp:4
-msgid "Post title"
-msgstr "記事タイトル"
-
-#: /View/Bbses/commentView.ctp:22 /View/Bbses/index.ctp:17
-#: /View/Bbses/view.ctp:21
-msgid "Latest post order"
-msgstr "最新の投稿順"
-
-#: /View/Bbses/commentView.ctp:23 /View/Bbses/index.ctp:18
-#: /View/Bbses/view.ctp:22
-msgid "Older post order"
-msgstr "古い投稿順"
-
-#: /View/Bbses/commentView.ctp:25 /View/Bbses/index.ctp:21
-#: /View/Bbses/view.ctp:24
+#: /Controller/BbsPostsController.php:280 /Controller/BbsesController.php:256
+#: /View/Bbses/commentView.ctp:25 /View/Bbses/indexForEditor.ctp:30
+#: /View/Bbses/view.ctp:27
 msgid "Status order"
 msgstr "ステータス順"
 
-#: /View/Bbses/commentView.ctp:60;100 /View/Bbses/view.ctp:59;99
-msgid "Write comment"
-msgstr "コメントを書く"
+#: /Controller/BbsesController.php:241 /View/Bbses/commentView.ctp:16;22
+#: /View/Bbses/index.ctp:15 /View/Bbses/indexForEditor.ctp:24
+msgid "Latest post order"
+msgstr "最新の記事順"
 
-#: /View/Bbses/commentView.ctp:61;101 /View/Bbses/view.ctp:60;100
-msgid "Edit"
-msgstr "編集"
+#: /Controller/BbsesController.php:246 /View/Bbses/commentView.ctp:23
+#: /View/Bbses/index.ctp:17 /View/Bbses/indexForEditor.ctp:26
+msgid "Older post order"
+msgstr "古い記事順"
 
-#: /View/Bbses/commentView.ctp:62;102 /View/Bbses/view.ctp:61;101
-msgid "Delete"
-msgstr "削除"
-
-#: /View/Bbses/index.ctp:19
+#: /Controller/BbsesController.php:251 /View/Bbses/index.ctp:19
+#: /View/Bbses/indexForEditor.ctp:28
 msgid "Descending order of comments"
 msgstr "コメントの多い順"
 
-#: /View/Bbses/index.ctp:47
+#: /Model/Bbs.php:125 /View/Bbses/commentView.ctp:3
+msgid "Bbs name"
+msgstr "掲示板名称"
+
+#: /Model/BbsPost.php:121 /View/Bbses/add.ctp:22
+msgid "Title"
+msgstr "タイトル"
+
+#: /Model/BbsPost.php:129 /View/Bbses/add.ctp:51
+msgid "Content"
+msgstr "本文"
+
+#: /View/Bbses/add.ctp:15 /View/Bbses/indexForEditor.ctp:60
 msgid "Create post"
 msgstr "記事作成"
+
+#: /View/Bbses/commentView.ctp:4
+msgid "Post title"
+msgstr "記事タイトル"
+
+#: /View/Bbses/commentView.ctp:60;100 /View/Bbses/view.ctp:63
+msgid "Write comment"
+msgstr "コメントを書く"
+
+#: /View/Bbses/commentView.ctp:61;101 /View/Bbses/view.ctp:65
+msgid "Edit"
+msgstr "編集"
+
+#: /View/Bbses/commentView.ctp:62;102 /View/Bbses/view.ctp:66
+msgid "Delete"
+msgstr "削除"
+
+#: /View/Bbses/edit.ctp:12
+msgid "Plugin name"
+msgstr "掲示板"
+
+#: /View/Bbses/edit.ctp:18
+msgid "Bbs edit"
+msgstr "編集"
+
+#: /View/Bbses/indexForEditor.ctp:31
+msgid "Do not read"
+msgstr "未読"
+
+#: /View/Bbses/notCreateBbs.ctp:2
+msgid "There are not published bbs"
+msgstr "現在作成されている掲示板はありません"
+
+#: /View/Bbses/notCreatePost.ctp:5
+msgid "There are not posts"
+msgstr "一件も該当記事はありません"
+
+#: /View/Elements/edit_form.ctp:30
+msgid "Can comments"
+msgstr "コメント投稿有無"
+
+#: /View/Elements/edit_form.ctp:42
+msgid "Can votes"
+msgstr "投票有無"
