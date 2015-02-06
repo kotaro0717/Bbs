@@ -2,11 +2,14 @@
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
 
-<div id="nc-bbs-<?php echo (int)$frameId; ?>">
+<div id="nc-bbs-index-for-editor-<?php echo (int)$frameId; ?>"
+		ng-controller="Bbses"
+		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
+
 	<p class="text-right">
-		フレームに移動予定です。⇒<span class="nc-tooltip" tooltip="<?php echo __d('net_commons', 'Manage'); ?>">
+		フレームに移動します⇒<span class="nc-tooltip" tooltip="<?php echo __d('net_commons', 'Manage'); ?>">
 			<a href="<?php echo $this->Html->url(
-				'/bbses/bbses/edit/' . $frameId) ?>" class="btn btn-primary">
+				'/bbses/bbses/view/' . $frameId) ?>" class="btn btn-primary">
 				<span class="glyphicon glyphicon-cog"> </span>
 			</a>
 		</span>
@@ -93,6 +96,7 @@
 	</table>
 
 	<!-- ページャーの表示 -->
+
 	<div class="text-center">
 		<?php echo $this->element('pager'); ?>
 	</div>

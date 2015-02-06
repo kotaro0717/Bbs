@@ -23,11 +23,32 @@ NetCommonsApp.controller('Bbses',
       $scope.serverValidationClear = NetCommonsBase.serverValidationClear;
 
       $scope.initialize = function(data) {
-        $scope.bbses = angular.copy(data.bbses);
+        $scope.bbses = angular.copy(data);
+        console.log($scope.bbses);
       };
 
       $scope.save = function(status) {
         console.debug(2);
       };
+
+      /**
+       * @param {number} frameId
+       * @return {void}
+       */
+      $scope.delete = function(postId) {
+        var message = 'Do you want to delete the this posts?<br />' +
+                      '(It should use defined language.)';
+//        dialogs.confirm(undefined, message)
+//          .result.then(
+//            function(yes) {
+//              $http.delete('/bbses/bbsPosts/' + postId.toString())
+//                .success(function(data, status, headers, config) {
+//                    //$scope.deleted = true;
+//                  })
+//                .error(function(data, status, headers, config) {
+//                    alert(status);  // It should be error code
+//                  });
+//            });
+      }
 
     });

@@ -2,7 +2,7 @@
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
 
-<div id="nc-bbs-edit-<?php echo (int)$frameId; ?>"
+<div id="nc-bbs-auth-setting-<?php echo (int)$frameId; ?>"
 		ng-controller="Bbses"
 		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
 
@@ -13,8 +13,9 @@
 <?php $this->end(); ?>
 
 <?php $this->startIfEmpty('tabList'); ?>
-<li class="active">
-	<a href="">
+<li>
+	<a href="<?php echo $this->Html->url(
+					'/bbses/bbses/view' . '/' . $frameId); ?>" ng-click="showSetting('edit')">
 		<?php echo __d('bbses', 'Bbs edit'); ?>
 	</a>
 </li>
@@ -24,9 +25,8 @@
 		<?php echo __d('bbses', 'Display change'); ?>
 	</a>
 </li>
-<li>
-	<a href="<?php echo $this->Html->url(
-					'/bbses/bbsAuthoritySettings/view' . '/' . $frameId); ?>" ng-click="showSetting('authoritySetting')">
+<li class="active">
+	<a href="">
 		<?php echo __d('bbses', 'Authority setting'); ?>
 	</a>
 </li>
@@ -68,7 +68,7 @@
 
 		<div class="panel panel-default" >
 			<div class="panel-body has-feedback">
-				<?php echo $this->element('editForm'); ?>
+				<?php echo $this->element('authSetting'); ?>
 			</div>
 
 			<div class="panel-footer text-center">

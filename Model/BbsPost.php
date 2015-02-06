@@ -133,16 +133,15 @@ class BbsPost extends BbsesAppModel {
 		));
 		return parent::beforeValidate($options);
 	}
+
 /**
  * get bbs data
  *
  * @param int $bbsId bbses.id
- * @param
- * @param
- * @param
- * @param
- * @param
- * @param bool $contentEditable true can edit the content, false not can edit the content.
+ * @param string $visibleRow
+ * @param bool $contentCreatable true can edit the content, false not can edit the content.
+ * @param int $postId
+ * @param array $sortOrder
  * @return array
  */
 	public function getPosts($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder) {
@@ -153,42 +152,108 @@ class BbsPost extends BbsesAppModel {
  		if (! $contentCreatable) {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
+
+		//親記事(postId:0)の場合、記事群取得
+		//0以外の場合、対象記事一件取得
 		if ($postId) {
 			//view表示のために記事指定
 			$conditions['id'] = $postId;
 
 			//対象記事のみ取得
-			$bbs_posts = $this->find('all', array(
-					'recursive' => 1,
+			$bbsPosts = $this->find('first', array(
+					'recursive' => -1,
 					'conditions' => $conditions,
-					'order' => 'BbsPost.created DESC',
 				)
 			);
-			$bbs_posts = $this->__setDateTime($bbs_posts);
-			return $bbs_posts;
+			return $this->__setDateTime(array($bbsPosts));
 		}
 
-		//containableビヘイビアでコメントを指定
-		//再帰的な呼び出しなため考える必要あり
-		$contains = array(
-			'BbsPost' => array(
-				'BbsPost' => array(
-					'BbsPost' => array(
-					)
-				)
-			)
-		);
 		$conditions['parent_id'] = $postId;
-		$bbs_posts = $this->find('all', array(
+		$bbsPosts = $this->find('all', array(
 				'recursive' => -1,
 				'conditions' => $conditions,
 				'order' => $sortOrder,
 				'limit' => $visibleRow,
-				'contain' => $contains,
+				//'contain' => $contains,
 			)
 		);
-		$bbs_posts = $this->__setDateTime($bbs_posts);
-		return $bbs_posts;
+		$bbsPosts = $this->__setDateTime($bbsPosts);
+		return $bbsPosts;
+	}
+
+/**
+ * get bbs data
+ *
+ * @param int $bbsId bbses.id
+ * @param string $visibleRow
+ * @param bool $contentCreatable true can edit the content, false not can edit the content.
+ * @param int $postId
+ * @param array $sortOrder
+ * @return array
+ */
+	public function getCurrentPosts($bbsId, $contentCreatable, $postId) {
+		$conditions = array(
+			'bbs_id' => $bbsId,
+			'id' => $postId
+		);
+ 		if (! $contentCreatable) {
+			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+		}
+
+		$posts = $this->find('first', array(
+				'recursive' => -1,
+				'conditions' => $conditions,
+			)
+		);
+		return $this->__setDateTime(array($posts));
+	}
+
+/**
+ * get bbs data
+ *
+ * @param int $bbsId bbses.id
+ * @param string $visibleRow
+ * @param bool $contentCreatable true can edit the content, false not can edit the content.
+ * @param int $postId
+ * @param array $sortOrder
+ * @return array
+ */
+	public function getComments($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder) {
+		//利用箇所
+		//記事詳細表示
+
+		//debug(array($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder));
+
+		//$bbsId => 掲示板を指定　//$postId =>親記事のidを持つコメントを指定
+		$conditions = array(
+			'bbs_id' => $bbsId,
+			'post_id' => $postId,
+		);
+
+ 		if (! $contentCreatable) {
+			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+		}
+
+//		$contains = array(
+//			'BbsPost' => array(
+//				'BbsPost' => array(
+//					'BbsPost' => array(
+//						'BbsPost' => array(
+//						)
+//					)
+//				)
+//			)
+//		);
+		$bbsComments = $this->find('all', array(
+				'recursive' => -1,
+				'conditions' => $conditions,
+				'order' => $sortOrder,
+				'limit' => $visibleRow,
+//				'contain' => $contains,
+			)
+		);
+		//debug($bbsComments);
+		return $this->__setDateTime($bbsComments);
 	}
 
 /**

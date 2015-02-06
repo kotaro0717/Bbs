@@ -1,3 +1,11 @@
+<?php echo $this->Html->script('/net_commons/base/js/workflow.js', false); ?>
+<?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
+<?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
+
+<div id="nc-bbs-index-<?php echo (int)$frameId; ?>"
+		ng-controller="Bbses"
+		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
+
 <div><strong><?php echo $dataForView['bbses']['name']; ?></strong></div>
 <div class="text-right">
 	<!-- 記事件数の表示 -->
@@ -69,4 +77,6 @@
 <!-- ページャーの表示 -->
 <div class="text-center">
 	<?php echo $this->element('pager'); ?>
+</div>
+
 </div>

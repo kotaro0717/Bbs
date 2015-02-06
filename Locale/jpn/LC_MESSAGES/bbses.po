@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-05 08:31+0000\n"
-"PO-Revision-Date: 2015-02-05 21:27+0900\n"
+"POT-Creation-Date: 2015-02-06 10:16+0000\n"
+"PO-Revision-Date: 2015-02-06 19:24+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -15,119 +15,136 @@ msgstr ""
 "X-Generator: Poedit 1.7.4\n"
 "Language: ja_JP\n"
 
-#: /Controller/BbsPostsController.php:270 /View/Bbses/view.ctp:18;24
+#: /Controller/BbsCommentsController.php:309
+#: /Controller/BbsPostsController.php:371 /View/Bbses/view.ctp:33
 msgid "Latest comment order"
 msgstr "最新のコメント順"
 
-#: /Controller/BbsPostsController.php:275 /View/Bbses/view.ctp:25
+#: /Controller/BbsCommentsController.php:314
+#: /Controller/BbsPostsController.php:376 /View/Bbses/view.ctp:35
 msgid "Older comment order"
 msgstr "古いコメント順"
 
-#: /Controller/BbsPostsController.php:280 /Controller/BbsesController.php:256
-#: /View/Bbses/commentView.ctp:25 /View/Bbses/indexForEditor.ctp:30
-#: /View/Bbses/view.ctp:27
+#: /Controller/BbsCommentsController.php:319
+#: /Controller/BbsPostsController.php:381 /Controller/BbsesController.php:267
+#: /View/Bbses/indexForEditor.ctp:40 /View/Bbses/view.ctp:38
+#: /View/Bbses/viewForComment.ctp:30
 msgid "Status order"
 msgstr "ステータス順"
 
-#: /Controller/BbsesController.php:241 /View/Bbses/commentView.ctp:16;22
-#: /View/Bbses/index.ctp:15 /View/Bbses/indexForEditor.ctp:24
-msgid "Latest post order"
-msgstr "最新の記事順"
-
-#: /Controller/BbsesController.php:246 /View/Bbses/commentView.ctp:23
-#: /View/Bbses/index.ctp:17 /View/Bbses/indexForEditor.ctp:26
-msgid "Older post order"
-msgstr "古い記事順"
-
-#: /Controller/BbsesController.php:251 /View/Bbses/index.ctp:19
-#: /View/Bbses/indexForEditor.ctp:28
-msgid "Descending order of comments"
-msgstr "コメントの多い順"
-
-#: /Model/Bbs.php:125 /View/Bbses/commentView.ctp:3
-msgid "Bbs name"
-msgstr "掲示板名称"
-
-#: /Model/BbsPost.php:121 /View/Bbses/add.ctp:22
-msgid "Title"
-msgstr "タイトル"
-
-#: /Model/BbsPost.php:129 /View/Bbses/add.ctp:51
-msgid "Content"
-msgstr "本文"
-
-#: /View/Bbses/add.ctp:15 /View/Bbses/indexForEditor.ctp:60
+#: /Controller/BbsPostsController.php:105 /View/Bbses/indexForEditor.ctp:70
+#: /View/Bbses/notCreatePost.ctp:6
 msgid "Create post"
 msgstr "記事作成"
 
-#: /View/Bbses/commentView.ctp:4
-msgid "Post title"
-msgstr "記事タイトル"
+#: /Controller/BbsPostsController.php:113
+msgid "Create comment"
+msgstr "コメント作成"
 
-#: /View/Bbses/commentView.ctp:60;100 /View/Bbses/view.ctp:63
-msgid "Write comment"
-msgstr "コメントを書く"
-
-#: /View/Bbses/commentView.ctp:61;101 /View/Bbses/view.ctp:65
+#: /Controller/BbsPostsController.php:133 /View/Bbses/view.ctp:84;128
+#: /View/Bbses/viewForComment.ctp:66;106
 msgid "Edit"
 msgstr "編集"
 
-#: /View/Bbses/commentView.ctp:62;102 /View/Bbses/view.ctp:66
-msgid "Delete"
-msgstr "削除"
+#: /Controller/BbsesController.php:252 /View/Bbses/index.ctp:23
+#: /View/Bbses/indexForEditor.ctp:34 /View/Bbses/viewForComment.ctp:21;27
+msgid "Latest post order"
+msgstr "最新の記事順"
 
+#: /Controller/BbsesController.php:257 /View/Bbses/index.ctp:25
+#: /View/Bbses/indexForEditor.ctp:36 /View/Bbses/viewForComment.ctp:28
+msgid "Older post order"
+msgstr "古い記事順"
+
+#: /Controller/BbsesController.php:262 /View/Bbses/index.ctp:27
+#: /View/Bbses/indexForEditor.ctp:38
+msgid "Descending order of comments"
+msgstr "コメントの多い順"
+
+#: /Model/Bbs.php:125 /View/Elements/editForm.ctp:3
+msgid "Bbs name"
+msgstr "掲示板名称"
+
+#: /Model/BbsPost.php:121 /View/Bbses/add.ctp:28 /View/Bbses/comment.ctp:29
+msgid "Title"
+msgstr "タイトル"
+
+#: /Model/BbsPost.php:129 /View/Bbses/add.ctp:57 /View/Bbses/comment.ctp:58
+msgid "Content"
+msgstr "本文"
+
+#: /View/Bbses/authSetting.ctp:12 /View/Bbses/displayChange.ctp:12
 #: /View/Bbses/edit.ctp:12
 msgid "Plugin name"
 msgstr "掲示板"
 
+#: /View/Bbses/authSetting.ctp:19 /View/Bbses/displayChange.ctp:19
 #: /View/Bbses/edit.ctp:18
 msgid "Bbs edit"
-msgstr "編集"
+msgstr "掲示板編集"
 
-#: /View/Bbses/indexForEditor.ctp:31
+#: /View/Bbses/authSetting.ctp:25 /View/Bbses/displayChange.ctp:24
+#: /View/Bbses/edit.ctp:24
+msgid "Display change"
+msgstr "表示方法変更"
+
+#: /View/Bbses/authSetting.ctp:30 /View/Bbses/displayChange.ctp:30
+#: /View/Bbses/edit.ctp:30
+msgid "Authority setting"
+msgstr "権限設定"
+
+#: /View/Bbses/indexForEditor.ctp:41
 msgid "Do not read"
 msgstr "未読"
 
 #: /View/Bbses/notCreateBbs.ctp:2
 msgid "There are not published bbs"
-msgstr "現在作成されている掲示板はありません"
+msgstr "現在作成されている掲示板はありません。"
 
-#: /View/Bbses/notCreatePost.ctp:5
+#: /View/Bbses/notCreatePost.ctp:17
 msgid "There are not posts"
-msgstr "一件も該当記事はありません"
+msgstr "一件も該当記事はありません。"
 
-#: /View/Elements/edit_form.ctp:30
-msgid "Can comments"
-msgstr "コメント投稿有無"
+#: /View/Bbses/view.ctp:79;125 /View/Bbses/viewForComment.ctp:65;105
+msgid "Write comment"
+msgstr "コメントを書く"
 
-#: /View/Elements/edit_form.ctp:42
-msgid "Can votes"
-msgstr "投票有無"
+#: /View/Bbses/view.ctp:87;130 /View/Bbses/viewForComment.ctp:67;107
+msgid "Delete"
+msgstr "削除"
 
-#: /View/Elements/edit_form.ctp:54
-msgid "Visible post row"
-msgstr "記事表示件数"
-
-#: /View/Elements/edit_form.ctp:75
-msgid "Visible comment row"
-msgstr "コメント表示件数"
-
-#: /View/Elements/edit_form.ctp:95
+#: /View/Elements/authSetting.ctp:3
 msgid "Post authority"
 msgstr "記事投稿権限"
 
-#: /View/Elements/edit_form.ctp:97
+#: /View/Elements/authSetting.ctp:8
 msgid "Room administrator"
 msgstr "ルーム管理者"
 
-#: /View/Elements/edit_form.ctp:104
+#: /View/Elements/authSetting.ctp:18
 msgid "Cheif editor"
 msgstr "編集長"
 
-#: /View/Elements/edit_form.ctp:111
+#: /View/Elements/authSetting.ctp:28
 msgid "Editor"
 msgstr "編集者"
 
-#: /View/Elements/edit_form.ctp:118
+#: /View/Elements/authSetting.ctp:38
 msgid "General"
 msgstr "一般"
+
+#: /View/Elements/displayChange.ctp:3
+msgid "Visible post row"
+msgstr "記事表示件数"
+
+#: /View/Elements/displayChange.ctp:28
+msgid "Visible comment row"
+msgstr "コメント表示件数"
+
+#: /View/Elements/editForm.ctp:30
+msgid "Can comments"
+msgstr "コメント投稿有無"
+
+#: /View/Elements/editForm.ctp:42
+msgid "Can votes"
+msgstr "投票有無"

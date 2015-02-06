@@ -1,10 +1,15 @@
 <!-- パンくずリスト -->
 <ol class="breadcrumb">
-  <li><a href="/bbses/bbses/index/<?php echo $frameId; ?>/"><?php echo __d('bbses', 'Bbs name'); ?></a></li>
-  <li><a href="/bbses/bbses/view/<?php echo $frameId; ?>/"><?php echo __d('bbses', 'Post title'); ?></a></li>
-  <li class="active">#<?php echo $comment_number="11"; ?></li>
+	<li><a href="<?php echo $this->Html->url(
+				'/bbses/bbses/index/' . $frameId) ?>">
+		<?php echo $dataForView['bbses']['name']; ?></a>
+	</li>
+	<li><a href="<?php echo $this->Html->url(
+				'/bbses/bbsPosts/view/' . $frameId . '/' . $dataForView['bbsPosts']['id']) ?>">
+		<?php echo $dataForView['bbsPosts']['title']; ?></a>
+	</li>
+	<li class="active">#<?php echo debug($dataForView['bbsComments']); ?></li>
 </ol>
-
 <!-- 記事タイトル -->
 	<h3><a href="/bbses/bbses/view/<?php echo $frameId; ?>/"><?php echo $title="サンプル記事1"; ?></a>に戻る</h3>
 

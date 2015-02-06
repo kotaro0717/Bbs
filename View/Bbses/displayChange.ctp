@@ -2,7 +2,7 @@
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
 
-<div id="nc-bbs-edit-<?php echo (int)$frameId; ?>"
+<div id="nc-bbs-display-change-<?php echo (int)$frameId; ?>"
 		ng-controller="Bbses"
 		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
 
@@ -13,14 +13,14 @@
 <?php $this->end(); ?>
 
 <?php $this->startIfEmpty('tabList'); ?>
-<li class="active">
-	<a href="">
+<li>
+	<a href="<?php echo $this->Html->url(
+					'/bbses/bbses/view' . '/' . $frameId); ?>" ng-click="showSetting('edit')">
 		<?php echo __d('bbses', 'Bbs edit'); ?>
 	</a>
 </li>
-<li>
-	<a href="<?php echo $this->Html->url(
-					'/bbses/bbsFrameSettings/view' . '/' . $frameId); ?>" ng-click="showSetting('displayChange')">
+<li class="active">
+	<a href="" ng-click="showSetting('displayChange')">
 		<?php echo __d('bbses', 'Display change'); ?>
 	</a>
 </li>
@@ -68,7 +68,7 @@
 
 		<div class="panel panel-default" >
 			<div class="panel-body has-feedback">
-				<?php echo $this->element('editForm'); ?>
+				<?php echo $this->element('displayChange'); ?>
 			</div>
 
 			<div class="panel-footer text-center">

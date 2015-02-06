@@ -2,7 +2,7 @@
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
 
-<div id="nc-bbs-add-<?php echo (int)$frameId; ?>"
+<div id="nc-bbs-comment-<?php echo (int)$frameId; ?>"
 		ng-controller="Bbses"
 		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
 
@@ -12,17 +12,18 @@
 				'/bbses/bbses/index/' . $frameId) ?>">
 		<?php echo $dataForView['bbses']['name']; ?></a>
 	</li>
-	<?php if (isset($dataForView['bbsPosts']['id'])) : ?>
-		<li><a href="<?php echo $this->Html->url(
-					'/bbses/bbsPosts/view/' . $frameId . '/' . $dataForView['bbsPosts']['id']) ?>">
-			<?php echo $dataForView['bbsPosts']['title']; ?></a>
-		</li>
-	<?php endif; ?>
+	<li><a href="<?php echo $this->Html->url(
+				'/bbses/bbsPosts/view/' . $frameId . '/' . $dataForView['bbsPosts']['id']) ?>">
+		<?php echo $dataForView['bbsPosts']['title']; ?></a>
+	</li>
 	<li class="active"><?php echo $dataForView['addStrings']; ?></li>
 </ol>
 
 <div class="panel panel-default">
 	<div class="panel-body">
+		<div>
+			<?php echo $this->element('Bbses.commentAccordion');?>
+		</div>
 		<div class="form-group">
 			<label class="control-label">
 				<?php echo __d('bbses', 'Title'); ?>
@@ -34,7 +35,7 @@
 							array(
 								'label' => false,
 								'class' => 'form-control',
-								'ng-model' => 'bbses.bbsPosts.title',
+								'ng-model' => 'bbses.bbsComments.title',
 								'required' => 'required',
 								'autofocus' => true,
 							)) ?>
@@ -64,7 +65,7 @@
 								'label' => false,
 								'class' => 'form-control',
 								'ui-tinymce' => 'tinymce.options',
-								'ng-model' => 'bbses.bbsPosts.content',
+								'ng-model' => 'bbses.bbsComments.content',
 								'rows' => 5,
 								'required' => 'required',
 							)) ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * BbsPosts Controller
+ * BbsComments Controller
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
@@ -17,7 +17,16 @@ App::uses('BbsesAppController', 'Bbses.Controller');
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
  * @package NetCommons\Bbses\Controller
  */
-class BbsPostsController extends BbsesAppController {
+class BbsCommentsController extends BbsesAppController {
+
+/**
+ * use helpers
+ *
+ * @var array
+ */
+	public $useTable  = array(
+		'bbs_posts'
+	);
 
 /**
  * use models
@@ -43,8 +52,8 @@ class BbsPostsController extends BbsesAppController {
 		'NetCommons.NetCommonsRoomRole' => array(
 			//コンテンツの権限設定
 			'allowedActions' => array(
-				'contentEditable' => array('add', 'edit', 'delete'),
-				'contentCreatable' => array('add', 'edit', 'delete'),
+				//'contentEditable' => array('add', 'edit', 'delete'),
+				//'contentCreatable' => array('add', 'edit', 'delete'),
 			),
 		),
 	);
@@ -63,8 +72,8 @@ class BbsPostsController extends BbsesAppController {
  *
  * @return void
  */
-	public function view($frameId, $postId) {
-		$this->view = 'Bbses/view';
+	public function view($frameId, $postId, $commentId) {
+		$this->view = 'Bbses/viewForComment';
 
 		$this->__setBbsSetting();
 		if (!isset($this->viewVars['bbsSettings'])) {
@@ -76,19 +85,25 @@ class BbsPostsController extends BbsesAppController {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		//記事を取る時にその人のユーザ名も含めて返すべき
+		//親記事情報を取得
 		$this->__setPost($postId);
 		if (!isset($this->viewVars['bbsPosts'])) {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		//コメントを取る時にその人のユーザ名も含めて返すべき
-		$this->__setComment($postId, $key = '', $params = '');
-		if (!isset($this->viewVars['bbsComments'])) {
+		//表示対象記事を取得
+		$this->__setCurrentPost($commentId);
+		if (!isset($this->viewVars['bbsCurrentPosts'])) {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		$this->__setPostUser($postId);
+		$this->__setComment($commentId, $key = '', $params = '');
+//		if (!isset($this->viewVars['bbsComments'])) {
+//			throw new NotFoundException(__d('net_commons', 'Not Found'));
+//		}
+		//debug($this->viewVars);
+
+//		$this->__setPostUser($postId);
 //		if (!isset($this->viewVars['bbsPostUsers']) && !isset($this->viewVars['users'])) {
 //			throw new NotFoundException(__d('net_commons', 'Not Found'));
 //		}
@@ -100,27 +115,8 @@ class BbsPostsController extends BbsesAppController {
  *
  * @return void
  */
-	public function add($frameId, $postId = '', $postFlag = '') {
-		$this->view = 'Bbses/add';
-		$this->set(array('addStrings' => __d('bbses', 'Create post')));
-		$this->__setBbs();
-		if (!isset($this->viewVars['bbses'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
-
-		//コメント返信の場合
-		if ($postFlag === '2') {
-			$this->set(array('addStrings' => __d('bbses', 'Create comment')));
-			$this->view = 'Bbses/comment';
-//			debug($postId);
-			$this->__setPost($postId);
-			if (!isset($this->viewVars['bbsPosts'])) {
-				throw new NotFoundException(__d('net_commons', 'Not Found'));
-			}
-		}
-
-		//記事追加の場合、ステータスを別途セットする（とりあえず）
-		$this->set(array('contentStatus' => '0'));
+	public function add() {
+		//
 	}
 
 /**
@@ -128,43 +124,8 @@ class BbsPostsController extends BbsesAppController {
  *
  * @return void
  */
-	public function edit($frameId, $postId) {
-		$this->view = 'Bbses/add';
-		$this->set(array('addStrings' => __d('bbses', 'Edit')));
-		$this->__setBbs();
-		if (!isset($this->viewVars['bbses'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
-
-		$this->__setPost($postId);
-		if (!isset($this->viewVars['bbsPosts'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
-
-		//記事追加の場合、ステータスを別途セットする（とりあえず）
-		$this->set(array('contentStatus' => '0'));
-
-		//登録処理
-//		if ($this->request->isPost()) {
-//			if ($matches = preg_grep('/^save_\d/', array_keys($this->data))) {
-//				list(, $status) = explode('_', array_shift($matches));
-//			}
-//			$data = array_merge_recursive(
-//				$this->data,
-//				['BbsPost' => ['status' => $status]]
-//			);
-//
-//			$bbsPost = $this->BbsPost->savePost($data);
-//			$this->redirect(isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
-//			return;
-//		}
-
-		//最新データ取得
-//		$this->__setBbsSetting();
-//		$this->__setBbs();
-//		$this->__setPost();
-
-		//$this->set('backUrl', isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
+	public function edit() {
+		//
 	}
 
 /**
@@ -174,18 +135,8 @@ class BbsPostsController extends BbsesAppController {
  * @throws NotFoundException
  * @return void
  */
-	public function delete($postId = null) {
-		$this->BbsPost->id = $postId;
-		if (!$this->BbsPost->exists()) {
-			throw new NotFoundException(__('Invalid post'));
-		}
-
-		$this->request->onlyAllow('delete');
-		if ($this->BbsPost->deleteFrame()) {
-			return $this->flash(__('The post has been deleted.'), array('controller' => 'bbses', 'action' => 'index'));
-		} else {
-			return $this->flash(__('The post could not be deleted. Please, try again.'), array('controller' => 'bbses', 'action' => 'index'));
-		}
+	public function delete() {
+		//
 	}
 
 /**
@@ -201,7 +152,7 @@ class BbsPostsController extends BbsesAppController {
 		//camelize
 		$results = array(
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
-			'currentVisiblePostRow' => $bbsSettings['BbsFrameSetting']['visible_post_row']
+			'currentVisibleCommentRow' => $bbsSettings['BbsFrameSetting']['visible_comment_row']
 		);
 		$this->set($this->camelizeKeyRecursive($results));
 
@@ -241,7 +192,6 @@ class BbsPostsController extends BbsesAppController {
  * @return void
  */
 	private function __setPost($postId) {
-		//BbsPostモデルで対象記事一件取得
 		$bbsPosts = $this->BbsPost->getPosts(
 				$this->viewVars['bbses']['id'],
 				1,
@@ -249,25 +199,28 @@ class BbsPostsController extends BbsesAppController {
 				$postId,
 				false
 			);
-
-		//取得した記事の作成者IDからユーザ情報を取得
-		$user = $this->User->find('first', array(
-				'recursive' => -1,
-				'conditions' => array(
-					'id' => $bbsPosts[0]['BbsPost']['created_user'],
-				)
-			)
-		);
-
-		//camelize用の配列へ格納
+		//camelize
 		$results = array(
 			'bbsPosts' => $bbsPosts[0]['BbsPost'],
 		);
+		$this->set($this->camelizeKeyRecursive($results));
+	}
 
-		//取得した記事の配列にユーザ名を追加
-		$results['bbsPosts']['username'] = $user['User']['username'];
-
+/**
+ * __setPost method
+ *
+ * @return void
+ */
+	private function __setCurrentPost($postId) {
+		$posts = $this->BbsPost->getCurrentPosts(
+				$this->viewVars['bbses']['id'],
+				$this->viewVars['contentCreatable'],
+				$postId
+			);
 		//camelize
+		$results = array(
+			'bbsCurrentPosts' => $posts[0]['BbsPost'],
+		);
 		$this->set($this->camelizeKeyRecursive($results));
 	}
 
@@ -299,37 +252,23 @@ class BbsPostsController extends BbsesAppController {
 				$sortOrder
 			);
 
-		//記事群をcamelizeするためのforeach
-		foreach ($bbsCommnets as $bbsComment) {
+		$this->set($bbsCommnets);
 
-			//取得した記事の作成者IDからユーザ情報を取得
-			$user = $this->User->find('first', array(
-					'recursive' => -1,
-					'conditions' => array(
-						'id' => $bbsComment['BbsPost']['created_user'],
-					)
-				)
-			);
-
-			$results = array(
-				'bbsComments' => $bbsComment['BbsPost'],
-			);
-
-			//取得した記事の配列にユーザ名を追加
-			$results['bbsComments']['username'] = $user['User']['username'];
-
-			//camelize
-			$comments[] = $this->camelizeKeyRecursive($results);
-		}
-
-		//配列の再構成 TODO:スリムじゃない
-		foreach ($comments as $comment) {
-			$result[] = $comment['bbsComments'];
-		}
-		$results['bbsComments'] = $result;
-
-		$this->set($results);
-//		$this->set($bbsCommnets);
+		//camelize
+//		foreach ($bbsCommnets as $bbsComment) {
+//			$results = array(
+//				'bbsComments' => $bbsComment['BbsPost'],
+//			);
+//			$comments[] = $this->camelizeKeyRecursive($results);
+//		}
+//
+//		//配列の再構成 TODO:スリムじゃない
+//		foreach ($comments as $comment) {
+//			$result[] = $comment['bbsComments'];
+//		}
+//		$results['bbsComments'] = $result;
+//
+//		$this->set($results);
 		}
 
 /**
@@ -345,7 +284,6 @@ class BbsPostsController extends BbsesAppController {
 				)
 			)
 		);
-
 		$bbsPostUser = $this->BbsPostsUser->getUsers(
 				$user['User']['id'],
 				$postId
