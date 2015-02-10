@@ -67,11 +67,13 @@ class BbsesController extends BbsesAppController {
 
 		$this->__setBbsSetting();
 		if (!isset($this->viewVars['bbsSettings'])) {
+			debug(1);
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
 		$this->__setBbs();
 		if (!isset($this->viewVars['bbses'])) {
+			debug(2);
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
@@ -84,6 +86,7 @@ class BbsesController extends BbsesAppController {
 		if ($this->viewVars['bbsPostNum']) {
 			$this->__setPost($postId = 0, $key, $params);
 			if (!isset($this->viewVars['bbsPosts'])) {
+				debug(3);
 				throw new NotFoundException(__d('net_commons', 'Not Found'));
 			}
 		} else {
@@ -184,7 +187,7 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	private function __setPost($postId, $key, $params) {
+	private function __setPost($postId, $key = '', $params = '') {
 		//初期設定
 		$visiblePostRow = $this->viewVars['bbsSettings']['visiblePostRow'];
 		$sortOrder = $this->__setSortOrder($params);

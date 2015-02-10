@@ -14,10 +14,10 @@
 <div class="text-left">
 	<div class="text-left" style="float:right;">
 		<!-- コメント数 -->
-		<span class="glyphicon glyphicon-comment"><?php echo $dataForView['bbsPosts']['commentNum']; ?>&nbsp;</span>
+		<span class="glyphicon glyphicon-comment"><?php echo $dataForView['bbsCurrentPosts']['commentNum']; ?>&nbsp;</span>
 		<!-- ソート用プルダウン -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default"><?php echo $dataForView['currentCommentSortOrder']; ?></button>
+			<button type="button" class="btn btn-default"><?php echo "未実装"; ?></button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -35,7 +35,7 @@
 		</div>
 		<!-- 表示件数 -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default"><?php echo '10' . "件"; ?></button>
+			<button type="button" class="btn btn-default"><?php echo "未実装"; ?></button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>

@@ -97,10 +97,6 @@ class BbsCommentsController extends BbsesAppController {
 		}
 
 		$this->__setComment($commentId, $key = '', $params = '');
-//		if (!isset($this->viewVars['bbsComments'])) {
-//			throw new NotFoundException(__d('net_commons', 'Not Found'));
-//		}
-		//debug($this->viewVars['bbsComments']);
 
 		$this->__setPostUser($postId, $this->viewVars['bbsPosts']['createdUser']);
 //		if (!isset($this->viewVars['bbsPostUsers']) && !isset($this->viewVars['users'])) {

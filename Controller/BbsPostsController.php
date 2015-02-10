@@ -83,9 +83,6 @@ class BbsPostsController extends BbsesAppController {
 
 		//コメントを取る時にその人のユーザ名も含めて返すべき
 		$this->__setComment($postId, $key = '', $params = '');
-		if (!isset($this->viewVars['bbsComments'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
 
 		$this->__setPostUser($postId);
 //		if (!isset($this->viewVars['bbsPostUsers']) && !isset($this->viewVars['users'])) {
@@ -297,6 +294,10 @@ class BbsPostsController extends BbsesAppController {
 				$postId,
 				$sortOrder
 			);
+
+		if (empty($bbsCommnets)) {
+			return $results['bbsComments'] = true;
+		}
 
 		//記事群をcamelizeするためのforeach
 		foreach ($bbsCommnets as $bbsComment) {
