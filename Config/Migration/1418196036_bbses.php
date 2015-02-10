@@ -109,30 +109,6 @@ class Bbses extends CakeMigration {
 				'plugin_key' => 'bbses'
 			),
 		),
-		'frames' => array(
-			array(
-				'id' => '30',
-				'language_id' => '2',
-				'room_id' => '1',
-				'box_id' => '3',
-				'plugin_key' => 'bbses',
-				'block_id' => '30',
-				'key' => 'frame_30',
-				'name' => '掲示板',
-				'weight' => '1',
-				'is_published' => true,
-				'from' => null,
-				'to' => null,
-			),
-		),
-		'blocks' => array(
-			array(
-				'id' => '30',
-				'language_id' => '2',
-				'room_id' => '1',
-				'key' => 'block_30',
-			),
-		),
 		'bbs_frame_settings' => array(
 			array(
 				'id' => '1',

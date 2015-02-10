@@ -138,6 +138,7 @@ class Bbs extends BbsesAppModel {
  * @return array
  */
 	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $is_post_list) {
+		$blockId = '30';
 		//$contentEditable = false; //TODO:debug用
 		$contains = false;
 		if ($is_post_list) {

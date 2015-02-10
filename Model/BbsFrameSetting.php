@@ -96,6 +96,7 @@ class BbsFrameSetting extends BbsesAppModel {
  * @return array
  */
 	public function getBbsSetting($frameKey) {
+		$frameKey = 'frame_30';
 		$conditions = array(
 			'frame_key' => $frameKey,
 		);
