@@ -8,126 +8,236 @@
 				'/bbses/bbsPosts/view/' . $frameId . '/' . $dataForView['bbsPosts']['id']) ?>">
 		<?php echo $dataForView['bbsPosts']['title']; ?></a>
 	</li>
-	<li class="active">#<?php echo debug($dataForView['bbsComments']); ?></li>
+	<li class="active">#<?php echo $dataForView['bbsCurrentPosts']['id']; ?></li>
 </ol>
-<!-- 記事タイトル -->
-	<h3><a href="/bbses/bbses/view/<?php echo $frameId; ?>/"><?php echo $title="サンプル記事1"; ?></a>に戻る</h3>
 
-<div class="text-right">
-<!-- コメント数 -->
-	<span class="glyphicon glyphicon-comment"><?php echo $comments_num="30"; ?></span>
-<!-- ソート用プルダウン -->
-	<div class="btn-group">
-		<button type="button" class="btn btn-default"><?php echo __d('bbses', 'Latest post order'); ?></button>
-		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-			<span class="caret"></span>
-			<span class="sr-only">Toggle Dropdown</span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><a href="#"><?php echo __d('bbses', 'Latest post order'); ?></a></li>
-			<li><a href="#"><?php echo __d('bbses', 'Older post order'); ?></a></li>
-			<?php if ($contentCreatable = true) : ?>
-				<li><a href="#"><?php echo __d('bbses', 'Status order'); ?></a></li>
-			<?php endif; ?>
-		</ul>
+<div class="text-left">
+	<div class="text-left" style="float:right;">
+		<!-- コメント数 -->
+		<span class="glyphicon glyphicon-comment"><?php echo $dataForView['bbsPosts']['commentNum']; ?>&nbsp;</span>
+		<!-- ソート用プルダウン -->
+		<div class="btn-group">
+			<button type="button" class="btn btn-default"><?php echo $dataForView['currentCommentSortOrder']; ?></button>
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+				<span class="caret"></span>
+				<span class="sr-only">Toggle Dropdown</span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="<?php echo $this->Html->url(
+								'/bbses/bbsPosts/view' . '/' . $frameId . '/' . 1 . '/' . 1); ?>"><?php echo __d('bbses', 'Latest comment order'); ?></a></li>
+				<li><a href="<?php echo $this->Html->url(
+								'/bbses/bbsPosts/view' . '/' . $frameId . '/' . 1 . '/' . 2); ?>"><?php echo __d('bbses', 'Older comment order'); ?></a></li>
+				<?php if ($contentCreatable) : ?>
+					<li><a href="<?php echo $this->Html->url(
+								'/bbses/bbsPosts/view' . '/' . $frameId . '/' . 1 . '/' . 3); ?>"><?php echo __d('bbses', 'Status order'); ?></a></li>
+				<?php endif; ?>
+			</ul>
+		</div>
+		<!-- 表示件数 -->
+		<div class="btn-group">
+			<button type="button" class="btn btn-default"><?php echo '10' . "件"; ?></button>
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+				<span class="caret"></span>
+				<span class="sr-only">Toggle Dropdown</span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="#"><?php echo '1' . "件"; ?></a></li>
+				<li><a href="#"><?php echo '5' . "件"; ?></a></li>
+				<li><a href="#"><?php echo '10' . "件"; ?></a></li>
+				<li><a href="#"><?php echo '20' . "件"; ?></a></li>
+				<li><a href="#"><?php echo '50' . "件"; ?></a></li>
+				<li><a href="#"><?php echo '100' . "件"; ?></a></li>
+			</ul>
+		</div>
 	</div>
-<!-- 表示件数 -->
-	<div class="btn-group">
-		<button type="button" class="btn btn-default"><?php echo '10' . "件"; ?></button>
-		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-			<span class="caret"></span>
-			<span class="sr-only">Toggle Dropdown</span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><a href="#"><?php echo '1' . "件"; ?></a></li>
-			<li><a href="#"><?php echo '5' . "件"; ?></a></li>
-			<li><a href="#"><?php echo '10' . "件"; ?></a></li>
-			<li><a href="#"><?php echo '20' . "件"; ?></a></li>
-			<li><a href="#"><?php echo '50' . "件"; ?></a></li>
-			<li><a href="#"><?php echo '100' . "件"; ?></a></li>
-		</ul>
-	</div>
-</div>
-<hr />
+	<!-- 記事タイトル -->
+	<h3><a href="<?php echo $this->Html->url(
+				'/bbses/bbsPosts/view/' . $frameId . '/' . $dataForView['bbsPosts']['id']) ?>">
+		<?php echo $dataForView['bbsPosts']['title']; ?></a>に戻る</h3>
+</div><br />
 
 <!-- 親記事 -->
-	<!-- id -->
-	1.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
-	<!-- ユーザ情報 -->
-	<span><?php echo $username="userA"; ?></span>
-	<!-- 作成時間 -->
-	<span><?php echo "12:12"; ?></span>
-	<!-- 本文 -->
-	<div><?php echo $content="サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。サンプル記事1の内容。"; ?></div>
-	<!-- いいね！ -->
-	<div class="text-left">
-		<div class="text-left" style="float:right;">
-			<a href="#" tooltip="<?php echo __d('bbses', 'Write comment'); ?>"><span class="glyphicon glyphicon-comment"></span></a>
-			<a href="#" tooltip="<?php echo __d('bbses', 'Edit'); ?>"><span class="glyphicon glyphicon-edit"></span></a>
-			<a href="#" tooltip="<?php echo __d('bbses', 'Delete'); ?>"><span class="glyphicon glyphicon-trash"></span></a>
+<div class="panel-group">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<!-- id -->
+			1.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
+			<!-- ユーザ情報 -->
+			<span><a href=""><?php echo $dataForView['postUsers']['username']; ?></a></span>
+			<!-- 作成時間 -->
+			<span><?php echo $dataForView['bbsPosts']['created']; ?></span>
+			<!-- ステータス -->
+			<span><?php echo $this->element('NetCommons.status_label',
+								array('status' => $dataForView['bbsPosts']['status'])); ?></span>
 		</div>
-		<span class="glyphicon glyphicon-thumbs-up"><?php echo $like_num="12"; ?></span>
-		<span class="glyphicon glyphicon-thumbs-down"><?php echo $unlike_num="2"; ?></span>
-	</div>
-<hr />
-
-<?php $comments = array(
-		11 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		10 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		9 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		8 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		7 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		6 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		5 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		4 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		3 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。",
-		2 => "コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。コメントの本文です。"
-	); ?>
-
-
-<!-- 全体の段落下げ -->
-<?php foreach ($comments as $id => $comment) { ?>
-<div class="col-md-offset-1 col-md-offset-1 col-xs-offset-1">
-<div class="col-sm-13 col-sm-13 col-xs-13">
-	<!-- id -->
-	<?php echo $id; ?>.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
-	<!-- ユーザ情報 -->
-	<span><?php echo $username="userB"; ?></span>
-	<!-- タイトル -->
-	<a href="#"><?php echo "コメント" . $id; ?></a>
-	<!-- 時間 -->
-	<span><?php echo "12:12"; ?></span>
-	<!-- 本文 -->
-	<div><?php echo $comment; ?></div>
-	<!-- いいね！ -->
-	<div class="text-left">
-		<div class="text-left" style="float:right;">
-			<a href="#" tooltip="<?php echo __d('bbses', 'Write comment'); ?>"><span class="glyphicon glyphicon-comment"></span></a>
-			<a href="#" tooltip="<?php echo __d('bbses', 'Edit'); ?>"><span class="glyphicon glyphicon-edit"></span></a>
-			<a href="#" tooltip="<?php echo __d('bbses', 'Delete'); ?>"><span class="glyphicon glyphicon-trash"></span></a>
+		<div class="panel-body">
+			<!-- 本文 -->
+			<div><?php echo $dataForView['bbsPosts']['content']; ?></div>
 		</div>
-		<span class="glyphicon glyphicon-thumbs-up"><?php echo $like_num="12"; ?></span>
-		<span class="glyphicon glyphicon-thumbs-down"><?php echo $unlike_num="2"; ?></span>
+		<div class="panel-footer">
+			<!-- いいね！ -->
+			<div class="text-left">
+				<div class="text-left" style="float:right;">
+					<?php if ($contentCreatable && $dataForView['bbses']['commentFlag']
+								&& $dataForView['bbsPosts']['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
+
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbsPosts/add' . '/' . $frameId . '/' . $dataForView['bbsPosts']['id'] . '/' . 2); ?>"
+							class="btn btn-success btn-xs" tooltip="<?php echo __d('bbses', 'Write comment'); ?>">
+							<span class="glyphicon glyphicon-comment"></span></a>
+					<?php endif; ?>
+
+					<?php if ($dataForView['bbsPosts']['createdUser'] === $dataForView['userId'] && $contentCreatable
+									&& $dataForView['bbsPosts']['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED
+								|| $contentPublishable) : ?>
+
+						<a href="<?php echo $this->Html->url(
+								'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $dataForView['bbsPosts']['id']); ?>"
+								class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
+								<span class="glyphicon glyphicon-edit"></span></a>
+
+						<button ng-click="delete(<?php echo $dataForView['bbsPosts']['id']; ?>)"
+								class="btn btn-danger btn-xs" tooltip="<?php echo __d('bbses', 'Delete'); ?>"><span class="glyphicon glyphicon-trash"></span>
+						</button>
+					<?php endif; ?>
+				</div>
+				<span class="glyphicon glyphicon-thumbs-up"><?php echo $dataForView['bbsPosts']['upVoteNum']; ?></span>
+				<span class="glyphicon glyphicon-thumbs-down"><?php echo $dataForView['bbsPosts']['downVoteNum']; ?></span>
+			</div>
+		</div>
 	</div>
-	<hr />
 </div>
+
+
+<!-- 対象の記事 -->
+<div class="panel-group">
+	<div class="panel panel-success">
+		<div class="panel-heading">
+			<!-- id -->
+			<?php echo $dataForView['bbsCurrentPosts']['id']; ?>.
+			<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
+			<!-- ユーザ情報 -->
+			<span><a href=""><?php echo $dataForView['currentPostUsers']['username']; ?></a></span>
+			<!-- タイトル※対象記事のためリンクを貼らない -->
+			<h4 style="display:inline;"><strong><?php echo $dataForView['bbsCurrentPosts']['title']; ?></strong></h4>
+			<!-- 作成時間 -->
+			<span><?php echo $dataForView['bbsCurrentPosts']['created']; ?></span>
+			<!-- ステータス -->
+			<span><?php echo $this->element('NetCommons.status_label',
+								array('status' => $dataForView['bbsCurrentPosts']['status'])); ?></span>
+		</div>
+		<div class="panel-body">
+			<!-- 本文 -->
+			<?php if ($dataForView['bbsCurrentPosts']['postId'] !== $dataForView['bbsCurrentPosts']['parentId']) : ?>
+				<div><a href="<?php echo $this->Html->url(
+							'/bbses/bbsComments/view' . '/' . $frameId . '/' . $dataForView['bbsCurrentPosts']['postId'] . '/' . $dataForView['bbsCurrentPosts']['parentId']); ?>">
+						>><?php echo $dataForView['bbsCurrentPosts']['parentId']; ?></a></div>
+			<?php endif; ?>
+			<div><?php echo $dataForView['bbsCurrentPosts']['content']; ?></div>
+		</div>
+		<div class="panel-footer">
+			<!-- いいね！ -->
+			<div class="text-left">
+				<div class="text-left" style="float:right;">
+					<?php if ($contentCreatable && $dataForView['bbses']['commentFlag']
+								&& $dataForView['bbsCurrentPosts']['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
+
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbsPosts/add' . '/' . $frameId . '/' . $dataForView['bbsPosts']['id'] . '/' . 2); ?>"
+							class="btn btn-success btn-xs" tooltip="<?php echo __d('bbses', 'Write comment'); ?>">
+							<span class="glyphicon glyphicon-comment"></span></a>
+					<?php endif; ?>
+
+					<?php if ($dataForView['bbsCurrentPosts']['createdUser'] === $dataForView['userId'] && $contentCreatable
+									&& $dataForView['bbsCurrentPosts']['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED
+								|| $contentPublishable) : ?>
+
+						<a href="<?php echo $this->Html->url(
+								'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $dataForView['bbsCurrentPosts']['id']); ?>"
+								class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
+								<span class="glyphicon glyphicon-edit"></span></a>
+
+						<button ng-click="delete(<?php echo $dataForView['bbsCurrentPosts']['id']; ?>)"
+								class="btn btn-danger btn-xs" tooltip="<?php echo __d('bbses', 'Delete'); ?>"><span class="glyphicon glyphicon-trash"></span>
+						</button>
+					<?php endif; ?>
+				</div>
+				<span class="glyphicon glyphicon-thumbs-up"><?php echo $dataForView['bbsCurrentPosts']['upVoteNum']; ?></span>
+				<span class="glyphicon glyphicon-thumbs-down"><?php echo $dataForView['bbsCurrentPosts']['downVoteNum']; ?></span>
+			</div>
+		</div>
+	</div>
 </div>
-<?php } ?>
+
+<?php if (isset($dataForView['bbsComments'])) : ?>
+
+	<?php //debug($dataForView['bbsComments']);?>
+
+	<!-- 全体の段落下げ -->
+	<?php foreach ($dataForView['bbsComments'] as $comment) { ?>
+	<div class="panel-group col-md-offset-1 col-md-offset-1 col-xs-offset-1 col-sm-13 col-sm-13 col-xs-13">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<!-- id -->
+				<?php echo $comment['id']; ?>.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
+				<!-- ユーザ情報 -->
+				<span><a href=""><?php echo $comment['username']; ?></a></span>
+				<!-- タイトル -->
+				<a href="<?php echo $this->Html->url(
+								'/bbses/bbsComments/view' . '/' . $frameId . '/' . $comment['postId'] . '/' . $comment['id']); ?>">
+								<h4 style="display:inline;"><strong><?php echo $comment['title']; ?></strong></h4></a>
+				<!-- 時間 -->
+				<span><?php echo $comment['created']; ?></span>
+				<!-- ステータス -->
+				<span><?php echo $this->element('NetCommons.status_label',
+									array('status' => $comment['status'])); ?></span>
+			</div>
+			<!-- 本文 -->
+			<div class="panel panel-body">
+				<?php if ($comment['postId'] !== $comment['parentId']) : ?>
+					<div><a href="<?php echo $this->Html->url(
+								'/bbses/bbsComments/view' . '/' . $frameId . '/' . $comment['postId'] . '/' . $comment['parentId']); ?>">
+							>><?php echo $comment['parentId']; ?></a></div>
+				<?php endif; ?>
+				<div><?php echo $comment['content']; ?></div>
+			</div>
+			<!-- フッター -->
+			<div class="panel-footer">
+				<!-- いいね！ -->
+				<div class="text-left">
+					<div class="text-left" style="float:right;">
+						<!-- コメント作成/編集/削除 -->
+						<?php if ($contentCreatable && $dataForView['bbses']['commentFlag']
+									&& $comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
+
+							<a href="<?php echo $this->Html->url(
+									'/bbses/bbsPosts/add' . '/' . $frameId . '/' . $comment['id'] . '/' . 2); ?>"
+									class="btn btn-success btn-xs" tooltip="<?php echo __d('bbses', 'Write comment'); ?>"><span class="glyphicon glyphicon-comment"></span></a>
+						<?php endif; ?>
+
+						<?php if ($comment['createdUser'] === $dataForView['userId'] && $contentCreatable
+										&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED
+									|| $contentPublishable) : ?>
+
+							<a href="<?php echo $this->Html->url(
+									'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $comment['id']); ?>"
+									class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>"><span class="glyphicon glyphicon-edit"></span></a>
+
+							<button ng-click="delete(<?php echo $comment['id']; ?>)"
+									class="btn btn-danger btn-xs" tooltip="<?php echo __d('bbses', 'Delete'); ?>"><span class="glyphicon glyphicon-trash"></span>
+							</button>
+						<?php endif; ?>
+					</div>
+					<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['upVoteNum']; ?></span>
+					<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['downVoteNum']; ?></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } ?>
+<?php endif; ?>
+
 <!-- ページャーの表示 -->
 <div class="text-center">
-	<nav>
-	  <ul class="pagination">
-		<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-		<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li>
-		  <a href="#" aria-label="Next">
-			<span aria-hidden="true">&raquo;</span>
-		  </a>
-		</li>
-	  </ul>
-	</nav>
+	<?php echo $this->element('pager'); ?>
 </div>

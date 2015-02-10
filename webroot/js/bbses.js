@@ -24,7 +24,6 @@ NetCommonsApp.controller('Bbses',
 
       $scope.initialize = function(data) {
         $scope.bbses = angular.copy(data);
-        console.log($scope.bbses);
       };
 
       $scope.save = function(status) {

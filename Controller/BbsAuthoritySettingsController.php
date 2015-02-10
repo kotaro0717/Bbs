@@ -28,7 +28,6 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 		'Bbses.Bbs',
 		'Bbses.BbsFrameSetting',
 		'Bbses.BbsPost',
-		'Bbses.BbsPostsUser',
 	);
 
 /**

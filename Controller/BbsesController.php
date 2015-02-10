@@ -29,7 +29,6 @@ class BbsesController extends BbsesAppController {
 		'Bbses.Bbs',
 		'Bbses.BbsFrameSetting',
 		'Bbses.BbsPost',
-		'Bbses.BbsPostsUser',
 	);
 
 /**
@@ -92,21 +91,9 @@ class BbsesController extends BbsesAppController {
 			return;
 		}
 
-		if ($this->viewVars['contentEditable']) {
-			$this->view = 'Bbses/indexForEditor';
-		}
 		if (! $this->viewVars['bbses']) {
 			$this->autoRender = false;
 		}
-	}
-
-/**
- * view method
- *
- * @return void
- */
-	public function commentView() {
-		$this->render('Bbses/commentView');
 	}
 
 /**
@@ -198,7 +185,6 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	private function __setPost($postId, $key, $params) {
-		//TODO:Modelとの切り分け考える
 		//初期設定
 		$visiblePostRow = $this->viewVars['bbsSettings']['visiblePostRow'];
 		$sortOrder = $this->__setSortOrder($params);

@@ -252,6 +252,42 @@ class BbsPost extends BbsesAppModel {
 //				'contain' => $contains,
 			)
 		);
+		return $this->__setDateTime($bbsComments);
+	}
+
+/**
+ * get bbs data
+ *
+ * @param int $bbsId bbses.id
+ * @param string $visibleRow
+ * @param bool $contentCreatable true can edit the content, false not can edit the content.
+ * @param int $postId
+ * @param array $sortOrder
+ * @return array
+ */
+	public function getReplies($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder) {
+		//利用箇所
+		//コメント詳細表示
+
+		//debug(array($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder));
+
+		//$bbsId => 掲示板を指定　//$postId =>親記事のidを持つコメントを指定
+		$conditions = array(
+			'bbs_id' => $bbsId,
+			'parent_id' => $postId,
+		);
+
+ 		if (! $contentCreatable) {
+			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+		}
+
+		$bbsComments = $this->find('all', array(
+				'recursive' => -1,
+				'conditions' => $conditions,
+				'order' => $sortOrder,
+				'limit' => $visibleRow,
+			)
+		);
 		//debug($bbsComments);
 		return $this->__setDateTime($bbsComments);
 	}

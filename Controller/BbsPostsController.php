@@ -29,7 +29,6 @@ class BbsPostsController extends BbsesAppController {
 		'Bbses.Bbs',
 		'Bbses.BbsFrameSetting',
 		'Bbses.BbsPost',
-		'Bbses.BbsPostsUser',
 	);
 
 /**
@@ -43,8 +42,8 @@ class BbsPostsController extends BbsesAppController {
 		'NetCommons.NetCommonsRoomRole' => array(
 			//コンテンツの権限設定
 			'allowedActions' => array(
-				'contentEditable' => array('add', 'edit', 'delete'),
-				'contentCreatable' => array('add', 'edit', 'delete'),
+				'contentEditable' => array('view', 'add', 'edit', 'delete'),
+				'contentCreatable' => array('view', 'add', 'edit', 'delete'),
 			),
 		),
 	);
@@ -329,7 +328,7 @@ class BbsPostsController extends BbsesAppController {
 		$results['bbsComments'] = $result;
 
 		$this->set($results);
-//		$this->set($bbsCommnets);
+
 		}
 
 /**
@@ -346,17 +345,12 @@ class BbsPostsController extends BbsesAppController {
 			)
 		);
 
-		$bbsPostUser = $this->BbsPostsUser->getUsers(
-				$user['User']['id'],
-				$postId
-			);
-
 		$results = array(
-			'bbsPostUsers' => $bbsPostUser['BbsPostsUser'],
 			'users' => $user['User'],
 		);
 		return $this->set($this->camelizeKeyRecursive($results));
 	}
+
 /**
  * __setPost method
  *

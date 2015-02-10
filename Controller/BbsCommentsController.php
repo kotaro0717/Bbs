@@ -38,7 +38,6 @@ class BbsCommentsController extends BbsesAppController {
 		'Bbses.Bbs',
 		'Bbses.BbsFrameSetting',
 		'Bbses.BbsPost',
-		'Bbses.BbsPostsUser',
 	);
 
 /**
@@ -101,12 +100,14 @@ class BbsCommentsController extends BbsesAppController {
 //		if (!isset($this->viewVars['bbsComments'])) {
 //			throw new NotFoundException(__d('net_commons', 'Not Found'));
 //		}
-		//debug($this->viewVars);
+		//debug($this->viewVars['bbsComments']);
 
-//		$this->__setPostUser($postId);
+		$this->__setPostUser($postId, $this->viewVars['bbsPosts']['createdUser']);
 //		if (!isset($this->viewVars['bbsPostUsers']) && !isset($this->viewVars['users'])) {
 //			throw new NotFoundException(__d('net_commons', 'Not Found'));
 //		}
+		$this->__setCurrentPostUser($postId, $this->viewVars['bbsCurrentPosts']['createdUser']);
+		//debug($this->viewVars['users']);
 
 	}
 
@@ -244,7 +245,7 @@ class BbsCommentsController extends BbsesAppController {
 //			$this->set($results);
 //		}
 
-		$bbsCommnets = $this->BbsPost->getComments(
+		$bbsCommnets = $this->BbsPost->getReplies(
 				$this->viewVars['bbses']['id'],
 				$visibleCommentRow,
 				$this->viewVars['contentCreatable'],
@@ -252,23 +253,40 @@ class BbsCommentsController extends BbsesAppController {
 				$sortOrder
 			);
 
-		$this->set($bbsCommnets);
+		if (empty($bbsCommnets)) {
+			return $results['bbsComments'] = true;
+		}
 
 		//camelize
-//		foreach ($bbsCommnets as $bbsComment) {
-//			$results = array(
-//				'bbsComments' => $bbsComment['BbsPost'],
-//			);
-//			$comments[] = $this->camelizeKeyRecursive($results);
-//		}
-//
-//		//配列の再構成 TODO:スリムじゃない
-//		foreach ($comments as $comment) {
-//			$result[] = $comment['bbsComments'];
-//		}
-//		$results['bbsComments'] = $result;
-//
-//		$this->set($results);
+		foreach ($bbsCommnets as $bbsComment) {
+
+			//取得した記事の作成者IDからユーザ情報を取得
+			$user = $this->User->find('first', array(
+					'recursive' => -1,
+					'conditions' => array(
+						'id' => $bbsComment['BbsPost']['created_user'],
+					)
+				)
+			);
+
+			$results = array(
+				'bbsComments' => $bbsComment['BbsPost'],
+			);
+
+			//取得した記事の配列にユーザ名を追加
+			$results['bbsComments']['username'] = $user['User']['username'];
+
+			//camelize
+			$comments[] = $this->camelizeKeyRecursive($results);
+		}
+
+		//配列の再構成 TODO:スリムじゃない
+		foreach ($comments as $comment) {
+			$result[] = $comment['bbsComments'];
+		}
+		$results['bbsComments'] = $result;
+
+		$this->set($results);
 		}
 
 /**
@@ -276,25 +294,47 @@ class BbsCommentsController extends BbsesAppController {
  *
  * @return void
  */
-	private function __setPostUser($postId) {
+	private function __setPostUser($postId, $createdUser) {
 		$user = $this->User->find('first', array(
 				'recursive' => -1,
 				'conditions' => array(
-					'id' => $this->viewVars['bbsPosts']['createdUser'],
+					'id' => $createdUser,
 				)
 			)
 		);
-		$bbsPostUser = $this->BbsPostsUser->getUsers(
-				$user['User']['id'],
-				$postId
-			);
 
 		$results = array(
-			'bbsPostUsers' => $bbsPostUser['BbsPostsUser'],
-			'users' => $user['User'],
+			'postUsers' => $user['User'],
 		);
+
 		return $this->set($this->camelizeKeyRecursive($results));
 	}
+
+/**
+ * __setPost method
+ *
+ * @return void
+ */
+	private function __setCurrentPostUser($postId, $createdUser) {
+		$user = $this->User->find('first', array(
+				'recursive' => -1,
+				'conditions' => array(
+					'id' => $createdUser,
+				)
+			)
+		);
+
+		//この記事を読んだか、
+		//投票したかを取得する必要がある
+		//別で取得する必要がある。
+
+		$results = array(
+			'currentPostUsers' => $user['User'],
+		);
+
+		return $this->set($this->camelizeKeyRecursive($results));
+	}
+
 /**
  * __setPost method
  *
