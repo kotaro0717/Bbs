@@ -41,8 +41,7 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 		'NetCommons.NetCommonsRoomRole' => array(
 			//コンテンツの権限設定
 			'allowedActions' => array(
-				//'contentEditable' => array('add', 'edit', 'delete'),
-				//'contentCreatable' => array('add', 'edit', 'delete'),
+				'contentPublishable' => array('edit'),
 			),
 		),
 	);
@@ -57,27 +56,52 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 	);
 
 /**
- * view method
- *
- * @return void
- */
-	public function view() {
-		$this->view = 'Bbses/authSetting';
-
-		$this->__setBbs();
-		if (!isset($this->viewVars['bbses'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
-
-	}
-
-/**
  * edit method
  *
  * @return void
  */
-	public function edit($frameId, $postId) {
-		//
+	public function edit() {
+		//不要:defaultでBbsAuthoritySettings/editを見てくれる
+		//$this->view = 'BbsAuthoritySettings/edit';
+
+		$this->__setBbs();
+		//debug用
+		if (!isset($this->viewVars['bbses'])) {
+			throw new NotFoundException(__d('net_commons', 'Not Found'));
+		}
+
+		if ($this->request->isPost()) {
+			$data = $this->data;
+			//$blockId, $userId, $contentCreatable, $contentEditable, $is_post_list
+			if (!$bbs = $this->Bbs->getBbs(
+				isset($this->data['Block']['id']) ? (int)$this->data['Block']['id'] : null,
+				false,
+				false,
+				false,
+				false
+			)) {
+				//bbsテーブルデータ作成とkey格納
+				$bbs = $this->Bbs->create(['key' => Security::hash('bbs' . mt_rand() . microtime(), 'md5')]);
+			}
+
+			//boolean値が文字列になっているため個別で格納し直している
+			$bbs['Bbs']['posts_authority'] = ($data['Bbs']['posts_authority'] === '1') ? true : false;
+			$data = Hash::merge($data, $bbs);
+
+			if (!$bbs = $this->Bbs->saveBbs($data)) {
+				if (!$this->__handleValidationError($this->Bbs->validationErrors)) {
+					return;
+				}
+			}
+
+			$this->set('blockId', $bbs['Bbs']['block_id']);
+			if (!$this->request->is('ajax')) {
+				$backUrl = CakeSession::read('backUrl');
+				CakeSession::delete('backUrl');
+				$this->redirect($backUrl);
+			}
+			return;
+		}
 	}
 
 /**
@@ -104,7 +128,6 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 		$results = array(
 			'bbses' => $bbses['Bbs'],
 		);
-		$results = $this->camelizeKeyRecursive($results);
 		$this->set($results);
 	}
 

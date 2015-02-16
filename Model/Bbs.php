@@ -58,16 +58,16 @@ class Bbs extends BbsesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'CreatedUser' => array(
-			'className' => 'Users.UserAttributesUser',
-			'foreignKey' => false,
-			'conditions' => array(
-				'Bbs.created_user = CreatedUser.user_id',
-				'CreatedUser.key' => 'nickname'
-			),
-			'fields' => array('CreatedUser.key', 'CreatedUser.value'),
-			'order' => ''
-		)
+//		'CreatedUser' => array(
+//			'className' => 'Users.UserAttributesUser',
+//			'foreignKey' => false,
+//			'conditions' => array(
+//				'Bbs.created_user = CreatedUser.user_id',
+//				'CreatedUser.key' => 'nickname'
+//			),
+//			'fields' => array('CreatedUser.key', 'CreatedUser.value'),
+//			'order' => ''
+//		)
 	);
 
 /**
@@ -138,7 +138,8 @@ class Bbs extends BbsesAppModel {
  * @return array
  */
 	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $is_post_list) {
-		$blockId = '30';
+		//固定化
+		//$blockId = '30';
 		//$contentEditable = false; //TODO:debug用
 		$contains = false;
 		if ($is_post_list) {
@@ -164,17 +165,54 @@ class Bbs extends BbsesAppModel {
  * @throws InternalErrorException
  */
 	public function saveBbs($data) {
+		//モデル定義
+		$this->setDataSource('master');
+		$models = array(
+			'Block' => 'Blocks.Block',
+		);
+		foreach ($models as $model => $class) {
+			$this->$model = ClassRegistry::init($class);
+			$this->$model->setDataSource('master');
+		}
+		//トランザクションBegin
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+		try {
+			/* var_dump($this->Comment); */
+			if (!$this->validateBbs($data)) {
+				return false;
+			}
+			//ブロックの登録
+			//$block = $this->Block->saveByFrameId($data['Frame']['id'], false);
+			//掲示板の登録
+			//$this->data['Bbs']['block_id'] = (int)$block['Block']['id'];
+			$this->data['Bbs']['block_id'] = (int)$this->data['Block']['id'];
+			$bbs = $this->save(null, false);
+			if (!$bbs) {
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+			}
+			//トランザクションCommit
+			$dataSource->commit();
+		} catch (Exception $ex) {
+			//トランザクションRollback
+			$dataSource->rollback();
+			//エラー出力
+			CakeLog::write(LOG_ERR, $ex);
+			throw $ex;
+		}
+		return $bbs;
 	}
+
 /**
- * validate bbs
+ * validate announcement
  *
  * @param array $data received post data
- * @return bool|array True on success, validation errors array on error
+ * @return bool True on success, false on error
  */
 	public function validateBbs($data) {
-//		$this->set($data);
-//		$this->validates();
-//		return $this->validationErrors ? $this->validationErrors : true;
+		$this->set($data);
+		$this->validates();
+		return $this->validationErrors ? false : true;
 	}
 
 /**

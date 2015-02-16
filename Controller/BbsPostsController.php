@@ -42,8 +42,8 @@ class BbsPostsController extends BbsesAppController {
 		'NetCommons.NetCommonsRoomRole' => array(
 			//コンテンツの権限設定
 			'allowedActions' => array(
-				'contentEditable' => array('view', 'add', 'edit', 'delete'),
-				'contentCreatable' => array('view', 'add', 'edit', 'delete'),
+				'contentEditable' => array('add', 'edit', 'delete'),
+				'contentCreatable' => array('add', 'edit', 'delete'),
 			),
 		),
 	);
@@ -97,7 +97,7 @@ class BbsPostsController extends BbsesAppController {
  * @return void
  */
 	public function add($frameId, $postId = '', $postFlag = '') {
-		$this->view = 'Bbses/add';
+		$this->view = 'Bbses/viewForAdd';
 		$this->set(array('addStrings' => __d('bbses', 'Create post')));
 		$this->__setBbs();
 		if (!isset($this->viewVars['bbses'])) {
@@ -117,6 +117,18 @@ class BbsPostsController extends BbsesAppController {
 
 		//記事追加の場合、ステータスを別途セットする（とりあえず）
 		$this->set(array('contentStatus' => '0'));
+
+        if ($this->request->is('post')) {
+            $this->BbsPost->create();
+			debug($this->viewVars['bbses']);
+			debug($this->viewVars['bbsPosts']);
+
+//            if ($this->BbsPost->save($this->request->data)) {
+//                $this->Session->setFlash(__('Your post has been saved.'));
+//                return $this->redirect(array('action' => 'index'));
+//            }
+            $this->Session->setFlash(__('Unable to add your post.'));
+        }
 	}
 
 /**
@@ -125,7 +137,7 @@ class BbsPostsController extends BbsesAppController {
  * @return void
  */
 	public function edit($frameId, $postId) {
-		$this->view = 'Bbses/add';
+		$this->view = 'Bbses/viewForAdd';
 		$this->set(array('addStrings' => __d('bbses', 'Edit')));
 		$this->__setBbs();
 		if (!isset($this->viewVars['bbses'])) {
@@ -140,28 +152,18 @@ class BbsPostsController extends BbsesAppController {
 		//記事追加の場合、ステータスを別途セットする（とりあえず）
 		$this->set(array('contentStatus' => '0'));
 
-		//登録処理
-//		if ($this->request->isPost()) {
-//			if ($matches = preg_grep('/^save_\d/', array_keys($this->data))) {
-//				list(, $status) = explode('_', array_shift($matches));
-//			}
-//			$data = array_merge_recursive(
-//				$this->data,
-//				['BbsPost' => ['status' => $status]]
-//			);
-//
-//			$bbsPost = $this->BbsPost->savePost($data);
-//			$this->redirect(isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
-//			return;
-//		}
-
-		//最新データ取得
-//		$this->__setBbsSetting();
-//		$this->__setBbs();
-//		$this->__setPost();
-
-		//$this->set('backUrl', isset($this->request->query['back_url']) ? $this->request->query['back_url'] : null);
 	}
+
+	/**
+	 * form method
+	 *
+	 * @param int $frameId frames.id
+	 * @return CakeResponse A response object containing the rendered view.
+	 */
+	   public function form($frameId = 0) {
+		   $this->view($frameId);
+		   return $this->render('BbsPostEdit/form', false);
+	   }
 
 /**
  * delete method
@@ -183,6 +185,48 @@ class BbsPostsController extends BbsesAppController {
 			return $this->flash(__('The post could not be deleted. Please, try again.'), array('controller' => 'bbses', 'action' => 'index'));
 		}
 	}
+
+/**
+ * Parse content status from request
+ *
+ * @throws BadRequestException
+ * @return mixed status on success, false on error
+ */
+	private function __parseStatus() {
+		if ($matches = preg_grep('/^save_\d/', array_keys($this->data))) {
+			list(, $status) = explode('_', array_shift($matches));
+		} else {
+			if ($this->request->is('ajax')) {
+				$this->renderJson(
+					['error' => ['validationErrors' => ['status' => __d('net_commons', 'Invalid request.')]]],
+					__d('net_commons', 'Bad Request'), 400
+				);
+			} else {
+				throw new BadRequestException(__d('net_commons', 'Bad Request'));
+			}
+			return false;
+		}
+		return $status;
+	}
+
+/**
+ * Handle validation error
+ *
+ * @param array $errors validation errors
+ * @return bool true on success, false on error
+ */
+	private function __handleValidationError($errors) {
+		if (is_array($errors)) {
+			$this->validationErrors = $errors;
+			if ($this->request->is('ajax')) {
+				$results = ['error' => ['validationErrors' => $errors]];
+				$this->renderJson($results, __d('net_commons', 'Bad Request'), 400);
+			}
+			return false;
+		}
+		return true;
+	}
+
 
 /**
  * __initBbs method

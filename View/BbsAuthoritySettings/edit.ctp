@@ -1,9 +1,8 @@
 <?php echo $this->Html->script('/net_commons/base/js/workflow.js', false); ?>
-<?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
 
-<div id="nc-bbs-display-change-<?php echo (int)$frameId; ?>"
-		ng-controller="Bbses"
+<div id="nc-bbs-auth-setting-<?php echo (int)$frameId; ?>"
+		ng-controller="BbsAuthoritySettings"
 		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
 
 <?php $formName = 'BbsForm'; ?>
@@ -15,18 +14,18 @@
 <?php $this->startIfEmpty('tabList'); ?>
 <li>
 	<a href="<?php echo $this->Html->url(
-					'/bbses/bbses/view' . '/' . $frameId); ?>" ng-click="showSetting('edit')">
+					'/bbses/bbses/edit' . '/' . $frameId); ?>">
 		<?php echo __d('bbses', 'Bbs edit'); ?>
-	</a>
-</li>
-<li class="active">
-	<a href="" ng-click="showSetting('displayChange')">
-		<?php echo __d('bbses', 'Display change'); ?>
 	</a>
 </li>
 <li>
 	<a href="<?php echo $this->Html->url(
-					'/bbses/bbsAuthoritySettings/view' . '/' . $frameId); ?>" ng-click="showSetting('authoritySetting')">
+					'/bbses/bbsFrameSettings/edit' . '/' . $frameId); ?>">
+		<?php echo __d('bbses', 'Display change'); ?>
+	</a>
+</li>
+<li class="active">
+	<a href="">
 		<?php echo __d('bbses', 'Authority setting'); ?>
 	</a>
 </li>
@@ -55,7 +54,6 @@
 	<div>
 	<?php echo $this->Form->create('Bbs', array(
 			'name' => 'form',
-			/* 'name' => $formName, */
 			'novalidate' => true,
 		)); ?>
 		<?php echo $this->Form->hidden('id'); ?>
@@ -68,15 +66,14 @@
 
 		<div class="panel panel-default" >
 			<div class="panel-body has-feedback">
-				<?php echo $this->element('displayChange'); ?>
+				<?php echo $this->element('BbsAuthoritySettings/authSetting'); ?>
 			</div>
 
 			<div class="panel-footer text-center">
-				<a href="<?php echo $this->Html->url(
-					'/bbses/bbses/index/' . $frameId) ?>" class="btn btn-default" ng-disabled="sending">
+				<button type="button" class="btn btn-default" ng-click="cancel()" ng-disabled="sending">
 					<span class="glyphicon glyphicon-remove"></span>
 					<?php echo __d('net_commons', 'Cancel'); ?>
-				</a>
+				</button>
 				<?php echo $this->Form->button(__d('net_commons', 'OK'),
 								array(
 									'class' => 'btn btn-primary',

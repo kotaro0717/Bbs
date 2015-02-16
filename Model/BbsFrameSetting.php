@@ -20,6 +20,8 @@ App::uses('BbsesAppModel', 'Bbses.Model');
  */
 class BbsFrameSetting extends BbsesAppModel {
 
+	const DISPLAY_NUMBER_UNIT = '件';
+
 /**
  * use behaviors
  *
@@ -72,14 +74,14 @@ class BbsFrameSetting extends BbsesAppModel {
 			),
 			'visible_post_row' => array(
 				'boolean' => array(
-					'rule' => array('boolean'),
+					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
 					'required' => true,
 				)
 			),
 			'visible_comment_row' => array(
 				'boolean' => array(
-					'rule' => array('boolean'),
+					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
 					'required' => true,
 				)
@@ -96,7 +98,8 @@ class BbsFrameSetting extends BbsesAppModel {
  * @return array
  */
 	public function getBbsSetting($frameKey) {
-		$frameKey = 'frame_30';
+		//固定化
+		//$frameKey = 'frame_30';
 		$conditions = array(
 			'frame_key' => $frameKey,
 		);
@@ -112,5 +115,77 @@ class BbsFrameSetting extends BbsesAppModel {
 			$bbsSetting['BbsFrameSetting']['id'] = '0';
 		}
 		return $bbsSetting;
+	}
+
+/**
+ * save bbs
+ *
+ * @param array $data received post data
+ * @return mixed On success Model::$data if its not empty or true, false on failure
+ * @throws InternalErrorException
+ */
+	public function saveBbsSetting($data) {
+		//モデル定義
+//		$this->setDataSource('master');
+//		$models = array(
+//			'Frame' => 'Frames.Frame',
+//		);
+//		foreach ($models as $model => $class) {
+//			$this->$model = ClassRegistry::init($class);
+//			$this->$model->setDataSource('master');
+//		}
+		//トランザクションBegin
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+		try {
+			/* var_dump($this->Comment); */
+			if (!$this->validateBbsSetting($data)) {
+				return false;
+			}
+
+			//BbsFrameSettingの登録
+			$this->data['BbsFrameSetting']['frame_key'] = $this->data['Frame']['key'];
+			$bbsSetting = $this->save(null, false);
+			if (!$bbsSetting) {
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+			}
+			//トランザクションCommit
+			$dataSource->commit();
+		} catch (Exception $ex) {
+			//トランザクションRollback
+			$dataSource->rollback();
+			//エラー出力
+			CakeLog::write(LOG_ERR, $ex);
+			throw $ex;
+		}
+		return $bbsSetting;
+	}
+
+/**
+ * validate announcement
+ *
+ * @param array $data received post data
+ * @return bool True on success, false on error
+ */
+	public function validateBbsSetting($data) {
+		$this->set($data);
+		$this->validates();
+		return $this->validationErrors ? false : true;
+	}
+
+/**
+ * getDisplayNumberOptions
+ *
+ * @return array
+ */
+	public static function getDisplayNumberOptions() {
+		return array(
+			1 => 1 . self::DISPLAY_NUMBER_UNIT,
+			5 => 5 . self::DISPLAY_NUMBER_UNIT,
+			10 => 10 . self::DISPLAY_NUMBER_UNIT,
+			20 => 20 . self::DISPLAY_NUMBER_UNIT,
+			50 => 50 . self::DISPLAY_NUMBER_UNIT,
+			100 => 100 . self::DISPLAY_NUMBER_UNIT,
+		);
 	}
 }

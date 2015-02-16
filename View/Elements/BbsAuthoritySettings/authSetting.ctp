@@ -2,7 +2,7 @@
 	<?php
 		echo $this->Form->label(__d('bbses', 'Post authority'));
 	?>
-	&nbsp;
+	<br />
 	<?php
 		echo $this->Form->input('', array(
 					'label' => __d('bbses', 'Room administrator'),
@@ -34,11 +34,12 @@
 	?>
 	&nbsp;
 	<?php
-		echo $this->Form->input('visiblePostRow', array(
+		echo $this->Form->input('Bbs.posts_authority', array(
 					'label' => __d('bbses', 'General'),
 					'div' => false,
 					'type' => 'checkbox',
-					'ng-model' => 'bbses.bbses.postsAuthority',
+					'ng-model' => 'bbses.bbses.posts_authority',
+					'autofocus' => true,
 				)
 			);
 	?>

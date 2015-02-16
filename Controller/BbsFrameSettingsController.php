@@ -41,8 +41,7 @@ class BbsFrameSettingsController extends BbsesAppController {
 		'NetCommons.NetCommonsRoomRole' => array(
 			//コンテンツの権限設定
 			'allowedActions' => array(
-				//'contentEditable' => array('add', 'edit', 'delete'),
-				//'contentCreatable' => array('add', 'edit', 'delete'),
+				'contentPublishable' => array('edit'),
 			),
 		),
 	);
@@ -57,27 +56,47 @@ class BbsFrameSettingsController extends BbsesAppController {
 	);
 
 /**
- * view method
+ * edit method
  *
  * @return void
  */
-	public function view() {
-		$this->view = 'Bbses/displayChange';
+	public function edit() {
+		//不要:defaultでBbsFrameSettings/editを見てくれる
+		//$this->view = 'BbsFrameSettings/edit';
 
 		$this->__setBbsSetting();
 		if (!isset($this->viewVars['bbsSettings'])) {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-	}
+		if ($this->request->isPost()) {
+			$data = $this->data;
 
-/**
- * edit method
- *
- * @return void
- */
-	public function edit($frameId, $postId) {
-		//
+			//$blockId, $userId, $contentCreatable, $contentEditable, $is_post_list
+			if (!$bbsSetting = $this->BbsFrameSetting->getBbsSetting(
+				isset($this->data['Frame']['key']) ? $this->data['Frame']['key'] : null
+			)) {
+				//bbsFrameSettingテーブルデータ生成
+				$bbsSetting = $this->BbsFrameSetting->create();
+			}
+
+			$data = Hash::merge($bbsSetting, $data);
+
+			if (!$bbsSetting = $this->BbsFrameSetting->saveBbsSetting($data)) {
+				if (!$this->__handleValidationError($this->BbsFrameSetting->validationErrors)) {
+					return;
+				}
+			}
+
+			$this->set('frameKey', $bbsSetting['BbsFrameSetting']['frame_key']);
+			if (!$this->request->is('ajax')) {
+				$backUrl = CakeSession::read('backUrl');
+				CakeSession::delete('backUrl');
+				$this->redirect($backUrl);
+			}
+			return;
+		}
+
 	}
 
 /**
@@ -97,6 +116,24 @@ class BbsFrameSettingsController extends BbsesAppController {
 		);
 		$this->set($this->camelizeKeyRecursive($results));
 
+	}
+
+/**
+ * Handle validation error
+ *
+ * @param array $errors validation errors
+ * @return bool true on success, false on error
+ */
+	private function __handleValidationError($errors) {
+		if (is_array($errors)) {
+			$this->validationErrors = $errors;
+			if ($this->request->is('ajax')) {
+				$results = ['error' => ['validationErrors' => $errors]];
+				$this->renderJson($results, __d('net_commons', 'Bad Request'), 400);
+			}
+			return false;
+		}
+		return true;
 	}
 
 }

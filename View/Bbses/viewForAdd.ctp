@@ -83,7 +83,7 @@
 		</div>
 	</div>
 	<div class="panel-footer text-center">
-		<?php echo $this->element('NetCommons.workflow_buttons'); ?>
+		<?php echo $this->element('Bbses.workflow_buttons'); ?>
 	</div>
 </div>
 

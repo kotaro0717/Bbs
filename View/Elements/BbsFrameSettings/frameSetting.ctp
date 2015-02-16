@@ -4,20 +4,14 @@
 	?>
 	&nbsp;
 	<?php
-		echo $this->Form->input('visiblePostRow', array(
+		echo $this->Form->input('BbsFrameSetting.visible_post_row', array(
 					'label' => false,
-					'div' => false,
 					'type' => 'select',
-					'options' => array(
-						'1' => "1件",
-						'5' => "5件",
-						'10' => "10件",
-						'20' => "20件",
-						'50' => "50件",
-						'100' => "100件",
-					),
+					'class' => 'form-control',
+					'options' => BbsFrameSetting::getDisplayNumberOptions(),
 					'selected' => $dataForView['bbsSettings']['visiblePostRow'],
 					'ng-model' => 'bbses.bbsSettings.visiblePostRow',
+					'autofocus' => true,
 				)
 			);
 	?>
@@ -29,18 +23,11 @@
 	?>
 	&nbsp;
 	<?php
-		echo $this->Form->input('visibleCommentRow', array(
+		echo $this->Form->input('BbsFrameSetting.visible_comment_row', array(
 					'label' => false,
-					'div' => false,
 					'type' => 'select',
-					'options' => array(
-						'1' => "1件",
-						'5' => "5件",
-						'10' => "10件",
-						'20' => "20件",
-						'50' => "50件",
-						'100' => "100件",
-					),
+					'class' => 'form-control',
+					'options' => BbsFrameSetting::getDisplayNumberOptions(),
 					'selected' => $dataForView['bbsSettings']['visibleCommentRow'],
 					'ng-model' => 'bbses.bbsSettings.visibleCommentRow',
 				)

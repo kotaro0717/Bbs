@@ -293,19 +293,18 @@ class BbsPost extends BbsesAppModel {
 	}
 
 /**
- * save post
+ * save posts
  *
  * @param array $data received post data
  * @return mixed On success Model::$data if its not empty or true, false on failure
  * @throws InternalErrorException
  */
-	public function savePost($data) {
+	public function savePosts($data) {
 		debug($data);
 		//モデル定義
 //		$this->setDataSource('master');
 //		$models = array(
-//			'Block' => 'Blocks.Block',
-//			'Comment' => 'Comments.Comment',
+//			'Bbs' => 'Bbses.Bbs',
 //		);
 //		foreach ($models as $model => $class) {
 //			$this->$model = ClassRegistry::init($class);
@@ -314,18 +313,32 @@ class BbsPost extends BbsesAppModel {
 //		//トランザクションBegin
 //		$dataSource = $this->getDataSource();
 //		$dataSource->begin();
+//		//validationを実行
+//		//$ret = $this->__validateIframe($data);
+//		$ret = null;
+//		if (is_array($ret)) {
+//			$this->validationErrors = $ret;
+//			return false;
+//		}
 //		try {
-//			//ブロックの登録
-//			$bbsId = $this->Block->saveByFrameId($data['Frame']['id'], false);
-//			//お知らせの登録
-//			$this->data['Announcement']['block_id'] = (int)$block['Block']['id'];
-//			$bbsPost = $this->save(null, false);
-//			if (! $bbsPost) {
+			//記事データの登録
+			//$this->data['Iframe']['block_id'] = (int)$block['Block']['id'];
+
+
+
+//			$iframe = $this->save(null, false);
+//			if (! $iframe) {
 //				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
 //			}
-//			//トランザクションCommit
+//			//コメントの登録
+//			if ($this->Comment->data) {
+//				if (! $this->Comment->save(null, false)) {
+//					throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+//				}
+//			}
+			//トランザクションCommit
 //			$dataSource->commit();
-//			return $announcement;
+//			return true;
 //		} catch (Exception $ex) {
 //			//トランザクションRollback
 //			$dataSource->rollback();

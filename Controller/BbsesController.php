@@ -104,12 +104,57 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	public function view() {
-		$this->view = 'Bbses/edit';
+	public function edit() {
+		//不要:defaultでBbses/editを見てくれる
+		//$this->view = 'Bbses/edit';
+
 		$this->__setBbs();
+		//debug用
 		if (!isset($this->viewVars['bbses'])) {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
+
+		//TODO:歯車から飛んできたときのURLを保持するように
+		if ($this->request->isGet()) {
+			CakeSession::write('backUrl', $this->request->referer());
+		}
+
+		if ($this->request->isPost()) {
+			$data = $this->data;
+			//$blockId, $userId, $contentCreatable, $contentEditable, $is_post_list
+			if (!$bbs = $this->Bbs->getBbs(
+				isset($this->data['Block']['id']) ? (int)$this->data['Block']['id'] : null,
+				false,
+				false,
+				false,
+				false
+			)) {
+				//bbsテーブルデータ作成とkey格納
+				$bbs = $this->Bbs->create(['key' => Security::hash('bbs' . mt_rand() . microtime(), 'md5')]);
+			}
+
+			// Hash::mergeが上手くいかないため、とりあえず編集項目を個別で格納
+			//$data = Hash::merge($data, $bbs);
+			$bbs['Bbs']['name'] = $data['Bbs']['name'];
+			$bbs['Bbs']['comment_flag'] = ($data['Bbs']['comment_flag'] === '1') ? true : false;
+			$bbs['Bbs']['vote_flag'] = ($data['Bbs']['vote_flag'] === '1') ? true : false;
+			$data = Hash::merge($data, $bbs);
+
+			if (!$bbs = $this->Bbs->saveBbs($data)) {
+				if (!$this->__handleValidationError($this->Bbs->validationErrors)) {
+					return;
+				}
+			}
+
+			$this->set('blockId', $bbs['Bbs']['block_id']);
+			if (!$this->request->is('ajax')) {
+				$backUrl = CakeSession::read('backUrl');
+				CakeSession::delete('backUrl');
+				$this->redirect($backUrl);
+			}
+			return;
+		}
+
 	}
 
 /**
@@ -127,7 +172,7 @@ class BbsesController extends BbsesAppController {
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
 			'currentVisiblePostRow' => $bbsSettings['BbsFrameSetting']['visible_post_row']
 		);
-		$this->set($this->camelizeKeyRecursive($results));
+		$this->set($results);
 
 	}
 
@@ -163,7 +208,7 @@ class BbsesController extends BbsesAppController {
 			'bbses' => $bbses['Bbs'],
 			'bbsPostNum' => count($bbses['BbsPost'])
 		);
-		$results = $this->camelizeKeyRecursive($results);
+		//$results = $this->camelizeKeyRecursive($results);
 		$this->set($results);
 
 		//記事をcamelize（配列のため別途行う）
@@ -189,7 +234,7 @@ class BbsesController extends BbsesAppController {
  */
 	private function __setPost($postId, $key = '', $params = '') {
 		//初期設定
-		$visiblePostRow = $this->viewVars['bbsSettings']['visiblePostRow'];
+		$visiblePostRow = $this->viewVars['bbsSettings']['visible_post_row'];
 		$sortOrder = $this->__setSortOrder($params);
 		//key(1):ソート順、key(2):表示件数
 		if ($key === '2') {
@@ -214,7 +259,8 @@ class BbsesController extends BbsesAppController {
 			$results = array(
 				'bbsPosts' => $bbsPost['BbsPost'],
 			);
-			$posts[] = $this->camelizeKeyRecursive($results);
+			//$posts[] = $this->camelizeKeyRecursive($results);
+			$posts[] = $results;
 		}
 
 		//配列の再構成 TODO:スリムじゃない
@@ -258,4 +304,23 @@ class BbsesController extends BbsesAppController {
 			return 'BbsPost.status DESC';
 		}
 	}
+
+/**
+ * Handle validation error
+ *
+ * @param array $errors validation errors
+ * @return bool true on success, false on error
+ */
+	private function __handleValidationError($errors) {
+		if (is_array($errors)) {
+			$this->validationErrors = $errors;
+			if ($this->request->is('ajax')) {
+				$results = ['error' => ['validationErrors' => $errors]];
+				$this->renderJson($results, __d('net_commons', 'Bad Request'), 400);
+			}
+			return false;
+		}
+		return true;
+	}
+
 }

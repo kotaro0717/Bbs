@@ -12,6 +12,11 @@
 </ol>
 
 <div class="text-left">
+	<!-- 記事タイトル -->
+	<h3><a href="<?php echo $this->Html->url(
+				'/bbses/bbsPosts/view/' . $frameId . '/' . $dataForView['bbsPosts']['id']) ?>">
+		<?php echo $dataForView['bbsPosts']['title']; ?></a>に戻る</h3>
+
 	<div class="text-left" style="float:right;">
 		<!-- コメント数 -->
 		<span class="glyphicon glyphicon-comment"><?php echo $dataForView['bbsCurrentPosts']['commentNum']; ?>&nbsp;</span>
@@ -50,25 +55,28 @@
 			</ul>
 		</div>
 	</div>
-	<!-- 記事タイトル -->
-	<h3><a href="<?php echo $this->Html->url(
-				'/bbses/bbsPosts/view/' . $frameId . '/' . $dataForView['bbsPosts']['id']) ?>">
-		<?php echo $dataForView['bbsPosts']['title']; ?></a>に戻る</h3>
+
 </div><br />
 
 <!-- 親記事 -->
 <div class="panel-group">
 	<div class="panel panel-info">
 		<div class="panel-heading">
-			<!-- id -->
-			1.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
-			<!-- ユーザ情報 -->
-			<span><a href=""><?php echo $dataForView['postUsers']['username']; ?></a></span>
-			<!-- 作成時間 -->
-			<span><?php echo $dataForView['bbsPosts']['created']; ?></span>
-			<!-- ステータス -->
-			<span><?php echo $this->element('NetCommons.status_label',
-								array('status' => $dataForView['bbsPosts']['status'])); ?></span>
+			<div class="text-left">
+				<!-- id -->
+				1.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
+				<!-- ユーザ情報 -->
+				<span><a href=""><?php echo $dataForView['postUsers']['username']; ?></a></span>
+				<!-- ステータス -->
+				<span><?php echo $this->element('NetCommons.status_label',
+									array('status' => $dataForView['bbsPosts']['status'])); ?></span>
+
+				<!-- 右に表示 -->
+				<div class="text-left" style="float:left;">
+					<!-- 作成時間 -->
+					<span><?php echo $dataForView['bbsPosts']['created']; ?></span>
+				</div>
+			</div>
 		</div>
 		<div class="panel-body">
 			<!-- 本文 -->
@@ -77,6 +85,10 @@
 		<div class="panel-footer">
 			<!-- いいね！ -->
 			<div class="text-left">
+				<span class="glyphicon glyphicon-thumbs-up"><?php echo $dataForView['bbsPosts']['upVoteNum']; ?></span>
+				<span class="glyphicon glyphicon-thumbs-down"><?php echo $dataForView['bbsPosts']['downVoteNum']; ?></span>
+
+				<!-- 右に表示 -->
 				<div class="text-left" style="float:right;">
 					<?php if ($contentCreatable && $dataForView['bbses']['commentFlag']
 								&& $dataForView['bbsPosts']['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
@@ -101,30 +113,33 @@
 						</button>
 					<?php endif; ?>
 				</div>
-				<span class="glyphicon glyphicon-thumbs-up"><?php echo $dataForView['bbsPosts']['upVoteNum']; ?></span>
-				<span class="glyphicon glyphicon-thumbs-down"><?php echo $dataForView['bbsPosts']['downVoteNum']; ?></span>
 			</div>
 		</div>
 	</div>
 </div>
 
-
 <!-- 対象の記事 -->
 <div class="panel-group">
 	<div class="panel panel-success">
 		<div class="panel-heading">
-			<!-- id -->
-			<?php echo $dataForView['bbsCurrentPosts']['id']; ?>.
-			<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
-			<!-- ユーザ情報 -->
-			<span><a href=""><?php echo $dataForView['currentPostUsers']['username']; ?></a></span>
-			<!-- タイトル※対象記事のためリンクを貼らない -->
-			<h4 style="display:inline;"><strong><?php echo $dataForView['bbsCurrentPosts']['title']; ?></strong></h4>
-			<!-- 作成時間 -->
-			<span><?php echo $dataForView['bbsCurrentPosts']['created']; ?></span>
-			<!-- ステータス -->
-			<span><?php echo $this->element('NetCommons.status_label',
-								array('status' => $dataForView['bbsCurrentPosts']['status'])); ?></span>
+			<div class="text-left">
+				<!-- id -->
+				<?php echo $dataForView['bbsCurrentPosts']['id']; ?>.
+				<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
+				<!-- ユーザ情報 -->
+				<span><a href=""><?php echo $dataForView['currentPostUsers']['username']; ?></a></span>
+				<!-- タイトル※対象記事のためリンクを貼らない -->
+				<h4 style="display:inline;"><strong><?php echo $dataForView['bbsCurrentPosts']['title']; ?></strong></h4>
+				<!-- ステータス -->
+				<span><?php echo $this->element('NetCommons.status_label',
+									array('status' => $dataForView['bbsCurrentPosts']['status'])); ?></span>
+
+				<!-- 右に表示 -->
+				<div class="text-left" style="float:right;">
+					<!-- 作成時間 -->
+					<span><?php echo $dataForView['bbsCurrentPosts']['created']; ?></span>
+				</div>
+			</div>
 		</div>
 		<div class="panel-body">
 			<!-- 本文 -->
@@ -138,6 +153,10 @@
 		<div class="panel-footer">
 			<!-- いいね！ -->
 			<div class="text-left">
+				<span class="glyphicon glyphicon-thumbs-up"><?php echo $dataForView['bbsCurrentPosts']['upVoteNum']; ?></span>
+				<span class="glyphicon glyphicon-thumbs-down"><?php echo $dataForView['bbsCurrentPosts']['downVoteNum']; ?></span>
+
+				<!-- 右に表示 -->
 				<div class="text-left" style="float:right;">
 					<?php if ($contentCreatable && $dataForView['bbses']['commentFlag']
 								&& $dataForView['bbsCurrentPosts']['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
@@ -162,8 +181,6 @@
 						</button>
 					<?php endif; ?>
 				</div>
-				<span class="glyphicon glyphicon-thumbs-up"><?php echo $dataForView['bbsCurrentPosts']['upVoteNum']; ?></span>
-				<span class="glyphicon glyphicon-thumbs-down"><?php echo $dataForView['bbsCurrentPosts']['downVoteNum']; ?></span>
 			</div>
 		</div>
 	</div>
