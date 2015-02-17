@@ -58,16 +58,6 @@ class Bbs extends BbsesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-//		'CreatedUser' => array(
-//			'className' => 'Users.UserAttributesUser',
-//			'foreignKey' => false,
-//			'conditions' => array(
-//				'Bbs.created_user = CreatedUser.user_id',
-//				'CreatedUser.key' => 'nickname'
-//			),
-//			'fields' => array('CreatedUser.key', 'CreatedUser.value'),
-//			'order' => ''
-//		)
 	);
 
 /**
@@ -137,23 +127,29 @@ class Bbs extends BbsesAppModel {
  * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $is_post_list) {
+	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $isPostList) {
 		//固定化
 		$blockId = '30';
 		//$contentEditable = false; //TODO:debug用
 		$contains = false;
-		if ($is_post_list) {
+
+		//記事一覧の場合
+		if ($isPostList) {
+			//関係する記事のみ取得するための条件を設定
 			$contains = $this->__setContainableParams($userId, $contentCreatable, $contentEditable);
 		}
+
 		$conditions = array(
 			'block_id' => $blockId,
 		);
+
 		$bbses = $this->find('first', array(
 				'conditions' => $conditions,
 				'order' => 'Bbs.id DESC',
 				'contain' => $contains,
 			)
 		);
+
 		return $bbses;
 	}
 

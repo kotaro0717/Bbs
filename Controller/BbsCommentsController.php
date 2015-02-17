@@ -149,7 +149,6 @@ class BbsCommentsController extends BbsesAppController {
 		//camelize
 		$results = array(
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
-			'currentVisibleCommentRow' => $bbsSettings['BbsFrameSetting']['visible_comment_row']
 		);
 		$this->set($this->camelizeKeyRecursive($results));
 
@@ -231,15 +230,6 @@ class BbsCommentsController extends BbsesAppController {
 		//初期設定
 		$visibleCommentRow = $this->viewVars['bbsSettings']['visibleCommentRow'];
 		$sortOrder = $this->__setSortOrder($params);
-		//key(2):表示件数
-//		if ($key === '2') {
-//			$visibleCommentRow = $params;
-//			$results = array(
-//				'currentVisibleCommentRow' => $visibleCommentRow
-//
-//			);
-//			$this->set($results);
-//		}
 
 		$bbsCommnets = $this->BbsPost->getReplies(
 				$this->viewVars['bbses']['id'],

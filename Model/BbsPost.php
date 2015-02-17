@@ -151,6 +151,9 @@ class BbsPost extends BbsesAppModel {
 			'bbs_id' => $bbsId,
 		);
 
+//自分で書いた記事とステータスが&&になっているからまずい
+//公開されているけど、自分で書いてないやつがでてこないはず。
+
 		//作成権限あり:自分で書いた記事のみ取得
 		if ($contentCreatable && ! $contentEditable) {
 			$conditions['created_user'] = $userId;
@@ -161,20 +164,19 @@ class BbsPost extends BbsesAppModel {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
 
-		//親記事(postId:0)の場合、記事群取得
-		//0以外の場合、対象記事一件取得
-//		if ($postId) {
-//			//view表示のために記事指定
-//			$conditions['id'] = $postId;
-//
-//			//対象記事のみ取得
-//			$bbsPosts = $this->find('first', array(
-//					'recursive' => -1,
-//					'conditions' => $conditions,
-//				)
-//			);
-//			return $this->__setDateTime(array($bbsPosts));
-//		}
+		//選択した記事を一件取得
+		if ($postId) {
+			//view表示のために記事指定
+			$conditions['id'] = $postId;
+
+			//対象記事のみ取得
+			$bbsPosts = $this->find('first', array(
+					'recursive' => -1,
+					'conditions' => $conditions,
+				)
+			);
+			return $this->__setDateTime(array($bbsPosts));
+		}
 
 		$conditions['parent_id'] = $postId;
 		//debug(array($conditions, $sortOrder, $visiblePostRow, $currentPage));
@@ -189,8 +191,7 @@ class BbsPost extends BbsesAppModel {
 		);
 
 		//作成時間をフォーマット
-		$bbsPosts = $this->__setDateTime($bbsPosts);
-		return $bbsPosts;
+		return $this->__setDateTime($bbsPosts);
 	}
 
 /**
@@ -230,11 +231,10 @@ class BbsPost extends BbsesAppModel {
  * @param array $sortOrder
  * @return array
  */
-	public function getComments($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder) {
+	public function getComments($bbsId, $userId, $contentEditable,
+			$contentCreatable, $postId, $sortOrder, $visibleCommentRow, $currentPage) {
 		//利用箇所
 		//記事詳細表示
-
-		//debug(array($bbsId, $visibleRow, $contentCreatable, $postId, $sortOrder));
 
 		//$bbsId => 掲示板を指定　//$postId =>親記事のidを持つコメントを指定
 		$conditions = array(
@@ -242,7 +242,13 @@ class BbsPost extends BbsesAppModel {
 			'post_id' => $postId,
 		);
 
- 		if (! $contentCreatable) {
+		//作成権限あり:自分で書いた記事のみ取得
+		if ($contentCreatable && ! $contentEditable) {
+			$conditions['created_user'] = $userId;
+		}
+
+		//作成・編集権限なし:公開中の記事のみ取得
+		if (! $contentCreatable && ! $contentEditable) {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
 
@@ -260,7 +266,8 @@ class BbsPost extends BbsesAppModel {
 				'recursive' => -1,
 				'conditions' => $conditions,
 				'order' => $sortOrder,
-				'limit' => $visibleRow,
+				'limit' => $visibleCommentRow,
+				'page' => $currentPage,
 //				'contain' => $contains,
 			)
 		);

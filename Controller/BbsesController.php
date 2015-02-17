@@ -62,11 +62,25 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	public function index($frameId, $currentPage = '', $sortParams = '', $visiblePostRow = '') {
-		$this->view = 'Bbses/index';
+		$this->view = 'Bbses/view';
+		$this->view($frameId, $currentPage, $sortParams, $visiblePostRow);
+	}
+
+/**
+ * index method
+ *
+ * @return void
+ */
+	public function view($frameId, $currentPage = '', $sortParams = '', $visiblePostRow = '') {
+		//プラグイン名からアクション名までのurlを$baseUrlにセット
+		$baseUrl = Inflector::variable($this->plugin) . '/' .
+				Inflector::variable($this->name) . '/' . $this->action;
+
+		$this->set('baseUrl', $baseUrl);
 
 		//現在の一覧表示ページ番号をセット
-		$currentPage = ($currentPage === '')? '1': $currentPage;
-		$this->set('currentPage', (int)$currentPage);
+		$currentPage = ($currentPage === '')? 1: (int)$currentPage;
+		$this->set('currentPage', $currentPage);
 
 		//現在のソートパラメータをセット
 		$sortParams = ($sortParams === '')? '1': $sortParams;
@@ -75,18 +89,16 @@ class BbsesController extends BbsesAppController {
 		//BbsFrameSettingを取得
 		$this->__setBbsSetting();
 		if (!isset($this->viewVars['bbsSettings'])) {
-			debug(1);
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
 		//表示件数を設定
 		$visiblePostRow =
 			($visiblePostRow === '')? $this->viewVars['bbsSettings']['visible_post_row'] : $visiblePostRow;
-		$this->set('currentVisiblePostRow', $visiblePostRow);
+		$this->set('currentVisibleRow', $visiblePostRow);
 
 		$this->__setBbs();
 		if (!isset($this->viewVars['bbses'])) {
-			debug(2);
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
@@ -97,10 +109,9 @@ class BbsesController extends BbsesAppController {
 		}
 
 		if ($this->viewVars['bbsPostNum']) {
-			$this->__setPost($postId = 0, (int)$currentPage, $sortParams, $visiblePostRow);
+			$this->__setPost($postId = 0, $currentPage, $sortParams, $visiblePostRow);
 			//$sortParam, $visibleNum
 			if (!isset($this->viewVars['bbsPosts'])) {
-				debug(3);
 				throw new NotFoundException(__d('net_commons', 'Not Found'));
 			}
 		} else {
@@ -196,49 +207,34 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	private function __setBbs() {
-		//ユーザIDを取得し、Viewにセット
+		//ログインユーザIDを取得し、Viewにセット
 		$this->set('userId', $this->Session->read('Auth.User.id'));
 
 		//掲示板データを取得
 		if (!$bbses = $this->Bbs->getBbs(
-				$this->viewVars['blockId'],
+				(isset($this->viewVars['blockId'])? $this->viewVars['blockId'] : ''),
 				$this->viewVars['userId'],
 				$this->viewVars['contentCreatable'],
 				$this->viewVars['contentEditable'],
-				$is_post_list = true
+				true	//記事一覧である
 			)
 		) {
+			//おそらく置かれた直後の話
 			$bbses = $this->Bbs->create();
-				$results = array(
+			$results = array(
 				'bbses' => $bbses['Bbs'],
 				'bbsPostNum' => 0
 			);
-			$results = $this->camelizeKeyRecursive($results);
 			$this->set($results);
 			return;
 		}
-		//camelize
+
 		$results = array(
 			'bbses' => $bbses['Bbs'],
 			'bbsPostNum' => count($bbses['BbsPost'])
 		);
-		//$results = $this->camelizeKeyRecursive($results);
-		$this->set($results);
 
-		//記事をcamelize（配列のため別途行う）
-//		foreach ($bbses['BbsPost'] as $bbsPost) {
-//			$results = array(
-//				'bbsPosts' => $bbsPost,
-//			);
-//			$posts[] = $this->camelizeKeyRecursive($results);
-//		}
-//
-//		//配列の再構成 TODO:スリムじゃない
-//		foreach ($posts as $post) {
-//			$result[] = $post['bbsPosts'];
-//		}
-//		$results['bbsPosts'] = $result;
-//		$this->set($results);
+		$this->set($results);
 	}
 
 /**
