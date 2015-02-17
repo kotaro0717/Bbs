@@ -139,7 +139,7 @@ class Bbs extends BbsesAppModel {
  */
 	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $is_post_list) {
 		//固定化
-		//$blockId = '30';
+		$blockId = '30';
 		//$contentEditable = false; //TODO:debug用
 		$contains = false;
 		if ($is_post_list) {
@@ -235,6 +235,7 @@ class Bbs extends BbsesAppModel {
 		if (! $contentCreatable && ! $contentEditable) {
 			$containConditions['BbsPost.status ='] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
+
 		$contains = array(
 			'BbsPost' => array(
 				'conditions' => $containConditions,

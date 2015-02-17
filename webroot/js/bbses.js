@@ -53,27 +53,27 @@ NetCommonsApp.controller('Bbses',
 
     });
 
-NetCommonsApp.filter('Bbses.filter', function () {
-        return function (text, len, content) {
-          end = '…';
-          if (content) {
-            text = angular.element(text).text();
-            end = "…";
-          }
-          if (len === undefined) {
-            // デフォルトは10文字
-            len = 10;
-          }
-          if(text !== undefined) {
-            if(text.length > len) {
-              return text.substring(0, len - 1) + end;
-            }
-            else {
-              return text;
-            }
-          }
-        };
-    });
+//NetCommonsApp.filter('Bbses.filter', function () {
+//        return function (text, len, content) {
+//          end = '…';
+//          if (content) {
+//            text = angular.element(text).text();
+//            end = "…";
+//          }
+//          if (len === undefined) {
+//            // デフォルトは10文字
+//            len = 10;
+//          }
+//          if(text !== undefined) {
+//            if(text.length > len) {
+//              return text.substring(0, len - 1) + end;
+//            }
+//            else {
+//              return text;
+//            }
+//          }
+//        };
+//    });
 
 NetCommonsApp.controller('BbsEdit',
   function($scope, NetCommonsBase, NetCommonsTab) {

@@ -42,8 +42,7 @@ class BbsesController extends BbsesAppController {
 		'NetCommons.NetCommonsRoomRole' => array(
 			//コンテンツの権限設定
 			'allowedActions' => array(
-				'contentEditable' => array('add', 'edit', 'delete'),
-				'contentCreatable' => array('add', 'edit', 'delete'),
+				'contentPublishable' => array('edit'),
 			),
 		),
 	);
@@ -62,14 +61,28 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	public function index($frameId, $key = '', $params = '') {
+	public function index($frameId, $currentPage = '', $sortParams = '', $visiblePostRow = '') {
 		$this->view = 'Bbses/index';
 
+		//現在の一覧表示ページ番号をセット
+		$currentPage = ($currentPage === '')? '1': $currentPage;
+		$this->set('currentPage', (int)$currentPage);
+
+		//現在のソートパラメータをセット
+		$sortParams = ($sortParams === '')? '1': $sortParams;
+		$this->set('sortParams', $sortParams);
+
+		//BbsFrameSettingを取得
 		$this->__setBbsSetting();
 		if (!isset($this->viewVars['bbsSettings'])) {
 			debug(1);
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
+
+		//表示件数を設定
+		$visiblePostRow =
+			($visiblePostRow === '')? $this->viewVars['bbsSettings']['visible_post_row'] : $visiblePostRow;
+		$this->set('currentVisiblePostRow', $visiblePostRow);
 
 		$this->__setBbs();
 		if (!isset($this->viewVars['bbses'])) {
@@ -77,14 +90,15 @@ class BbsesController extends BbsesAppController {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		//フレーム置いただけの場合
+		//フレーム置いた直後
 		if (!isset($this->viewVars['bbses']['key'])) {
 			$this->view = 'Bbses/notCreateBbs';
 			return;
 		}
 
 		if ($this->viewVars['bbsPostNum']) {
-			$this->__setPost($postId = 0, $key, $params);
+			$this->__setPost($postId = 0, (int)$currentPage, $sortParams, $visiblePostRow);
+			//$sortParam, $visibleNum
 			if (!isset($this->viewVars['bbsPosts'])) {
 				debug(3);
 				throw new NotFoundException(__d('net_commons', 'Not Found'));
@@ -97,6 +111,7 @@ class BbsesController extends BbsesAppController {
 		if (! $this->viewVars['bbses']) {
 			$this->autoRender = false;
 		}
+
 	}
 
 /**
@@ -170,7 +185,6 @@ class BbsesController extends BbsesAppController {
 		//camelize
 		$results = array(
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
-			'currentVisiblePostRow' => $bbsSettings['BbsFrameSetting']['visible_post_row']
 		);
 		$this->set($results);
 
@@ -232,56 +246,113 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	private function __setPost($postId, $key = '', $params = '') {
-		//初期設定
-		$visiblePostRow = $this->viewVars['bbsSettings']['visible_post_row'];
-		$sortOrder = $this->__setSortOrder($params);
-		//key(1):ソート順、key(2):表示件数
-		if ($key === '2') {
-			$visiblePostRow = $params;
-			$results = array(
-				'currentVisiblePostRow' => $visiblePostRow
+	private function __setPost($postId, $currentPage, $sortParams, $visiblePostRow) {
+		//ソート条件をセット
+		$sortOrder = $this->__setSortOrder($sortParams);
 
-			);
-			$this->set($results);
-		}
-
+		//BbsPost->find
 		$bbsPosts = $this->BbsPost->getPosts(
 				$this->viewVars['bbses']['id'],
-				$visiblePostRow,
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
-				$postId,
-				$sortOrder
+				$postId,			//欲しい記事のID指定
+				$sortOrder,			//order by指定
+				$visiblePostRow,	//limit指定
+				$currentPage		//ページ番号指定
 			);
+		$this->set('bbsPosts', $bbsPosts);
 
-		//camelize
-		foreach ($bbsPosts as $bbsPost) {
-			$results = array(
-				'bbsPosts' => $bbsPost['BbsPost'],
+		//前のページがあるか取得
+		if ($currentPage === 1) {
+			$this->set('hasPrevPage', false);
+		} else {
+			$prevPage = $currentPage - 1;
+			$prevPosts = $this->BbsPost->getPosts(
+					$this->viewVars['bbses']['id'],
+					$this->viewVars['userId'],
+					$this->viewVars['contentEditable'],
+					$this->viewVars['contentCreatable'],
+					$postId,			//欲しい記事のID指定
+					$sortOrder,			//order by指定
+					$visiblePostRow,	//limit指定
+					$prevPage			//前のページ番号指定
+				);
+			$hasPrevPage = (empty($prevPosts))? false : true;
+			$this->set('hasPrevPage', $hasPrevPage);
+		}
+
+		//次のページがあるか取得
+		$nextPage = $currentPage + 1;
+		$nextPosts = $this->BbsPost->getPosts(
+				$this->viewVars['bbses']['id'],
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$postId,			//欲しい記事のID指定
+				$sortOrder,			//order by指定
+				$visiblePostRow,	//limit指定
+				$nextPage			//次のページ番号指定
 			);
-			//$posts[] = $this->camelizeKeyRecursive($results);
-			$posts[] = $results;
-		}
+		$hasNextPage = (empty($nextPosts))? false : true;
+		$this->set('hasNextPage', $hasNextPage);
 
-		//配列の再構成 TODO:スリムじゃない
-		foreach ($posts as $post) {
-			$result[] = $post['bbsPosts'];
-		}
-		$results['bbsPosts'] = $result;
+		//2ページ先のページがあるか取得
+		$nextSecondPage = $currentPage + 2;
+		$nextSecondPosts = $this->BbsPost->getPosts(
+				$this->viewVars['bbses']['id'],
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$postId,			//欲しい記事のID指定
+				$sortOrder,			//order by指定
+				$visiblePostRow,	//limit指定
+				$nextSecondPage		//2ページ先の番号指定
+			);
+		$hasNextSecondPage = (empty($nextSecondPosts))? false : true;
+		$this->set('hasNextSecondPage', $hasNextSecondPage);
 
-		$this->set($results);
+		//1,2ページの時のみ4,5ページがあるかどうか取得（モックとしてとりあえず）
+		//if ($currentPage === 1 || $currentPage === 2) {
+			//4ページがあるか取得（モックとしてとりあえず）
+			$posts = $this->BbsPost->getPosts(
+					$this->viewVars['bbses']['id'],
+					$this->viewVars['userId'],
+					$this->viewVars['contentEditable'],
+					$this->viewVars['contentCreatable'],
+					$postId,			//欲しい記事のID指定
+					$sortOrder,			//order by指定
+					$visiblePostRow,	//limit指定
+					4					//4ページ先の番号指定
+				);
+			$hasFourPage = (empty($posts))? false : true;
+			$this->set('hasFourPage', $hasFourPage);
 
-		}
+			//5ページがあるか取得（モックとしてとりあえず）
+			$posts = $this->BbsPost->getPosts(
+					$this->viewVars['bbses']['id'],
+					$this->viewVars['userId'],
+					$this->viewVars['contentEditable'],
+					$this->viewVars['contentCreatable'],
+					$postId,			//欲しい記事のID指定
+					$sortOrder,			//order by指定
+					$visiblePostRow,	//limit指定
+					5					//5ページ先の番号指定
+				);
+			$hasFivePage = (empty($posts))? false : true;
+			$this->set('hasFivePage', $hasFivePage);
+		//}
+	}
 
 /**
  * __setPost method
  *
- * @return void
+ * @param $sortParams
+ * @return string order for search
  */
-	private function __setSortOrder($params) {
-		switch ($params) {
+	private function __setSortOrder($sortParams) {
+		switch ($sortParams) {
 		case '1':
-		case '':
 		default :
 			//最新の投稿順
 			$sortStr = __d('bbses', 'Latest post order');
@@ -293,11 +364,16 @@ class BbsesController extends BbsesAppController {
 			$this->set('currentPostSortOrder', $sortStr);
 			return 'BbsPost.created ASC';
 		case '3':
+			//最新の投稿順（未読のみ）
+			$sortStr = __d('bbses', 'Do not read');
+			$this->set('currentPostSortOrder', $sortStr);
+			return 'BbsPost.comment_num DESC';
+		case '4':
 			//コメントの多い順
 			$sortStr = __d('bbses', 'Descending order of comments');
 			$this->set('currentPostSortOrder', $sortStr);
 			return 'BbsPost.comment_num DESC';
-		case '4':
+		case '5':
 			//ステータス順
 			$sortStr = __d('bbses', 'Status order');
 			$this->set('currentPostSortOrder', $sortStr);

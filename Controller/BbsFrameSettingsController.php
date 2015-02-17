@@ -112,7 +112,7 @@ class BbsFrameSettingsController extends BbsesAppController {
 		//camelize
 		$results = array(
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
-			'currentVisiblePostRow' => $bbsSettings['BbsFrameSetting']['visible_post_row']
+			//'currentVisiblePostRow' => $bbsSettings['BbsFrameSetting']['visible_post_row']
 		);
 		$this->set($this->camelizeKeyRecursive($results));
 

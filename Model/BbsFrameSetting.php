@@ -99,7 +99,7 @@ class BbsFrameSetting extends BbsesAppModel {
  */
 	public function getBbsSetting($frameKey) {
 		//固定化
-		//$frameKey = 'frame_30';
+		$frameKey = 'frame_30';
 		$conditions = array(
 			'frame_key' => $frameKey,
 		);

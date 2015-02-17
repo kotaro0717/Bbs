@@ -54,7 +54,7 @@ class AppSchema extends CakeSchema {
 		'parent_id' => array('type' => 'integer', 'null' => false, 'default' => null),
 		'status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 4, 'comment' => 'public status, 1: public, 2: public pending, 3: draft during 4: remand | 公開状況 1:公開中、2:公開申請中、3:下書き中、4:差し戻し | | '),
 		'title' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'title | タイトル | |', 'charset' => 'utf8'),
-		'content' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'content | 本文 | |', 'charset' => 'utf8'),
+		'content' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'content | 本文 | |', 'charset' => 'utf8'),
 		'comment_num' => array('type' => 'integer', 'null' => false, 'default' => '0'),
 		'up_vote_num' => array('type' => 'integer', 'null' => false, 'default' => '0'),
 		'down_vote_num' => array('type' => 'integer', 'null' => false, 'default' => '0'),
