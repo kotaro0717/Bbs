@@ -61,8 +61,12 @@ class BbsAuthoritySettingsController extends BbsesAppController {
  * @return void
  */
 	public function edit() {
-		//不要:defaultでBbsAuthoritySettings/editを見てくれる
-		//$this->view = 'BbsAuthoritySettings/edit';
+//		$authSettingOptions = array(
+//				__d('bbses', 'Room administrator'),
+//				__d('bbses', 'Cheif editor'),
+//				__d('bbses', 'Editor'),
+//			);
+//		$this->set('authSettingOptions', $authSettingOptions);
 
 		$this->__setBbs();
 		//debug用
@@ -85,7 +89,11 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 			}
 
 			//boolean値が文字列になっているため個別で格納し直している
-			$bbs['Bbs']['posts_authority'] = ($data['Bbs']['posts_authority'] === '1') ? true : false;
+			$bbs['Bbs']['post_create_authority'] = ($data['Bbs']['post_create_authority'] === '1') ? true : false;
+			$bbs['Bbs']['post_publish_authority'] = ($data['Bbs']['post_publish_authority'] === '1') ? true : false;
+			$bbs['Bbs']['comment_create_authority'] = ($data['Bbs']['comment_create_authority'] === '1') ? true : false;
+			//IDリセット
+			unset($data['Bbs']['id']);
 			$data = Hash::merge($data, $bbs);
 
 			if (!$bbs = $this->Bbs->saveBbs($data)) {
@@ -123,8 +131,10 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 			)
 		) {
 			$bbses = $this->Bbs->create();
+			$bbses['Bbs']['post_create_authority'] = ($bbses['Bbs']['post_create_authority'] === '1') ? true : false;
+			$bbses['Bbs']['post_publish_authority'] = ($bbses['Bbs']['post_publish_authority'] === '1') ? true : false;
+			$bbses['Bbs']['comment_create_authority'] = ($bbses['Bbs']['comment_create_authority'] === '1') ? true : false;
 		}
-		//camelize
 		$results = array(
 			'bbses' => $bbses['Bbs'],
 		);

@@ -4,7 +4,6 @@
 <?php //echo debug($hasNextSecondPage); ?>
 <?php //echo debug($hasFourPage); ?>
 <?php //echo debug($hasFivePage); ?>
-<?php //echo debug($baseUrl); ?>
 
 <nav>
 	<ul class="pagination">
@@ -13,7 +12,7 @@
 		<li class="<?php echo ($currentPage < 4)? 'disabled' : ''; ?>">
 			<?php $prevPager = $currentPage - 1 ?>
 			<a href="<?php echo ($currentPage < 4)? '' : $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $prevPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ; ?>"
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $prevPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ; ?>"
 				aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
 		</li>
 
@@ -21,18 +20,18 @@
 		<?php if (!($currentPage === 1) && !($currentPage === 2)) : ?>
 			<?php $minPageNum = $currentPage - 2 ?>
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $minPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $minPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 				<?php echo $minPageNum++; ?></a>
 			</li>
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $minPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $minPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 				<?php echo $minPageNum; ?></a>
 			</li>
 
 		<!-- 2ページの時1ページを表示 -->
 		<?php elseif ($currentPage === 2) : ?>
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 				<?php echo 1; ?></a>
 			</li>
 
@@ -46,7 +45,7 @@
 		<?php $nextPageNum = $currentPage + 1; ?>
 		<?php if ($hasNextPage) : ?>
 			<li><a href="<?php echo $this->Html->url(
-						'/' . $baseUrl . '/' . $frameId . '/' . $nextPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+						'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $nextPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo $nextPageNum++; ?></a>
 			</li>
 		<?php else : ?>
@@ -57,7 +56,7 @@
 
 		<?php if ($hasNextSecondPage) : ?>
 			<li><a href="<?php echo $this->Html->url(
-						'/' . $baseUrl . '/' . $frameId . '/' . $nextPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+						'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $nextPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo $nextPageNum++; ?></a>
 			</li>
 		<?php else : ?>
@@ -70,7 +69,7 @@
 		<?php if ($currentPage === 1) : ?>
 			<?php if ($hasFourPage) : ?>
 				<li><a href="<?php echo $this->Html->url(
-						'/' . $baseUrl . '/' . $frameId . '/' . 4 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+						'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 4 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo 4; ?></a>
 				</li>
 			<?php else : ?>
@@ -81,7 +80,7 @@
 
 			<?php if ($hasFivePage) : ?>
 				<li><a href="<?php echo $this->Html->url(
-						'/' . $baseUrl . '/' . $frameId . '/' . 5 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+						'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 5 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo 5; ?></a>
 				</li>
 			<?php else : ?>
@@ -95,7 +94,7 @@
 
 			<?php if ($hasFivePage) : ?>
 				<li><a href="<?php echo $this->Html->url(
-						'/' . $baseUrl . '/' . $frameId . '/' . 5 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+						'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 5 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo 5; ?></a>
 				</li>
 			<?php else : ?>
@@ -108,13 +107,12 @@
 
 		<!-- [>>]の表示 -->
 		<li class="<?php echo ($hasNextPage &&
-								$hasFourPage &&	$hasFivePage &&
+								$hasFourPage && $hasFivePage &&
 								$hasNextPage && $hasNextSecondPage)? '' : 'disabled'; ?>">
-
 			<?php $nextPager = $currentPage + 1 ?>
 			<a href="<?php echo ($hasNextPage && $hasFourPage && $hasFivePage && $hasNextPage && $hasNextSecondPage)?
 					$this->Html->url(
-						'/' . $baseUrl . '/' . $frameId . '/' . $nextPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) : ''; ?>"
+						'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $nextPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) : ''; ?>"
 					aria-label="Next">
 				<span aria-hidden="true">&raquo;</span>
 			</a>

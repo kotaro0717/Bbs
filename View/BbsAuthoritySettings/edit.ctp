@@ -3,7 +3,7 @@
 
 <div id="nc-bbs-auth-setting-<?php echo (int)$frameId; ?>"
 		ng-controller="BbsAuthoritySettings"
-		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
+		ng-init="initialize(<?php echo h(json_encode($bbses)); ?>)">
 
 <?php $formName = 'BbsForm'; ?>
 
@@ -66,7 +66,7 @@
 
 		<div class="panel panel-default" >
 			<div class="panel-body has-feedback">
-				<?php echo $this->element('BbsAuthoritySettings/authSetting'); ?>
+				<?php echo $this->element('BbsAuthoritySettings/auth_setting'); ?>
 			</div>
 
 			<div class="panel-footer text-center">

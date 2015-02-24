@@ -80,6 +80,8 @@ class BbsFrameSettingsController extends BbsesAppController {
 				$bbsSetting = $this->BbsFrameSetting->create();
 			}
 
+			//作成時間,更新時間を再セット
+			unset($bbsSetting['BbsFrameSetting']['created'], $bbsSetting['BbsFrameSetting']['modified']);
 			$data = Hash::merge($bbsSetting, $data);
 
 			if (!$bbsSetting = $this->BbsFrameSetting->saveBbsSetting($data)) {

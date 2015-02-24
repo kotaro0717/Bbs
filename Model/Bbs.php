@@ -129,8 +129,7 @@ class Bbs extends BbsesAppModel {
  */
 	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $isPostList) {
 		//固定化
-		$blockId = '30';
-		//$contentEditable = false; //TODO:debug用
+		//$blockId = '30';
 		$contains = false;
 
 		//記事一覧の場合
@@ -161,28 +160,26 @@ class Bbs extends BbsesAppModel {
  * @throws InternalErrorException
  */
 	public function saveBbs($data) {
-		//モデル定義
-		$this->setDataSource('master');
-		$models = array(
+		$this->loadModels([
+			'Bbs' => 'Bbses.Bbs',
 			'Block' => 'Blocks.Block',
-		);
-		foreach ($models as $model => $class) {
-			$this->$model = ClassRegistry::init($class);
-			$this->$model->setDataSource('master');
-		}
+		]);
+
 		//トランザクションBegin
 		$dataSource = $this->getDataSource();
 		$dataSource->begin();
+
 		try {
 			/* var_dump($this->Comment); */
 			if (!$this->validateBbs($data)) {
 				return false;
 			}
 			//ブロックの登録
-			//$block = $this->Block->saveByFrameId($data['Frame']['id'], false);
+			$block = $this->Block->saveByFrameId($data['Frame']['id'], false);
+
 			//掲示板の登録
-			//$this->data['Bbs']['block_id'] = (int)$block['Block']['id'];
-			$this->data['Bbs']['block_id'] = (int)$this->data['Block']['id'];
+			$this->data['Bbs']['block_id'] = (int)$block['Block']['id'];
+			//$this->data['Bbs']['block_id'] = (int)$this->data['Block']['id'];
 			$bbs = $this->save(null, false);
 			if (!$bbs) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
@@ -220,7 +217,7 @@ class Bbs extends BbsesAppModel {
 		//containableビヘイビア用の条件
 
 		//親記事のみ取得
-		$containConditions['BbsPost.parent_id ='] = 0;
+		$containConditions['BbsPost.parent_id ='] = null;
 
 		//作成権限あり:自分で書いた記事のみ取得
 		if ($contentCreatable && ! $contentEditable) {
@@ -242,35 +239,4 @@ class Bbs extends BbsesAppModel {
 		return $contains;
 	}
 
-/**
- * __setDateTime method
- *
- * @return void
- */
-	private function __setDateTime($bbs_posts) {
-		$today = date("Y-m-d");
-		$year = date("Y");
-		$i = 0;
-		//再フォーマット
-		foreach ($bbs_posts as $post) {
-			$date = $post['created'];
-			//日付切り出し
-			$createdDay = substr($post['created'], 0, 10);
-			//年切り出し
-			$createdYear = substr($post['created'], 0, 4);
-			//変換
-			if ($today === $createdDay) {
-				//今日
-				$bbs_posts[$i]['created'] = date('G:i', strtotime($date));
-			} else if ($year !== $createdYear) {
-				//昨年以前
-				$bbs_posts[$i]['created'] =  date('Y/m/d', strtotime($date));
-			} else if ($today > $createdDay) {
-				//今日より前 かつ 今年
-				$bbs_posts[$i]['created'] =  date('m/d', strtotime($date));
-			}
-			$i++;
-		}
-		return $bbs_posts;
-	}
 }

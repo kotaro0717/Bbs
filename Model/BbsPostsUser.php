@@ -1,6 +1,6 @@
 <?php
 /**
- * BbsFrameSetting Model
+ * BbsPostsUser Model
  *
  * @property Block $Block
  *
@@ -13,15 +13,14 @@
 App::uses('BbsesAppModel', 'Bbses.Model');
 
 /**
- * BbsFrameSetting Model
+ * BbsPostsUser Model
  *
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
  * @package NetCommons\Bbses\Model
  */
-class BbsFrameSetting extends BbsesAppModel {
+class BbsPostsUser extends BbsesAppModel {
 
-	const DISPLAY_NUMBER_UNIT = '件';
-
+	public $useTable = 'bbs_posts_users';
 /**
  * use behaviors
  *
@@ -45,13 +44,13 @@ class BbsFrameSetting extends BbsesAppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Frame' => array(
-			'className' => 'Frames.Frame',
-			'foreignKey' => 'frame_key',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
+//		'Frame' => array(
+//			'className' => 'Frames.Frame',
+//			'foreignKey' => 'frame_key',
+//			'conditions' => '',
+//			'fields' => '',
+//			'order' => ''
+//		),
 	);
 
 /**
@@ -65,22 +64,15 @@ class BbsFrameSetting extends BbsesAppModel {
  */
 	public function beforeValidate($options = array()) {
 		$this->validate = Hash::merge($this->validate, array(
-			'frame_key' => array(
+			'post_id' => array(
 				'notEmpty' => array(
 					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
 					'required' => true,
 				)
 			),
-			'visible_post_row' => array(
-				'boolean' => array(
-					'rule' => array('notEmpty'),
-					'message' => __d('net_commons', 'Invalid request.'),
-					'required' => true,
-				)
-			),
-			'visible_comment_row' => array(
-				'boolean' => array(
+			'user_id' => array(
+				'notEmpty' => array(
 					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
 					'required' => true,
@@ -97,21 +89,22 @@ class BbsFrameSetting extends BbsesAppModel {
  * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getBbsSetting($frameKey) {
+	public function getReadPostStatus($postId, $userId) {
 		$conditions = array(
-			'frame_key' => $frameKey,
+			'post_id' => $postId,
+			'user_id' => $userId,
 		);
-		if (!$bbsSetting = $this->find('first', array(
+		if (! $this->find('first', array(
 				'recursive' => -1,
 				'conditions' => $conditions,
-				'order' => 'BbsFrameSetting.id DESC'
+				//'order' => 'BbsPostsUsers.id DESC'
 			))
 		) {
-			//初期値を設定
-			$bbsSetting = $this->create($conditions);
-			$this->saveBbsSetting($bbsSetting);
+			//未読
+			return false;
 		}
-		return $bbsSetting;
+		//既読
+		return true;
 	}
 
 /**
@@ -121,24 +114,21 @@ class BbsFrameSetting extends BbsesAppModel {
  * @return mixed On success Model::$data if its not empty or true, false on failure
  * @throws InternalErrorException
  */
-	public function saveBbsSetting($data) {
+	public function saveReadStatus($data) {
 		$this->loadModels([
-			'BbsFrameSetting' => 'Bbses.BbsFrameSetting',
+			'BbsPostsUser' => 'Bbses.BbsPostsUser',
 		]);
 
 		//トランザクションBegin
 		$dataSource = $this->getDataSource();
 		$dataSource->begin();
 		try {
-			/* var_dump($this->Comment); */
-			if (!$this->validateBbsSetting($data)) {
+			if (! $this->validateBbsPostsUser($data)) {
 				return false;
 			}
 
-			//BbsFrameSettingの登録
-			//$this->data['BbsFrameSetting']['frame_key'] = $this->data['Frame']['key'];
-			$bbsSetting = $this->save(null, false);
-			if (!$bbsSetting) {
+			$bbsPostsUser = $this->save(null, false);
+			if (! $bbsPostsUser) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
 			}
 			//トランザクションCommit
@@ -150,7 +140,7 @@ class BbsFrameSetting extends BbsesAppModel {
 			CakeLog::write(LOG_ERR, $ex);
 			throw $ex;
 		}
-		return $bbsSetting;
+		return $bbsPostsUser;
 	}
 
 /**
@@ -159,25 +149,9 @@ class BbsFrameSetting extends BbsesAppModel {
  * @param array $data received post data
  * @return bool True on success, false on error
  */
-	public function validateBbsSetting($data) {
+	public function validateBbsPostsUser($data) {
 		$this->set($data);
 		$this->validates();
 		return $this->validationErrors ? false : true;
-	}
-
-/**
- * getDisplayNumberOptions
- *
- * @return array
- */
-	public static function getDisplayNumberOptions() {
-		return array(
-			1 => 1 . self::DISPLAY_NUMBER_UNIT,
-			5 => 5 . self::DISPLAY_NUMBER_UNIT,
-			10 => 10 . self::DISPLAY_NUMBER_UNIT,
-			20 => 20 . self::DISPLAY_NUMBER_UNIT,
-			50 => 50 . self::DISPLAY_NUMBER_UNIT,
-			100 => 100 . self::DISPLAY_NUMBER_UNIT,
-		);
 	}
 }

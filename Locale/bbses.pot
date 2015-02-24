@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-06 10:16+0000\n"
+"POT-Creation-Date: 2015-02-24 02:05+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,159 +14,220 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Controller/BbsCommentsController.php:309
-#: /Controller/BbsPostsController.php:371
-#: /View/Bbses/view.ctp:33
+#: /Controller/BbsCommentsController.php:557
+#: /Controller/BbsPostsController.php:534
+#: /View/BbsComments/view.ctp:48
+#: /View/BbsPosts/view.ctp:48
 msgid "Latest comment order"
 msgstr ""
 
-#: /Controller/BbsCommentsController.php:314
-#: /Controller/BbsPostsController.php:376
-#: /View/Bbses/view.ctp:35
+#: /Controller/BbsCommentsController.php:562
+#: /Controller/BbsPostsController.php:540
+#: /View/BbsComments/view.ctp:50
+#: /View/BbsPosts/view.ctp:50
 msgid "Older comment order"
 msgstr ""
 
-#: /Controller/BbsCommentsController.php:319
-#: /Controller/BbsPostsController.php:381
-#: /Controller/BbsesController.php:267
-#: /View/Bbses/indexForEditor.ctp:40
-#: /View/Bbses/view.ctp:38
-#: /View/Bbses/viewForComment.ctp:30
+#: /Controller/BbsCommentsController.php:567
+#: /View/BbsComments/view.ctp:53
+#: /View/BbsPosts/view.ctp:53
 msgid "Status order"
 msgstr ""
 
-#: /Controller/BbsPostsController.php:105
-#: /View/Bbses/indexForEditor.ctp:70
-#: /View/Bbses/notCreatePost.ctp:6
-msgid "Create post"
-msgstr ""
-
-#: /Controller/BbsPostsController.php:113
-msgid "Create comment"
-msgstr ""
-
-#: /Controller/BbsPostsController.php:133
-#: /View/Bbses/view.ctp:84;128
-#: /View/Bbses/viewForComment.ctp:66;106
-msgid "Edit"
-msgstr ""
-
-#: /Controller/BbsesController.php:252
-#: /View/Bbses/index.ctp:23
-#: /View/Bbses/indexForEditor.ctp:34
-#: /View/Bbses/viewForComment.ctp:21;27
+#: /Controller/BbsesController.php:453
+#: /View/Bbses/view.ctp:76
 msgid "Latest post order"
 msgstr ""
 
-#: /Controller/BbsesController.php:257
-#: /View/Bbses/index.ctp:25
-#: /View/Bbses/indexForEditor.ctp:36
-#: /View/Bbses/viewForComment.ctp:28
+#: /Controller/BbsesController.php:459
+#: /View/Bbses/view.ctp:81
 msgid "Older post order"
 msgstr ""
 
-#: /Controller/BbsesController.php:262
-#: /View/Bbses/index.ctp:27
-#: /View/Bbses/indexForEditor.ctp:38
+#: /Controller/BbsesController.php:465
+#: /View/Bbses/view.ctp:86
 msgid "Descending order of comments"
 msgstr ""
 
-#: /Model/Bbs.php:125
-#: /View/Elements/editForm.ctp:3
-msgid "Bbs name"
+#: /Controller/BbsesController.php:493
+#: /View/Bbses/view.ctp:37
+msgid "Display all posts"
 msgstr ""
 
-#: /Model/BbsPost.php:121
-#: /View/Bbses/add.ctp:28
-#: /View/Bbses/comment.ctp:29
-msgid "Title"
-msgstr ""
-
-#: /Model/BbsPost.php:129
-#: /View/Bbses/add.ctp:57
-#: /View/Bbses/comment.ctp:58
-msgid "Content"
-msgstr ""
-
-#: /View/Bbses/authSetting.ctp:12
-#: /View/Bbses/displayChange.ctp:12
-#: /View/Bbses/edit.ctp:12
-msgid "Plugin name"
-msgstr ""
-
-#: /View/Bbses/authSetting.ctp:19
-#: /View/Bbses/displayChange.ctp:19
-#: /View/Bbses/edit.ctp:18
-msgid "Bbs edit"
-msgstr ""
-
-#: /View/Bbses/authSetting.ctp:25
-#: /View/Bbses/displayChange.ctp:24
-#: /View/Bbses/edit.ctp:24
-msgid "Display change"
-msgstr ""
-
-#: /View/Bbses/authSetting.ctp:30
-#: /View/Bbses/displayChange.ctp:30
-#: /View/Bbses/edit.ctp:30
-msgid "Authority setting"
-msgstr ""
-
-#: /View/Bbses/indexForEditor.ctp:41
+#: /Controller/BbsesController.php:499
+#: /View/Bbses/view.ctp:39
 msgid "Do not read"
 msgstr ""
 
-#: /View/Bbses/notCreateBbs.ctp:2
-msgid "There are not published bbs"
+#: /Controller/BbsesController.php:506
+#: /View/Bbses/view.ctp:41
+msgid "Published"
 msgstr ""
 
-#: /View/Bbses/notCreatePost.ctp:17
-msgid "There are not posts"
+#: /Controller/BbsesController.php:524
+#: /View/Bbses/view.ctp:45
+#: /View/Elements/status_label.ctp:23
+#: /View/Elements/workflow_buttons.ctp:20
+msgid "Disapproval"
 msgstr ""
 
-#: /View/Bbses/view.ctp:79;125
-#: /View/Bbses/viewForComment.ctp:65;105
-msgid "Write comment"
+#: /Model/Bbs.php:115
+#: /View/Elements/Bbses/edit.ctp:3
+msgid "Bbs name"
 msgstr ""
 
-#: /View/Bbses/view.ctp:87;130
-#: /View/Bbses/viewForComment.ctp:67;107
+#: /Model/BbsPost.php:122
+#: /View/Elements/BbsComments/add_comment_form.ctp:15
+#: /View/Elements/BbsPosts/post_form.ctp:15
+msgid "Title"
+msgstr ""
+
+#: /Model/BbsPost.php:130
+#: /View/Elements/BbsComments/add_comment_form.ctp:47
+#: /View/Elements/BbsPosts/post_form.ctp:45
+msgid "Content"
+msgstr ""
+
+#: /View/BbsAuthoritySettings/edit.ctp:11
+#: /View/BbsFrameSettings/edit.ctp:11
+#: /View/Bbses/edit.ctp:11
+msgid "Plugin name"
+msgstr ""
+
+#: /View/BbsAuthoritySettings/edit.ctp:18
+#: /View/BbsFrameSettings/edit.ctp:18
+#: /View/Bbses/edit.ctp:17
+msgid "Bbs edit"
+msgstr ""
+
+#: /View/BbsAuthoritySettings/edit.ctp:24
+#: /View/BbsFrameSettings/edit.ctp:23
+#: /View/Bbses/edit.ctp:23
+msgid "Display change"
+msgstr ""
+
+#: /View/BbsAuthoritySettings/edit.ctp:29
+#: /View/BbsFrameSettings/edit.ctp:29
+#: /View/Bbses/edit.ctp:29
+msgid "Authority setting"
+msgstr ""
+
+#: /View/BbsComments/add.ctp:21
+msgid "Create comment"
+msgstr ""
+
+#: /View/BbsComments/edit.ctp:21
+#: /View/BbsComments/view.ctp:143;264;402
+#: /View/BbsPosts/edit.ctp:21
+#: /View/BbsPosts/view.ctp:155;310
+#: /View/Bbses/view.ctp:191
+msgid "Edit"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:133;255;393
+#: /View/BbsPosts/view.ctp:145;301
 msgid "Delete"
 msgstr ""
 
-#: /View/Elements/authSetting.ctp:3
-msgid "Post authority"
+#: /View/BbsComments/view.ctp:171;291;431
+#: /View/BbsPosts/view.ctp:182;338
+msgid "Quote this posts"
 msgstr ""
 
-#: /View/Elements/authSetting.ctp:8
+#: /View/BbsComments/view.ctp:181;301;441
+#: /View/BbsPosts/view.ctp:192;348
+msgid "Write comment"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:317
+msgid "This comments has not yet been published"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:325
+#: /View/BbsPosts/view.ctp:216
+msgid "There are not comments now"
+msgstr ""
+
+#: /View/BbsPosts/add.ctp:15
+#: /View/Bbses/notCreatePost.ctp:19
+#: /View/Bbses/view.ctp:21
+msgid "Create post"
+msgstr ""
+
+#: /View/BbsPosts/view.ctp:37
+msgid "Comments"
+msgstr ""
+
+#: /View/BbsPosts/view.ctp:208
+msgid "This posts has not yet been published"
+msgstr ""
+
+#: /View/Bbses/notCreateBbs.ctp:13
+msgid "There are not published bbs now"
+msgstr ""
+
+#: /View/Bbses/notCreatePost.ctp:31
+#: /View/Bbses/view.ctp:212
+msgid "There are not posts now"
+msgstr ""
+
+#: /View/Bbses/view.ctp:62
+msgid "Posts"
+msgstr ""
+
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:3
+msgid "Post creatable authority"
+msgstr ""
+
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:10;64;117;170
 msgid "Room administrator"
 msgstr ""
 
-#: /View/Elements/authSetting.ctp:18
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:21;75;128;181
 msgid "Cheif editor"
 msgstr ""
 
-#: /View/Elements/authSetting.ctp:28
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:32;86;139;192
 msgid "Editor"
 msgstr ""
 
-#: /View/Elements/authSetting.ctp:38
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:43;97;150;203
 msgid "General"
 msgstr ""
 
-#: /View/Elements/displayChange.ctp:3
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:57
+msgid "Post publishable authority"
+msgstr ""
+
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:110
+msgid "Comment creatable authority"
+msgstr ""
+
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:163
+msgid "Comment publishable authority"
+msgstr ""
+
+#: /View/Elements/BbsFrameSettings/frame_setting.ctp:3
 msgid "Visible post row"
 msgstr ""
 
-#: /View/Elements/displayChange.ctp:28
+#: /View/Elements/BbsFrameSettings/frame_setting.ctp:22
 msgid "Visible comment row"
 msgstr ""
 
-#: /View/Elements/editForm.ctp:30
-msgid "Can comments"
+#: /View/Elements/Bbses/edit.ctp:32
+msgid "Use comment"
 msgstr ""
 
-#: /View/Elements/editForm.ctp:42
-msgid "Can votes"
+#: /View/Elements/Bbses/edit.ctp:44
+msgid "Auto approval"
+msgstr ""
+
+#: /View/Elements/Bbses/edit.ctp:56
+msgid "Use like button"
+msgstr ""
+
+#: /View/Elements/Bbses/edit.ctp:69
+msgid "Use unlike button"
 msgstr ""
 

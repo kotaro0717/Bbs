@@ -3,7 +3,7 @@
 
 <div id="nc-bbs-edit-<?php echo (int)$frameId; ?>"
 		ng-controller="BbsEdit"
-		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
+		ng-init="initialize(<?php echo h(json_encode($bbses)); ?>)">
 
 <?php $formName = 'BbsForm'; ?>
 

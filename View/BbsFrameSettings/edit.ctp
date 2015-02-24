@@ -66,7 +66,7 @@
 
 		<div class="panel panel-default" >
 			<div class="panel-body has-feedback">
-				<?php echo $this->element('BbsFrameSettings/frameSetting'); ?>
+				<?php echo $this->element('BbsFrameSettings/frame_setting'); ?>
 			</div>
 
 			<div class="panel-footer text-center">

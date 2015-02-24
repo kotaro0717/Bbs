@@ -17,30 +17,29 @@
 	<?php if ($contentPublishable) : ?>
 		<?php if ($contentStatus === NetCommonsBlockComponent::STATUS_APPROVED) : ?>
 		<?php echo $this->Form->button(
-			__d('net_commons', 'Disapproval'),
+			__d('bbses', 'Disapproval'),
 			array(
 				'class' => 'btn btn-danger',
 				'name' => 'save_' . NetCommonsBlockComponent::STATUS_DISAPPROVED,
-				'ng-click' => 'save(' . NetCommonsBlockComponent::STATUS_DISAPPROVED . ')',
 			)) ?>
 		<?php endif; ?>
 		<?php if ($contentStatus !== NetCommonsBlockComponent::STATUS_APPROVED) : ?>
+		<!-- 公開中の記事に対しての一時保存を制限 -->
 		<?php echo $this->Form->button(
-			__d('net_commons', 'Save temporally'),
-			array(
-				'class' => 'btn btn-default',
-				'name' => 'save_' . NetCommonsBlockComponent::STATUS_IN_DRAFT,
-				'ng-click' => 'save(' . NetCommonsBlockComponent::STATUS_IN_DRAFT . ')',
-			)) ?>
+				__d('net_commons', 'Save temporally'),
+				array(
+					'class' => 'btn btn-default',
+					'disabled' => ($contentStatus === NetCommonsBlockComponent::STATUS_PUBLISHED)? true : false,
+					'name' => 'save_' . NetCommonsBlockComponent::STATUS_IN_DRAFT,
+				)) ?>
 		<?php endif; ?>
+
 	<?php else : ?>
 		<?php echo $this->Form->button(
 			__d('net_commons', 'Save temporally'),
 			array(
 				'class' => 'btn btn-default',
 				'name' => 'save_' . NetCommonsBlockComponent::STATUS_IN_DRAFT,
-				'ng-click' => 'save(' . NetCommonsBlockComponent::STATUS_IN_DRAFT . ')',
-
 			)) ?>
 	<?php endif; ?>
 
@@ -50,7 +49,6 @@
 			array(
 				'class' => 'btn btn-primary',
 				'name' => 'save_' . NetCommonsBlockComponent::STATUS_PUBLISHED,
-				'ng-click' => 'save(' . NetCommonsBlockComponent::STATUS_PUBLISHED . ')',
 			)) ?>
 	<?php else : ?>
 		<?php echo $this->Form->button(
@@ -58,6 +56,5 @@
 			array(
 				'class' => 'btn btn-primary',
 				'name' => 'save_' . NetCommonsBlockComponent::STATUS_APPROVED,
-				'ng-click' => 'save(' . NetCommonsBlockComponent::STATUS_APPROVED . ')',
 			)) ?>
 	<?php endif;
