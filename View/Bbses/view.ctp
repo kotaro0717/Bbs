@@ -34,17 +34,17 @@
 				</button>
 				<ul class="dropdown-menu" role="menu">
 					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 1); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
 					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 2); ?>"><?php echo __d('bbses', 'Do not read'); ?></a></li>
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 7); ?>"><?php echo __d('bbses', 'Do not read'); ?></a></li>
 					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 3); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
 					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 4); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
 					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>"><?php echo __d('bbses', 'Disapproval'); ?></a></li>
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_DISAPPROVED); ?>"><?php echo __d('bbses', 'Remand'); ?></a></li>
 					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>"><?php echo __d('net_commons', 'Approving'); ?></a></li>
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_APPROVED); ?>"><?php echo __d('net_commons', 'Approving'); ?></a></li>
 				</ul>
 			</span>
 		<?php endif; ?>
@@ -57,13 +57,13 @@
 	<span class="text-left" style="float:right;">
 
 		<!-- 記事件数の表示 -->
-		<span class="glyphicon glyphicon-duplicate"><?php echo $bbsPostNum; ?></span>
+		<span class="glyphicon glyphicon-duplicate"><?php echo $postNum; ?></span>
 		<small><?php echo __d('bbses', 'Posts'); ?></small>&nbsp;
 
 		<!-- ソート -->
 		<div class="btn-group">
 			<button type="button" class="btn btn-default">
-				<?php echo $currentPostSortOrder; ?>
+				<?php echo $currentSortOrder; ?>
 			</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>
@@ -82,7 +82,7 @@
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 3 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Descending order of comments'); ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 3 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Descending order of comments') . '(検討)'; ?>
 					</a>
 				</li>
 			</ul>
@@ -91,8 +91,7 @@
 		<!-- 表示件数 -->
 		<div class="btn-group">
 			<button type="button" class="btn btn-default">
-				<!-- Todo:件をCONST化する -->
-				<?php echo $currentVisibleRow . "件"; ?>
+				<?php echo $currentVisibleRow . BbsFrameSetting::DISPLAY_NUMBER_UNIT; ?>
 			</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>

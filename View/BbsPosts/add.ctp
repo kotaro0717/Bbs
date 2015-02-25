@@ -33,7 +33,7 @@
 			<?php echo $this->element('BbsPosts/post_form'); ?>
 		</div>
 		<div class="panel-footer text-center">
-			<?php echo $this->element('NetCommons.workflow_buttons'); ?>
+			<?php echo $this->element('Bbses.post_workflow_buttons'); ?>
 		</div>
 	</div>
 <?php echo $this->Form->end(); ?>

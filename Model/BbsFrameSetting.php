@@ -23,16 +23,6 @@ class BbsFrameSetting extends BbsesAppModel {
 	const DISPLAY_NUMBER_UNIT = '件';
 
 /**
- * use behaviors
- *
- * @var array
- */
-	public $actsAs = array(
-		// TODO: disabled for debug
-		/* 'NetCommons.Publishable' */
-	);
-
-/**
  * Validation rules
  *
  * @var array
@@ -90,11 +80,9 @@ class BbsFrameSetting extends BbsesAppModel {
 		return parent::beforeValidate($options);
 	}
 /**
- * get bbs data
+ * get bbs setting data
  *
  * @param int $frameId frames.id
- * @param int $blockId blocks.id
- * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
 	public function getBbsSetting($frameKey) {
@@ -130,13 +118,10 @@ class BbsFrameSetting extends BbsesAppModel {
 		$dataSource = $this->getDataSource();
 		$dataSource->begin();
 		try {
-			/* var_dump($this->Comment); */
 			if (!$this->validateBbsSetting($data)) {
 				return false;
 			}
 
-			//BbsFrameSettingの登録
-			//$this->data['BbsFrameSetting']['frame_key'] = $this->data['Frame']['key'];
 			$bbsSetting = $this->save(null, false);
 			if (!$bbsSetting) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));

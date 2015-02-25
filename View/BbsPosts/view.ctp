@@ -40,11 +40,11 @@
 			<!-- URL:controller:BbsPostsController action:view -->
 			<!--     argument:frameId, postId(記事), pageNumber(コメント一覧ページ番号), sortParams(ソート), visibleRow(表示件数), narrowDown(絞り込み)-->
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 1); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 3); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 4); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
 			<li><a href="<?php echo $this->Html->url(
 					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>"><?php echo __d('bbses', 'Disapproval'); ?></a></li>
 		</ul>
@@ -58,7 +58,9 @@
 
 		<!-- ソート用プルダウン -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default"><?php echo $currentCommentSortOrder; ?></button>
+			<button type="button" class="btn btn-default">
+				<?php echo $currentSortOrder; ?>
+			</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -74,7 +76,9 @@
 		</div>
 		<!-- 表示件数 -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default"><?php echo $currentVisibleRow . "件"; ?></button>
+			<button type="button" class="btn btn-default">
+				<?php echo $currentVisibleRow . BbsFrameSetting::DISPLAY_NUMBER_UNIT; ?>
+			</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -260,7 +264,7 @@
 									<h4 style="display:inline;"><strong><?php echo $comment['title']; ?></strong></h4></a>
 
 					<!-- ステータス -->
-					<span><?php echo $this->element('NetCommons.status_label',
+					<span><?php echo $this->element('Bbses.status_label',
 										array('status' => $comment['status'])); ?></span>
 				</span>
 
@@ -295,8 +299,17 @@
 						<?php if ($bbses['use_unlike_button']) : ?>
 							<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['unlike_num']; ?></span>
 						<?php endif; ?>
-					<?php endif; ?>&nbsp;
+
+					<!-- '5'(非承認) -->
+					<?php elseif ($comment['status'] === '5' && $contentPublishable) : ?>
+						<!-- 承認するボタン -->
+						<?php echo $this->element('approving_button',
+										array('comment' => $comment)); ?>
+
+					<?php endif; ?>
+					&nbsp;
 				</span>
+
 				<span class="text-left" style="float:right;">
 					<!-- コメント編集/削除 -->
 					<?php if ($comment['created_user'] === $userId && $contentCreatable

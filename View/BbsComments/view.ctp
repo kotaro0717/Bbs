@@ -48,11 +48,11 @@
 			<!--     argument:frameId, postId(記事), $bbsCurrentComments(対象コメント) -->
 			<!--     pageNumber(コメント一覧ページ番号), sortParams(ソート), visibleRow(表示件数), narrowDown(絞り込み) -->
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 1); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 3); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
 			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 4); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
 			<li><a href="<?php echo $this->Html->url(
 					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>"><?php echo __d('bbses', 'Disapproval'); ?></a></li>
 		</ul>
@@ -65,7 +65,9 @@
 
 		<!-- ソート用プルダウン -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default"><?php echo $currentCommentSortOrder; ?></button>
+			<button type="button" class="btn btn-default">
+				<?php echo $currentSortOrder; ?>
+			</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -83,7 +85,9 @@
 
 		<!-- 表示件数 -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default"><?php echo $currentVisibleRow . "件"; ?></button>
+			<button type="button" class="btn btn-default">
+				<?php echo $currentVisibleRow . BbsFrameSetting::DISPLAY_NUMBER_UNIT; ?>
+			</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -124,7 +128,7 @@
 
 				<!-- ユーザ情報 -->
 				<span>
-					<a href="" ng-click="user.showUser(<?php echo $bbsPosts['user_id'] ?>)">
+					<a href="" ng-click="user.showUser(<?php echo $bbsPosts['userId'] ?>)">
 						<?php echo $bbsPosts['username']; ?>
 					</a>
 				</span>
@@ -236,7 +240,7 @@
 				<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
 				<!-- ユーザ情報 -->
 				<span>
-					<a href="">
+					<a href="" ng-click="user.showUser(<?php echo $bbsCurrentComments['userId'] ?>)">
 						<?php echo $bbsCurrentComments['username']; ?>
 					</a>
 				</span>
@@ -244,7 +248,7 @@
 				<!-- タイトル※対象記事のためリンクを貼らない -->
 				<h4 style="display:inline;"><strong><?php echo $bbsCurrentComments['title']; ?></strong></h4>
 				<!-- ステータス -->
-				<span><?php echo $this->element('NetCommons.status_label',
+				<span><?php echo $this->element('Bbses.status_label',
 									array('status' => $bbsCurrentComments['status'])); ?></span>
 			</span>
 
@@ -262,11 +266,27 @@
 			<?php endif; ?>
 			<div><?php echo $bbsCurrentComments['content']; ?></div>
 		</div>
+
+		<!-- フッター -->
 		<div class="panel-footer">
 			<!-- いいね！ -->
 			<span class="text-left">
-				<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsCurrentComments['like_num']; ?></span>
-				<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsCurrentComments['unlike_num']; ?></span>
+				<?php if ($bbsCurrentComments['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
+					<?php if ($bbses['use_like_button']) : ?>
+						<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsCurrentComments['like_num']; ?></span>
+					<?php endif; ?>
+					<?php if ($bbses['use_unlike_button']) : ?>
+						<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsCurrentComments['unlike_num']; ?></span>
+					<?php endif; ?>
+
+				<!-- '5'(非承認) -->
+				<?php elseif ($bbsCurrentComments['status'] === '5' && $contentPublishable) : ?>
+					<!-- 承認するボタン -->
+					<?php echo $this->element('approving_button',
+									array('comment' => $bbsCurrentComments)); ?>
+
+				<?php endif; ?>
+				&nbsp;
 			</span>
 
 			<!-- 右に表示 -->
@@ -297,7 +317,7 @@
 				<!-- 編集 -->
 				<span class="text-left" style="float:right;">
 					<a href="<?php echo $this->Html->url(
-							'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $bbsCurrentComments['id']); ?>"
+							'/bbses/bbsComments/edit' . '/' . $frameId . '/' . $bbsCurrentComments['id']); ?>"
 							class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
 							<span class="glyphicon glyphicon-edit"></span>
 					</a>
@@ -374,13 +394,17 @@
 					<!-- id -->
 					<?php echo $comment['id']; ?>.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
 					<!-- ユーザ情報 -->
-					<span><a href=""><?php echo $comment['username']; ?></a></span>
+					<span>
+						<a href="" ng-click="user.showUser(<?php echo $comment['userId'] ?>)">
+							<?php echo $comment['username']; ?>
+						</a>
+					</span>
 					<!-- タイトル -->
 					<a href="<?php echo $this->Html->url(
-									'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsCurrentComments['id'] . '/' . $comment['id']); ?>">
+									'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
 									<h4 style="display:inline;"><strong><?php echo $comment['title']; ?></strong></h4></a>
 					<!-- ステータス -->
-					<span><?php echo $this->element('NetCommons.status_label',
+					<span><?php echo $this->element('Bbses.status_label',
 										array('status' => $comment['status'])); ?></span>
 				</span>
 
@@ -392,57 +416,72 @@
 			</div>
 			<!-- 本文 -->
 			<div class="panel panel-body">
-				<?php //if ($bbsCurrentComments['id'] !== $comment['parent_id']) : ?>
+				<?php if ($bbsCurrentComments['id'] !== $comment['parent_id']) : ?>
 					<div><a href="<?php echo $this->Html->url(
-								'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id']); ?>">
+								'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
 							>><?php echo $comment['parent_id']; ?></a></div>
-				<?php// endif; ?>
+				<?php endif; ?>
 				<div><?php echo $comment['content']; ?></div>
 			</div>
 			<!-- フッター -->
 			<div class="panel-footer">
 				<!-- いいね！ -->
 				<span class="text-left">
-					<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['like_num']; ?></span>
-					<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['unlike_num']; ?></span>
+					<?php if ($comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
+						<?php if ($bbses['use_like_button']) : ?>
+							<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['like_num']; ?></span>
+						<?php endif; ?>
+						<?php if ($bbses['use_unlike_button']) : ?>
+							<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['unlike_num']; ?></span>
+						<?php endif; ?>
+
+					<!-- '5'(非承認) -->
+					<?php elseif ($comment['status'] === '5' && $contentPublishable) : ?>
+						<!-- 承認するボタン -->
+						<?php echo $this->element('approving_button',
+										array('comment' => $comment)); ?>
+
+					<?php endif; ?>
+					&nbsp;
 				</span>
 
-				<!-- コメント編集/削除 -->
-				<?php if ($comment['created_user'] === $userId && $contentCreatable
-								&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED
-							|| $contentPublishable) : ?>
+				<span class="text-left" style="float:right;">
+					<!-- コメント編集/削除 -->
+					<?php if ($comment['created_user'] === $userId && $contentCreatable
+									&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED
+								|| $contentPublishable) : ?>
 
-					<!-- 削除 -->
-					<span class="text-left" style="float:right;">
-						<?php echo $this->Form->create('',
-							array(
-								'div' => false,
-								'type' => 'post',
-								'url' => '/bbses/bbsPosts/delete/' . $frameId . '/' . $comment['id']
-							)); ?>
+						<!-- 削除 -->
+						<span class="text-left" style="float:right;">
+							<?php echo $this->Form->create('',
+								array(
+									'div' => false,
+									'type' => 'post',
+									'url' => '/bbses/bbsPosts/delete/' . $frameId . '/' . $comment['id']
+								)); ?>
 
-							<?php echo $this->Form->button('<span class="glyphicon glyphicon-trash"></span>',
-									array(
-										'label' => false,
-										'div' => false,
-										'type' => 'submit',
-										'class' => 'btn btn-danger btn-xs',
-										'tooltip' => __d('bbses', 'Delete'),
-									)); ?>
-						<?php echo $this->Form->end(); ?>
-					</span>
+								<?php echo $this->Form->button('<span class="glyphicon glyphicon-trash"></span>',
+										array(
+											'label' => false,
+											'div' => false,
+											'type' => 'submit',
+											'class' => 'btn btn-danger btn-xs',
+											'tooltip' => __d('bbses', 'Delete'),
+										)); ?>
+							<?php echo $this->Form->end(); ?>
+						</span>
 
-					<!-- 編集 -->
-					<span class="text-left" style="float:right;">
-						<a href="<?php echo $this->Html->url(
-								'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $comment['id']); ?>"
-								class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
-								<span class="glyphicon glyphicon-edit"></span>
-						</a>
-						&nbsp;
-					</span>
-				<?php endif; ?>
-
+						<!-- 編集 -->
+						<span class="text-left" style="float:right;">
+							<a href="<?php echo $this->Html->url(
+									'/bbses/bbsComments/edit' . '/' . $frameId . '/' . $comment['id']); ?>"
+									class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
+									<span class="glyphicon glyphicon-edit"></span>
+							</a>
+							&nbsp;
+						</span>
+					<?php endif; ?>
+				</span>
 
 				<!-- コメント作成 -->
 				<!-- Warn:style 一行に表示するため指定 -->

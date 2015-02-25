@@ -186,7 +186,6 @@ class BbsPost extends BbsesAppModel {
 		$params = array(
 				'conditions' => $conditions,
 				'recursive' => -1,
-				//Todo:array外して良いかも
 				'order' => $sortOrder,
 				'group' => $group,
 				'limit' => $visiblePostRow,
@@ -270,50 +269,6 @@ class BbsPost extends BbsesAppModel {
 		//日時フォーマット（記事群）
 		return $this->__setDateTime($bbsComments, true);
 	}
-
-/**
- * get bbs data
- *
- * @param int $bbsId bbses.id
- * @param string $visibleRow
- * @param bool $contentCreatable true can edit the content, false not can edit the content.
- * @param int $postId
- * @param array $sortOrder
- * @return array
- */
-//	public function getReplies($bbsId, $userId, $contentEditable,
-//			$contentCreatable, $postId, $sortOrder, $visibleCommentRow, $currentPage) {
-//
-//		//Todo:木構造で取ってくる必要がある
-//
-//		//$bbsId => 掲示板を指定　//$postId =>
-//		$conditions = array(
-//			'bbs_id' => $bbsId,
-//			'parent_id' => $postId,
-//		);
-//
-//		//作成権限あり:自分で書いた記事のみ取得
-//		if ($contentCreatable && ! $contentEditable) {
-//			$conditions['created_user'] = $userId;
-//		}
-//
-//		//作成・編集権限なし:公開中の記事のみ取得
-//		if (! $contentCreatable && ! $contentEditable) {
-//			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-//		}
-//
-//		$bbsComments = $this->find('all', array(
-//				'recursive' => -1,
-//				'conditions' => $conditions,
-//				'order' => $sortOrder,
-//				'limit' => $visibleCommentRow,
-//				'page' => $currentPage,
-//			)
-//		);
-//
-//		//日時フォーマット（記事群）
-//		return $this->__setDateTime($bbsComments, true);
-//	}
 
 /**
  * save posts

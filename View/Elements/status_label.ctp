@@ -18,8 +18,15 @@
 		<?php echo __d('net_commons', 'Approving'); ?>
 	</span>
 
+	<!-- NetCommonsBlockComponent::STATUS_REMAND = '4' -->
 	<span class="label label-danger"
 			ng-switch-when="<?php echo NetCommonsBlockComponent::STATUS_DISAPPROVED ?>">
+		<?php echo __d('bbses', 'Remand'); ?>
+	</span>
+
+	<!-- NetCommonsBlockComponent::STATUS_DISAPPROVED = '5' -->
+	<span class="label label-danger"
+			ng-switch-when="<?php echo '5' ?>">
 		<?php echo __d('bbses', 'Disapproval'); ?>
 	</span>
 

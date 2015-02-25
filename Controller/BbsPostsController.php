@@ -117,22 +117,20 @@ class BbsPostsController extends BbsesAppController {
 			throw new NotFoundException(__d('net_commons', 'Not Found'));
 		}
 
-		//記事新規登録のためにデータ生成
-		$bbsPost = $this->BbsPost->create();
-		$bbsPost['BbsPost']['title'] = '新規記事' . 'X';
-		$this->set('bbsPosts', $bbsPost['BbsPost']);
-		if (!isset($this->viewVars['bbsPosts'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
-
-		//Todo:見なおす　　　記事追加の場合、ステータスを別途セットする（とりあえず）
-		$this->set(array('contentStatus' => '0'));
-
 		if ($this->request->isGet()) {
 			$referer = $this->request->referer();
 			if (! strstr($referer, '/bbses')) {
 				CakeSession::write('backUrl', $this->request->referer());
 			}
+
+			//新規記事データセット
+			$bbsPost = $this->BbsPost->create();
+			$bbsPost['BbsPost']['title'] = '新規記事' . date('YmdHis');
+			$results = array(
+					'bbsPosts' => $bbsPost['BbsPost'],
+					'contentStatus' => null,
+				);
+			$this->set($results);
 		}
 
         if ($this->request->isPost()) {
@@ -178,10 +176,7 @@ class BbsPostsController extends BbsesAppController {
 		$this->__setPost($postId);
 
 		if ($this->request->isGet()) {
-			$referer = $this->request->referer();
-			if (! strstr($referer, '/bbses')) {
-				CakeSession::write('backUrl', $this->request->referer());
-			}
+			CakeSession::write('backUrl', $this->request->referer());
 		}
 
         if ($this->request->isPost()) {
@@ -194,7 +189,7 @@ class BbsPostsController extends BbsesAppController {
 				['BbsPost' => ['status' => $status]]
 			);
 
-			//新規登録のため、データ生成
+			//編集データ取得
 			$bbsPost = $this->BbsPost->getPosts(
 					$data['Bbs']['id'],
 					$this->viewVars['userId'],
@@ -206,14 +201,13 @@ class BbsPostsController extends BbsesAppController {
 					null
 					);
 			//編集者のIDを格納
-			$bbsPost['BbsPost']['created_user'] = $data['User']['id'];
+			//$bbsPost['BbsPost']['created_user'] = $data['User']['id'];
 
-			//作成時間,更新時間を再セット
-			$bbsPost['BbsPost']['created'] = date('Y-m-d H:i:s');
+			//更新時間をセット
 			$bbsPost['BbsPost']['modified'] = date('Y-m-d H:i:s');
 			$data = Hash::merge($bbsPost, $data);
 
-			//Todo:UPDATEしているが良いのか？
+			//Todo:UPDATE
 			$data['BbsPost']['id'] = $bbsPost['BbsPost']['id'];
 
 			if (!$bbsPost = $this->BbsPost->savePost($data)) {
@@ -384,16 +378,23 @@ class BbsPostsController extends BbsesAppController {
 /**
  * __setPost method
  *
+ * @param $postId
+ * @param $currentPage
+ * @param $sortParams
+ * @param $visibleCommentRow
+ * @param $narrowDownParams
  * @return void
  */
 	private function __setComment($postId, $currentPage, $sortParams,
-			$visibleCommentRow, $narrowDownParams) {
+									$visibleCommentRow, $narrowDownParams) {
+
 		//ソート条件をセット
-		$sortOrder = $this->__setSortOrder($sortParams);
+		$sortOrder = $this->setSortOrder($sortParams);
 
 		//絞り込み条件をセット
-		$conditions = $this->__setNarrowDown($narrowDownParams);
+		$conditions = $this->setNarrowDown($narrowDownParams);
 		$conditions['bbs_id'] =	$this->viewVars['bbses']['id'];
+		//Treeビヘイビアのlft,rghtカラムを利用して対象記事のコメントのみ取得
 		$conditions['or']['and']['lft >'] = $this->viewVars['bbsPosts']['lft'];
 		$conditions['or']['and']['rght <'] = $this->viewVars['bbsPosts']['rght'];
 
@@ -527,93 +528,6 @@ class BbsPostsController extends BbsesAppController {
 						'user_id' => $this->viewVars['userId'],
 				);
 			$results = $this->BbsPostsUser->saveReadStatus($default);
-		}
-	}
-
-/**
- * __setPost method
- *
- * @param $sortParams
- * @return string
- */
-	private function __setSortOrder($sortParams) {
-		//Todo:BbsesAppControllerで纏める
-		switch ($sortParams) {
-		case '1':
-		default :
-			//最新の投稿順
-			$sortStr = __d('bbses', 'Latest comment order');
-			$this->set('currentCommentSortOrder', $sortStr);
-			return array('BbsPost.created DESC', 'BbsPost.title');
-
-		case '2':
-			//古い投稿順
-			$sortStr = __d('bbses', 'Older comment order');
-			$this->set('currentCommentSortOrder', $sortStr);
-			return array('BbsPost.created ASC', 'BbsPost.title');
-		}
-	}
-
-/**
- * __setNarrowDown method
- *
- * @param $narrowDownParams
- * @return string order for search
- */
-	private function __setNarrowDown($narrowDownParams) {
-		//BbsControllerと同様
-		//Todo:BbsesAppControllerで纏める
-		switch ($narrowDownParams) {
-		case '1':
-		default :
-			//全件表示
-			$narrowDownStr = __d('bbses', 'Display all posts');
-			$this->set('narrowDown', $narrowDownStr);
-			return array();
-
-		case '2':
-			//未読
-			$narrowDownStr = __d('bbses', 'Do not read');
-			$this->set('narrowDown', $narrowDownStr);
-			//__setPostの未読or既読セット中に未読のみ取得する
-			return array();
-
-		case '3':
-			//公開中
-			$narrowDownStr = __d('bbses', 'Published');
-			$this->set('narrowDown', $narrowDownStr);
-			$conditions = array(
-					'status' => NetCommonsBlockComponent::STATUS_PUBLISHED
-				);
-			return $conditions;
-
-		case '4':
-			//一時保存
-			$narrowDownStr = __d('net_commons', 'Temporary');
-			$this->set('narrowDown', $narrowDownStr);
-			$conditions = array(
-					'status' => NetCommonsBlockComponent::STATUS_IN_DRAFT
-				);
-			return $conditions;
-
-		case '5':
-			//非承認
-			$narrowDownStr = __d('bbses', 'Disapproval');
-			$this->set('narrowDown', $narrowDownStr);
-			$conditions = array(
-					'status' => NetCommonsBlockComponent::STATUS_DISAPPROVED
-				);
-			return $conditions;
-
-		case '6':
-			//承認待ち
-			$narrowDownStr = __d('net_commons', 'Approving');
-			$this->set('narrowDown', $narrowDownStr);
-			$conditions = array(
-					'status' => NetCommonsBlockComponent::STATUS_APPROVED
-				);
-			return $conditions;
-
 		}
 	}
 
