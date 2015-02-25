@@ -99,7 +99,7 @@ class BbsCommentsController extends BbsesAppController {
 		$this->set('sortParams', $sortParams);
 
 		//現在の絞り込みをセット
-		$narrowDownParams = ($narrowDownParams === '')? '1' : $narrowDownParams;
+		$narrowDownParams = ($narrowDownParams === '')? '6' : $narrowDownParams;
 		$this->set('narrowDownParams', $narrowDownParams);
 
 		//コメント表示数をセット
@@ -163,7 +163,7 @@ class BbsCommentsController extends BbsesAppController {
 			//新規登録のため、データ生成
 			$bbsComment = $this->BbsPost->create(['key' => Security::hash('bbsPost' . mt_rand() . microtime(), 'md5')]);
 			//初期化
-			$bbsComment['BbsPost']['bbs_id'] = 0;
+			$bbsComment['BbsPost']['bbs_key'] = '';
 			$data = Hash::merge($bbsComment, $data);
 
 			if (!$bbsComment = $this->BbsPost->savePost($data)) {
@@ -174,7 +174,7 @@ class BbsCommentsController extends BbsesAppController {
 
 			//親記事のコメント数の更新処理
 			$parentPosts = $this->BbsPost->getPosts(
-					$data['Bbs']['id'],
+					$data['Bbs']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -230,7 +230,7 @@ class BbsCommentsController extends BbsesAppController {
 
 			//編集データ取得
 			$bbsComment = $this->BbsPost->getPosts(
-					$data['Bbs']['id'],
+					$data['Bbs']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -262,6 +262,37 @@ class BbsCommentsController extends BbsesAppController {
 			}
 			return;
 		}
+	}
+
+/**
+ * delete method
+ *
+ * @param string $postId postId
+ * @throws NotFoundException
+ * @return void
+ */
+	public function delete($frameId, $postId, $parentId, $commentId = '') {
+		if (! $this->request->isPost()) {
+			return;
+		}
+
+		if (!$bbsPost = $this->BbsPost->delete(
+				($commentId)? $commentId : $parentId
+		)) {
+			if (!$this->__handleValidationError($this->BbsPost->validationErrors)) {
+				return;
+			}
+		}
+
+		$backUrl = array(
+				'controller' => ($commentId)? 'bbsComments' : 'bbsPosts',
+				'action' => 'view',
+				$frameId,
+				$postId,
+				($commentId)? $parentId : '',
+			);
+
+		$this->redirect($backUrl);
 	}
 
 /**
@@ -353,7 +384,7 @@ class BbsCommentsController extends BbsesAppController {
 		//Memo:BbsPostsController->__setPost()と同じ
 		//選択した記事を一件取得
 		$bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['id'],
+				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -389,7 +420,7 @@ class BbsCommentsController extends BbsesAppController {
  */
 	private function __setCurrentComment($postId) {
 		$posts = $this->BbsPost->getCurrentComments(
-				$this->viewVars['bbses']['id'],
+				$this->viewVars['bbses']['key'],
 				$postId,
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable']
@@ -433,7 +464,7 @@ class BbsCommentsController extends BbsesAppController {
 
 		//絞り込み条件をセット
 		$conditions = $this->setNarrowDown($narrowDownParams);
-		$conditions['bbs_id'] =	$this->viewVars['bbses']['id'];
+		$conditions['bbs_key'] =	$this->viewVars['bbses']['key'];
 		//Treeビヘイビアのlft,rghtカラムを利用して対象記事のコメントのみ取得
 		$conditions['or']['and']['lft >'] = $this->viewVars['bbsCurrentComments']['lft'];
 		$conditions['or']['and']['rght <'] = $this->viewVars['bbsCurrentComments']['rght'];

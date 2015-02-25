@@ -106,7 +106,7 @@ class BbsesController extends BbsesAppController {
 		$this->set('sortParams', $sortParams);
 
 		//現在の絞り込みをセット
-		$narrowDownParams = ($narrowDownParams === '')? '1' : $narrowDownParams;
+		$narrowDownParams = ($narrowDownParams === '')? '6' : $narrowDownParams;
 		$this->set('narrowDownParams', $narrowDownParams);
 
 		//BbsFrameSettingを取得
@@ -276,7 +276,7 @@ class BbsesController extends BbsesAppController {
 
 		//BbsPost->find
 		if (! $bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['id'],
+				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -345,7 +345,7 @@ class BbsesController extends BbsesAppController {
 		} else {
 			$prevPage = $currentPage - 1;
 			$prevPosts = $this->BbsPost->getPosts(
-					$this->viewVars['bbses']['id'],
+					$this->viewVars['bbses']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -362,7 +362,7 @@ class BbsesController extends BbsesAppController {
 		//次のページがあるか取得
 		$nextPage = $currentPage + 1;
 		$nextPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['id'],
+				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -378,7 +378,7 @@ class BbsesController extends BbsesAppController {
 		//2ページ先のページがあるか取得
 		$nextSecondPage = $currentPage + 2;
 		$nextSecondPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['id'],
+				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -395,7 +395,7 @@ class BbsesController extends BbsesAppController {
 		//if ($currentPage === 1 || $currentPage === 2) {
 			//4ページがあるか取得（モックとしてとりあえず）
 			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['bbses']['id'],
+					$this->viewVars['bbses']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -410,7 +410,7 @@ class BbsesController extends BbsesAppController {
 
 			//5ページがあるか取得（モックとしてとりあえず）
 			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['bbses']['id'],
+					$this->viewVars['bbses']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -432,7 +432,7 @@ class BbsesController extends BbsesAppController {
  * @return string order for search
  */
 	private function __setCommentNum($bbsPost) {
-		$conditions['bbs_id'] =	$this->viewVars['bbses']['id'];
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
 		$conditions['or']['and']['lft >'] = $bbsPost['lft'];
 		$conditions['or']['and']['rght <'] = $bbsPost['rght'];
 
@@ -457,7 +457,7 @@ class BbsesController extends BbsesAppController {
  */
 	private function __setPostNum() {
 		$bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['id'],
+				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],

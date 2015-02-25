@@ -303,7 +303,7 @@
 					<!-- '5'(非承認) -->
 					<?php elseif ($comment['status'] === '5' && $contentPublishable) : ?>
 						<!-- 承認するボタン -->
-						<?php echo $this->element('approving_button',
+						<?php echo $this->element('approving_buttons',
 										array('comment' => $comment)); ?>
 
 					<?php endif; ?>
@@ -322,8 +322,7 @@
 								array(
 									'div' => false,
 									'type' => 'post',
-									//Todo:削除処理はbbsPostsのdeleteで行うか？
-									'url' => '/bbses/bbsPosts/delete/' . $frameId . '/' . $comment['id']
+									'url' => '/bbses/bbsComments/delete/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']
 								)); ?>
 
 								<?php echo $this->Form->button('<span class="glyphicon glyphicon-trash"></span>',

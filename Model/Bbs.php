@@ -68,10 +68,7 @@ class Bbs extends BbsesAppModel {
 	public $hasMany = array(
 		'BbsPost' => array(
             'className' => 'Bbses.BbsPost',
-            'foreignKey' => 'bbs_id',
-//            'conditions' => array('BbsPost.status' => '1'),
-//            'order' => 'BbsPost.created DESC',
-//            'limit' => '5',
+            'foreignKey' => 'bbs_key',
             'dependent' => true
         )
 	);

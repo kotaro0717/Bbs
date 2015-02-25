@@ -56,7 +56,7 @@ class Bbses extends CakeMigration {
 				'bbs_posts' => array(
 					'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary', 'comment' => 'ID | | | '),
 					'key' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'bbs posts key | 掲示板記事キー | Hash値 | ', 'charset' => 'utf8'),
-					'bbs_id' => array('type' => 'integer', 'null' => false, 'default' => null),
+					'bbs_key' => array('type' => 'integer', 'null' => false, 'default' => null),
 					'parent_id' => array('type' => 'integer', 'null' => true, 'default' => null),
 					'lft' => array('type' => 'integer', 'null' => false, 'default' => null),
 					'rght' => array('type' => 'integer', 'null' => false, 'default' => null),

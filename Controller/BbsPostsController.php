@@ -66,6 +66,10 @@ class BbsPostsController extends BbsesAppController {
 	public function view($frameId, $postId, $currentPage = '', $sortParams = '',
 							$visibleCommentRow = '', $narrowDownParams = '') {
 
+		if ($this->request->isGet()) {
+			CakeSession::write('backUrl', $this->request->referer());
+		}
+
 		//プラグイン名からアクション名までのurlを$baseUrlにセット
 		$baseUrl = Inflector::variable($this->plugin) . '/' .
 				Inflector::variable($this->name) . '/' . $this->action;
@@ -80,7 +84,7 @@ class BbsPostsController extends BbsesAppController {
 		$this->set('sortParams', $sortParams);
 
 		//現在の絞り込みをセット
-		$narrowDownParams = ($narrowDownParams === '')? '1' : $narrowDownParams;
+		$narrowDownParams = ($narrowDownParams === '')? '6' : $narrowDownParams;
 		$this->set('narrowDownParams', $narrowDownParams);
 
 		$this->__setBbsSetting();
@@ -125,7 +129,7 @@ class BbsPostsController extends BbsesAppController {
 
 			//新規記事データセット
 			$bbsPost = $this->BbsPost->create();
-			$bbsPost['BbsPost']['title'] = '新規記事' . date('YmdHis');
+			$bbsPost['BbsPost']['title'] = '新規記事_' . date('YmdHis');
 			$results = array(
 					'bbsPosts' => $bbsPost['BbsPost'],
 					'contentStatus' => null,
@@ -145,7 +149,7 @@ class BbsPostsController extends BbsesAppController {
 
 			//新規登録のため、データ生成
 			$bbsPost = $this->BbsPost->create(['key' => Security::hash('bbsPost' . mt_rand() . microtime(), 'md5')]);
-			$bbsPost['BbsPost']['bbs_id'] = '0';
+			$bbsPost['BbsPost']['bbs_id'] = '';
 			$data = Hash::merge($bbsPost, $data);
 
 			if (!$bbsPost = $this->BbsPost->savePost($data)) {
@@ -191,7 +195,7 @@ class BbsPostsController extends BbsesAppController {
 
 			//編集データ取得
 			$bbsPost = $this->BbsPost->getPosts(
-					$data['Bbs']['id'],
+					$data['Bbs']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -233,24 +237,23 @@ class BbsPostsController extends BbsesAppController {
  * @return void
  */
 	public function delete($frameId, $postId) {
-		$this->view = 'BbsPosts/delete';
-
-		if ($this->request->isGet()) {
-			$referer = $this->request->referer();
-			if (! strstr($referer, '/delete')) {
-				CakeSession::write('backUrl', $this->request->referer());
+		if (! $this->request->isPost()) {
+			return;
+		}
+		if (!$bbsPost = $this->BbsPost->delete($postId)) {
+			if (!$this->__handleValidationError($this->BbsPost->validationErrors)) {
+				return;
 			}
 		}
 
-		if ($this->request->isPost()) {
-			if (!$bbsPost = $this->BbsPost->delete($postId)) {
-				//失敗したときのハンドリング
-			}
+		$backUrl = array(
+				'controller' => 'bbses',
+				'action' => 'view',
+				$frameId,
+			);
 
-			$backUrl = CakeSession::read('backUrl');
-			CakeSession::delete('backUrl');
-			$this->redirect($backUrl);
-		}
+		//記事一覧へリダイレクト
+		$this->redirect($backUrl);
 	}
 
 /**
@@ -345,7 +348,7 @@ class BbsPostsController extends BbsesAppController {
 	private function __setPost($postId) {
 		//選択した記事を一件取得
 		$bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['id'],
+				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -393,7 +396,7 @@ class BbsPostsController extends BbsesAppController {
 
 		//絞り込み条件をセット
 		$conditions = $this->setNarrowDown($narrowDownParams);
-		$conditions['bbs_id'] =	$this->viewVars['bbses']['id'];
+		$conditions['bbs_key'] =	$this->viewVars['bbses']['key'];
 		//Treeビヘイビアのlft,rghtカラムを利用して対象記事のコメントのみ取得
 		$conditions['or']['and']['lft >'] = $this->viewVars['bbsPosts']['lft'];
 		$conditions['or']['and']['rght <'] = $this->viewVars['bbsPosts']['rght'];

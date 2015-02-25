@@ -45,13 +45,13 @@ class BbsPost extends BbsesAppModel {
  * @var array
  */
 	public $belongsTo = array(
-//		'Bbs' => array(
-//			'className' => 'Bbses.Bbs',
-//			'foreignKey' => 'bbs_id',
-//			'conditions' => '',
-//			'fields' => '',
-//			'order' => ''
-//		),
+		'Bbs' => array(
+			'className' => 'Bbses.Bbs',
+			'foreignKey' => 'bbs_key',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
 //		'BbsPost' => array(
 //			'className' => 'Bbses.BbsPost',
 //			'foreignKey' => 'parent_id',
@@ -59,20 +59,6 @@ class BbsPost extends BbsesAppModel {
 //			'fields' => '',
 //			'order' => ''
 //		)
-	);
-
-/**
- * hasMany associations
- *s
- * @var array
- */
-	public $hasMany = array(
-//		'BbsPost' => array(
-//            'className' => 'Bbses.BbsPost',
-//            'foreignKey' => 'parent_id',
-//            'order' => 'BbsPost.created DESC',
-//            'dependent' => true
-//        )
 	);
 
 /**
@@ -93,7 +79,7 @@ class BbsPost extends BbsesAppModel {
 					'required' => true,
 				)
 			),
-			'bbs_id' => array(
+			'bbs_key' => array(
 				'notEmpty' => array(
 					'rule' => array('notEmpty'),
 					'message' => __d('net_commons', 'Invalid request.'),
@@ -138,19 +124,19 @@ class BbsPost extends BbsesAppModel {
 /**
  * get bbs data
  *
- * @param int $bbsId bbses.id
+ * @param int $bbsKey bbses.key
  * @param string $visibleRow
  * @param bool $contentCreatable true can edit the content, false not can edit the content.
  * @param int $postId
  * @param array $sortOrder
  * @return array
  */
-	public function getPosts($bbsId, $userId, $contentEditable,
+	public function getPosts($bbsKey, $userId, $contentEditable,
 			$contentCreatable, $postId, $sortOrder, $visiblePostRow, $currentPage, $conditions = '') {
 
 		//Todo:bbs_postはconditionsに纏めて渡すように変更する
 		//debug($conditions);
-		$conditions['bbs_id'] =	$bbsId;
+		$conditions['bbs_key'] = $bbsKey;
 
 		//作成権限まで
 		if ($contentCreatable && ! $contentEditable) {
@@ -200,16 +186,16 @@ class BbsPost extends BbsesAppModel {
 /**
  * get bbs data
  *
- * @param int $bbsId bbses.id
+ * @param int $bbsKey bbses.key
  * @param string $visibleRow
  * @param bool $contentCreatable true can edit the content, false not can edit the content.
  * @param int $postId
  * @param array $sortOrder
  * @return array
  */
-	public function getCurrentComments($bbsId, $postId, $contentEditable, $contentCreatable) {
+	public function getCurrentComments($bbsKey, $postId, $contentEditable, $contentCreatable) {
 		$conditions = array(
-			'bbs_id' => $bbsId,
+			'bbs_key' => $bbsKey,
 			'id' => $postId
 		);
 
@@ -289,7 +275,7 @@ class BbsPost extends BbsesAppModel {
 			if (!$this->validatePost($data)) {
 				return false;
 			}
-			$this->data['BbsPost']['bbs_id'] = (int)$this->data['Bbs']['id'];
+			$this->data['BbsPost']['bbs_key'] = (int)$this->data['Bbs']['key'];
 			$bbsPost = $this->save(null, false);
 			if (!$bbsPost) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));

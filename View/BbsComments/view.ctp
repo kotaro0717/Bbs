@@ -282,7 +282,7 @@
 				<!-- '5'(非承認) -->
 				<?php elseif ($bbsCurrentComments['status'] === '5' && $contentPublishable) : ?>
 					<!-- 承認するボタン -->
-					<?php echo $this->element('approving_button',
+					<?php echo $this->element('approving_buttons',
 									array('comment' => $bbsCurrentComments)); ?>
 
 				<?php endif; ?>
@@ -300,7 +300,7 @@
 						array(
 							'div' => false,
 							'type' => 'post',
-							'url' => '/bbses/bbsPosts/delete/' . $frameId . '/' . $bbsCurrentComments['id']
+							'url' => '/bbses/bbsComments/delete/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id']
 						)); ?>
 
 						<?php echo $this->Form->button('<span class="glyphicon glyphicon-trash"></span>',
@@ -438,7 +438,7 @@
 					<!-- '5'(非承認) -->
 					<?php elseif ($comment['status'] === '5' && $contentPublishable) : ?>
 						<!-- 承認するボタン -->
-						<?php echo $this->element('approving_button',
+						<?php echo $this->element('approving_buttons',
 										array('comment' => $comment)); ?>
 
 					<?php endif; ?>
@@ -457,7 +457,7 @@
 								array(
 									'div' => false,
 									'type' => 'post',
-									'url' => '/bbses/bbsPosts/delete/' . $frameId . '/' . $comment['id']
+									'url' => '/bbses/bbsComments/delete/' . $frameId . '/' .  $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $comment['id']
 								)); ?>
 
 								<?php echo $this->Form->button('<span class="glyphicon glyphicon-trash"></span>',
