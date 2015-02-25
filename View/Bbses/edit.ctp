@@ -70,11 +70,6 @@
 			</div>
 
 			<div class="panel-footer text-center">
-<!--				<button type="button" class="btn btn-default" ng-click="cancel()" ng-disabled="sending">
-					<span class="glyphicon glyphicon-remove"></span>
-					<?php //echo __d('net_commons', 'Cancel'); ?>
-				</button>-->
-
 				<?php echo $this->Form->button('<span class="glyphicon glyphicon-remove"></span>' . __d("net_commons", "Cancel"),
 						array(
 							'label' => false,

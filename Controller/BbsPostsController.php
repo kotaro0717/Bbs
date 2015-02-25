@@ -105,6 +105,23 @@ class BbsPostsController extends BbsesAppController {
 		//記事に関するコメントをセット
 		$this->__setComment($postId, $currentPage, $sortParams, $visibleCommentRow, $narrowDownParams);
 
+		//コメント数をセットする
+		//$this->__setCommentNum($postId);
+		//Todo:メソッド化する
+		$conditions['parent_id'] = $this->viewVars['bbsPosts']['id'];
+		if (! $posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentCreatable'],
+				$this->viewVars['contentEditable'],
+				false,
+				false,
+				false,
+				$conditions
+		)) {
+			$this->set('commentNum', 0);
+		}
+		$this->set('commentNum', count($posts));
+
 		//既読情報を登録
 		$this->__saveReadStatus($postId);
 	}
@@ -117,24 +134,15 @@ class BbsPostsController extends BbsesAppController {
 	public function add($frameId) {
 		//掲示板名を取得
 		$this->__setBbs();
-		if (!isset($this->viewVars['bbses'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
+
+		//記事初期データを取得
+		$this->__setPost();
 
 		if ($this->request->isGet()) {
 			$referer = $this->request->referer();
 			if (! strstr($referer, '/bbses')) {
 				CakeSession::write('backUrl', $this->request->referer());
 			}
-
-			//新規記事データセット
-			$bbsPost = $this->BbsPost->create();
-			$bbsPost['BbsPost']['title'] = '新規記事_' . date('YmdHis');
-			$results = array(
-					'bbsPosts' => $bbsPost['BbsPost'],
-					'contentStatus' => null,
-				);
-			$this->set($results);
 		}
 
         if ($this->request->isPost()) {
@@ -149,16 +157,16 @@ class BbsPostsController extends BbsesAppController {
 
 			//新規登録のため、データ生成
 			$bbsPost = $this->BbsPost->create(['key' => Security::hash('bbsPost' . mt_rand() . microtime(), 'md5')]);
-			$bbsPost['BbsPost']['bbs_id'] = '';
+			$bbsPost['BbsPost']['bbs_key'] = $data['Bbs']['key'];
 			$data = Hash::merge($bbsPost, $data);
 
-			if (!$bbsPost = $this->BbsPost->savePost($data)) {
+			if (! $bbsPost = $this->BbsPost->savePost($data)) {
 				if (!$this->__handleValidationError($this->BbsPost->validationErrors)) {
 					return;
 				}
 			}
 
-			if (!$this->request->is('ajax')) {
+			if (! $this->request->is('ajax')) {
 				$backUrl = CakeSession::read('backUrl');
 				CakeSession::delete('backUrl');
 				$this->redirect($backUrl);
@@ -194,27 +202,25 @@ class BbsPostsController extends BbsesAppController {
 			);
 
 			//編集データ取得
-			$bbsPost = $this->BbsPost->getPosts(
-					$data['Bbs']['key'],
+			$conditions['bbs_key'] = $data['Bbs']['key'];
+			$conditions['id'] = $postId;
+			$bbsPosts = $this->BbsPost->getOnePosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
-					$postId,
-					null,
-					null,
-					null
-					);
+					$conditions
+				);
 			//編集者のIDを格納
 			//$bbsPost['BbsPost']['created_user'] = $data['User']['id'];
 
 			//更新時間をセット
-			$bbsPost['BbsPost']['modified'] = date('Y-m-d H:i:s');
-			$data = Hash::merge($bbsPost, $data);
+			$bbsPosts['BbsPost']['modified'] = date('Y-m-d H:i:s');
+			$data = Hash::merge($bbsPosts, $data);
 
 			//Todo:UPDATE
-			$data['BbsPost']['id'] = $bbsPost['BbsPost']['id'];
+			$data['BbsPost']['id'] = $bbsPosts['BbsPost']['id'];
 
-			if (!$bbsPost = $this->BbsPost->savePost($data)) {
+			if (!$bbsPosts = $this->BbsPost->savePost($data)) {
 				if (!$this->__handleValidationError($this->BbsPost->validationErrors)) {
 					return;
 				}
@@ -345,18 +351,25 @@ class BbsPostsController extends BbsesAppController {
  *
  * @return void
  */
-	private function __setPost($postId) {
-		//選択した記事を一件取得
-		$bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['key'],
+	private function __setPost($postId = '') {
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+		$conditions['id'] = $postId;
+
+		if (! $bbsPosts = $this->BbsPost->getOnePosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
-				$postId,	//選択された記事のId
-				null,
-				null,
-				null
-			);
+				$conditions
+		)) {
+			//新規記事データセット
+			$bbsPosts = $this->BbsPost->create();
+			$bbsPosts['BbsPost']['title'] = '新規記事_' . date('YmdHis');
+			$results = array(
+					'bbsPosts' => $bbsPosts['BbsPost'],
+					'contentStatus' => null,
+				);
+			return $this->set($results);
+		}
 
 		//取得した記事の作成者IDからユーザ情報を取得
 		$user = $this->User->find('first', array(
@@ -379,7 +392,7 @@ class BbsPostsController extends BbsesAppController {
 	}
 
 /**
- * __setPost method
+ * __setComment method
  *
  * @param $postId
  * @param $currentPage
@@ -396,12 +409,12 @@ class BbsPostsController extends BbsesAppController {
 
 		//絞り込み条件をセット
 		$conditions = $this->setNarrowDown($narrowDownParams);
-		$conditions['bbs_key'] =	$this->viewVars['bbses']['key'];
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
 		//Treeビヘイビアのlft,rghtカラムを利用して対象記事のコメントのみ取得
 		$conditions['or']['and']['lft >'] = $this->viewVars['bbsPosts']['lft'];
 		$conditions['or']['and']['rght <'] = $this->viewVars['bbsPosts']['rght'];
 
-		$bbsCommnets = $this->BbsPost->getComments(
+		$bbsCommnets = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -416,7 +429,6 @@ class BbsPostsController extends BbsesAppController {
 			//空配列を渡す
 			//Todo:空ではなく、falseを渡して、Viewでは「空ならメッセージ」に修正
 			$this->set('bbsComments', array());
-			$this->set('commentNum', 0);
 			return;
 		}
 
@@ -435,15 +447,13 @@ class BbsPostsController extends BbsesAppController {
 			$results[] = $bbsComment['BbsPost'];
 		}
 		$this->set('bbsComments', $results);
-		//コメント数をセット
-		$this->set('commentNum', count($results));
 
 		//前のページがあるか取得
 		if ($currentPage === 1) {
 			$this->set('hasPrevPage', false);
 		} else {
 			$prevPage = $currentPage - 1;
-			$prevPosts = $this->BbsPost->getComments(
+			$prevPosts = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -458,7 +468,7 @@ class BbsPostsController extends BbsesAppController {
 
 		//次のページがあるか取得
 		$nextPage = $currentPage + 1;
-		$nextPosts = $this->BbsPost->getComments(
+		$nextPosts = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -472,7 +482,7 @@ class BbsPostsController extends BbsesAppController {
 
 		//2ページ先のページがあるか取得
 		$nextSecondPage = $currentPage + 2;
-		$nextSecondPosts = $this->BbsPost->getComments(
+		$nextSecondPosts = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -487,7 +497,7 @@ class BbsPostsController extends BbsesAppController {
 		//1,2ページの時のみ4,5ページがあるかどうか取得（モックとしてとりあえず）
 		//if ($currentPage === 1 || $currentPage === 2) {
 			//4ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getComments(
+			$posts = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -500,7 +510,7 @@ class BbsPostsController extends BbsesAppController {
 			$this->set('hasFourPage', $hasFourPage);
 
 			//5ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getComments(
+			$posts = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],

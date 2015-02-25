@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2015-02-18 04:13+0000\n"
-"PO-Revision-Date: 2015-02-24 14:55+0900\n"
+"PO-Revision-Date: 2015-02-25 20:07+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -220,3 +220,13 @@ msgstr "非承認"
 #: /View/Elements/Bbses/edit.ctp:44
 msgid "Auto approval"
 msgstr "自動承認する"
+
+#: /View/Elements/approving_buttons.ctp:30
+msgid "Approving"
+msgstr "承認する"
+
+#: /Controller/BbsesAppController.php:100 /View/Bbses/view.ctp:45
+#: /View/Elements/post_workflow_buttons.ctp:20
+#: /View/Elements/status_label.ctp:24
+msgid "Remand"
+msgstr "差し戻し"

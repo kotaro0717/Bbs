@@ -28,12 +28,12 @@
 	</div>
 
 	<div class="has-error">
-		<?php if ($this->validationErrors['BbsPost']): ?>
-		<?php foreach ($this->validationErrors['BbsPost']['title'] as $message): ?>
+		<?php if (isset($this->validationErrors['BbsPost']['title'])): ?>
+		<?php //foreach ($this->validationErrors['BbsPost']['title'] as $message): ?>
 			<div class="help-block">
-				<?php echo $message ?>
+				<?php //echo $message ?>
 			</div>
-		<?php endforeach; ?>
+		<?php //endforeach; ?>
 		<?php else : ?>
 			<br />
 		<?php endif; ?>
@@ -59,7 +59,7 @@
 	</div>
 
 	<div class="has-error">
-		<?php if ($this->validationErrors['BbsPost']): ?>
+		<?php if (isset($this->validationErrors['BbsPost']['content'])): ?>
 		<?php foreach ($this->validationErrors['BbsPost']['content'] as $message): ?>
 			<div class="help-block">
 				<?php echo $message; ?>

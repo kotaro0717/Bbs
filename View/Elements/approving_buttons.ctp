@@ -23,10 +23,10 @@
 		'value' => $comment['content'],
 	)); ?>
 
-	<?php echo $this->Form->button('<span class="glyphicon glyphicon-saved"></span>', array(
+	<?php echo $this->Form->button('<span class="glyphicon glyphicon-ok"></span>', array(
 		'label' => false,
 		'type' => 'submit',
-		'class' => 'btn btn-success btn-xs',
+		'class' => 'btn btn-warning btn-xs',
 		'tooltip' => __d('bbses', 'Approving'),
 		'name' => 'save_' . NetCommonsBlockComponent::STATUS_PUBLISHED,
 	)); ?>

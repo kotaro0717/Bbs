@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-24 02:05+0000\n"
+"POT-Creation-Date: 2015-02-25 11:05+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,75 +14,66 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Controller/BbsCommentsController.php:557
-#: /Controller/BbsPostsController.php:534
-#: /View/BbsComments/view.ctp:48
-#: /View/BbsPosts/view.ctp:48
-msgid "Latest comment order"
-msgstr ""
-
-#: /Controller/BbsCommentsController.php:562
-#: /Controller/BbsPostsController.php:540
-#: /View/BbsComments/view.ctp:50
-#: /View/BbsPosts/view.ctp:50
-msgid "Older comment order"
-msgstr ""
-
-#: /Controller/BbsCommentsController.php:567
-#: /View/BbsComments/view.ctp:53
-#: /View/BbsPosts/view.ctp:53
-msgid "Status order"
-msgstr ""
-
-#: /Controller/BbsesController.php:453
-#: /View/Bbses/view.ctp:76
+#: /Controller/BbsesAppController.php:43
+#: /View/Bbses/view.ctp:75
 msgid "Latest post order"
 msgstr ""
 
-#: /Controller/BbsesController.php:459
-#: /View/Bbses/view.ctp:81
+#: /Controller/BbsesAppController.php:49
+#: /View/Bbses/view.ctp:80
 msgid "Older post order"
 msgstr ""
 
-#: /Controller/BbsesController.php:465
-#: /View/Bbses/view.ctp:86
+#: /Controller/BbsesAppController.php:55
+#: /View/Bbses/view.ctp:85
 msgid "Descending order of comments"
 msgstr ""
 
-#: /Controller/BbsesController.php:493
-#: /View/Bbses/view.ctp:37
-msgid "Display all posts"
-msgstr ""
-
-#: /Controller/BbsesController.php:499
-#: /View/Bbses/view.ctp:39
-msgid "Do not read"
-msgstr ""
-
-#: /Controller/BbsesController.php:506
+#: /Controller/BbsesAppController.php:73
+#: /View/BbsComments/view.ctp:53
+#: /View/BbsPosts/view.ctp:45
 #: /View/Bbses/view.ctp:41
 msgid "Published"
 msgstr ""
 
-#: /Controller/BbsesController.php:524
+#: /Controller/BbsesAppController.php:100
 #: /View/Bbses/view.ctp:45
-#: /View/Elements/status_label.ctp:23
-#: /View/Elements/workflow_buttons.ctp:20
+#: /View/Elements/post_workflow_buttons.ctp:20
+#: /View/Elements/status_label.ctp:24
+msgid "Remand"
+msgstr ""
+
+#: /Controller/BbsesAppController.php:109
+#: /View/BbsComments/view.ctp:57
+#: /View/BbsPosts/view.ctp:49
+#: /View/Elements/status_label.ctp:30
 msgid "Disapproval"
 msgstr ""
 
-#: /Model/Bbs.php:115
+#: /Controller/BbsesAppController.php:119
+#: /View/BbsComments/view.ctp:51
+#: /View/BbsPosts/view.ctp:43
+#: /View/Bbses/view.ctp:37
+msgid "Display all posts"
+msgstr ""
+
+#: /Controller/BbsesAppController.php:125
+#: /View/Bbses/view.ctp:39
+msgid "Do not read"
+msgstr ""
+
+#: /Model/Bbs.php:112
 #: /View/Elements/Bbses/edit.ctp:3
 msgid "Bbs name"
 msgstr ""
 
-#: /Model/BbsPost.php:122
+#: /Model/BbsPost.php:108
 #: /View/Elements/BbsComments/add_comment_form.ctp:15
 #: /View/Elements/BbsPosts/post_form.ctp:15
 msgid "Title"
 msgstr ""
 
-#: /Model/BbsPost.php:130
+#: /Model/BbsPost.php:116
 #: /View/Elements/BbsComments/add_comment_form.ctp:47
 #: /View/Elements/BbsPosts/post_form.ctp:45
 msgid "Content"
@@ -117,81 +108,94 @@ msgid "Create comment"
 msgstr ""
 
 #: /View/BbsComments/edit.ctp:21
-#: /View/BbsComments/view.ctp:143;264;402
+#: /View/BbsComments/view.ctp:184;321;478
 #: /View/BbsPosts/edit.ctp:21
-#: /View/BbsPosts/view.ctp:155;310
-#: /View/Bbses/view.ctp:191
+#: /View/BbsPosts/view.ctp:180;343
+#: /View/Bbses/view.ctp:194
 msgid "Edit"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:133;255;393
-#: /View/BbsPosts/view.ctp:145;301
+#: /View/BbsComments/view.ctp:64
+#: /View/BbsPosts/view.ctp:57
+msgid "Comments"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:80
+#: /View/BbsPosts/view.ctp:72
+msgid "Latest comment order"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:82
+#: /View/BbsPosts/view.ctp:74
+msgid "Older comment order"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:174;312;469
+#: /View/BbsPosts/view.ctp:170;334
 msgid "Delete"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:171;291;431
-#: /View/BbsPosts/view.ctp:182;338
+#: /View/BbsComments/view.ctp:212;348;507
+#: /View/BbsPosts/view.ctp:207;371
 msgid "Quote this posts"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:181;301;441
-#: /View/BbsPosts/view.ctp:192;348
+#: /View/BbsComments/view.ctp:222;358;517
+#: /View/BbsPosts/view.ctp:217;381
 msgid "Write comment"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:317
+#: /View/BbsComments/view.ctp:374
 msgid "This comments has not yet been published"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:325
-#: /View/BbsPosts/view.ctp:216
-msgid "There are not comments now"
+#: /View/BbsComments/view.ctp:382
+#: /View/BbsPosts/view.ctp:241
+msgid "There are not comments"
 msgstr ""
 
 #: /View/BbsPosts/add.ctp:15
-#: /View/Bbses/notCreatePost.ctp:19
 #: /View/Bbses/view.ctp:21
 msgid "Create post"
 msgstr ""
 
-#: /View/BbsPosts/view.ctp:37
-msgid "Comments"
-msgstr ""
-
-#: /View/BbsPosts/view.ctp:208
+#: /View/BbsPosts/view.ctp:233
 msgid "This posts has not yet been published"
 msgstr ""
 
-#: /View/Bbses/notCreateBbs.ctp:13
+#: /View/Bbses/notCreateBbs.ctp:12
 msgid "There are not published bbs now"
 msgstr ""
 
-#: /View/Bbses/notCreatePost.ctp:31
-#: /View/Bbses/view.ctp:212
-msgid "There are not posts now"
+#: /View/Bbses/view.ctp:61
+msgid "Posts"
 msgstr ""
 
-#: /View/Bbses/view.ctp:62
-msgid "Posts"
+#: /View/Bbses/view.ctp:215
+msgid "There are not posts"
+msgstr ""
+
+#: /View/Elements/approving_buttons.ctp:30
+msgid "Approving"
 msgstr ""
 
 #: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:3
 msgid "Post creatable authority"
 msgstr ""
 
-#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:10;64;117;170
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:10;64;117
 msgid "Room administrator"
 msgstr ""
 
-#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:21;75;128;181
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:21;75;128
 msgid "Cheif editor"
 msgstr ""
 
-#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:32;86;139;192
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:32;86;139
 msgid "Editor"
 msgstr ""
 
-#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:43;97;150;203
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:43;97;150
 msgid "General"
 msgstr ""
 
@@ -201,10 +205,6 @@ msgstr ""
 
 #: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:110
 msgid "Comment creatable authority"
-msgstr ""
-
-#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:163
-msgid "Comment publishable authority"
 msgstr ""
 
 #: /View/Elements/BbsFrameSettings/frame_setting.ctp:3

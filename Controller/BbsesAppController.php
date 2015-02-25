@@ -52,7 +52,7 @@ class BbsesAppController extends AppController {
 
 		case '3':
 			//コメントの多い順
-			$sortStr = __d('bbses', 'Descending order of comments') . '(検討)';
+			$sortStr = __d('bbses', 'Descending order of comments');
 			$this->set('currentSortOrder', $sortStr);
 			return array('BbsPost.comment_num DESC', 'BbsPost.title');
 

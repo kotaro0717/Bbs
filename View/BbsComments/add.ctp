@@ -27,8 +27,8 @@
 		'novalidate' => true,
 	)); ?>
 	<?php echo $this->Form->hidden('id'); ?>
-	<?php echo $this->Form->hidden('Bbs.id', array(
-		'value' => $bbses['id'],
+	<?php echo $this->Form->hidden('Bbs.key', array(
+		'value' => $bbses['key'],
 	)); ?>
 	<?php echo $this->Form->hidden('BbsPost.parent_id', array(
 		'value' => $bbsPosts['id'],

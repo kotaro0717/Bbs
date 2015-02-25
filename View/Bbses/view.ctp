@@ -82,7 +82,7 @@
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 3 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Descending order of comments') . '(検討)'; ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 3 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Descending order of comments'); ?>
 					</a>
 				</li>
 			</ul>
@@ -147,7 +147,10 @@
 
 							<!-- コメント数 -->
 							<?php if ($bbsPost['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
-								<span class="glyphicon glyphicon-comment"><?php echo $bbsPost['comment_num']; ?></span>
+								<span class="glyphicon glyphicon-comment"></span>
+								<span tooltip="<?php echo __d('bbses', 'Publishing'); ?>"><?php echo $bbsPost['comment_num']; ?></span>
+								<span tooltip="<?php echo __d('bbses', 'Include the other status'); ?>"><?php echo ($contentCreatable)? '(' . $bbsPost['all_comment_num'] . ')' : ''; ?>
+
 							<?php endif; ?>
 						</a>
 					<?php echo ($bbsPost['readStatus'])? '' : '</strong>' ; ?>

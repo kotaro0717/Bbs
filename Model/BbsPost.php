@@ -28,7 +28,7 @@ class BbsPost extends BbsesAppModel {
 	public $actsAs = array(
 		// TODO: disabled for debug
 		/* 'NetCommons.Publishable', */
-		'Containable',	//Todo:全部ツリーでいける?
+		'Containable',
 		'Tree',
 	);
 
@@ -131,12 +131,10 @@ class BbsPost extends BbsesAppModel {
  * @param array $sortOrder
  * @return array
  */
-	public function getPosts($bbsKey, $userId, $contentEditable,
-			$contentCreatable, $postId, $sortOrder, $visiblePostRow, $currentPage, $conditions = '') {
-
-		//Todo:bbs_postはconditionsに纏めて渡すように変更する
-		//debug($conditions);
-		$conditions['bbs_key'] = $bbsKey;
+	public function getOnePosts($userId, $contentEditable, $contentCreatable, $conditions) {
+		if (! $conditions['id']) {
+			return;
+		}
 
 		//作成権限まで
 		if ($contentCreatable && ! $contentEditable) {
@@ -150,24 +148,43 @@ class BbsPost extends BbsesAppModel {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
 
-		//選択した記事を一件取得/////////////////////////////////////////////////
-		if ($postId) {
-			//view表示のために記事指定
-			$conditions['id'] = $postId;
+		//対象記事のみ取得
+		$bbsPosts = $this->find('first', array(
+				'recursive' => -1,
+				'conditions' => $conditions,
+			)
+		);
 
-			//対象記事のみ取得
-			$bbsPosts = $this->find('first', array(
-					'recursive' => -1,
-					'conditions' => $conditions,
-				)
-			);
+		//日時フォーマット（一件）
+		return $this->__setDateTime(array($bbsPosts), false);
+	}
 
-			//日時フォーマット（一件）
-			return $this->__setDateTime(array($bbsPosts), false);
+/**
+ * get bbs data
+ *
+ * @param int $bbsKey bbses.key
+ * @param string $visibleRow
+ * @param bool $contentCreatable true can edit the content, false not can edit the content.
+ * @param int $postId
+ * @param array $sortOrder
+ * @return array
+ */
+	public function getPosts($userId, $contentEditable, $contentCreatable,
+				$sortOrder, $visiblePostRow, $currentPage, $conditions = '') {
+
+		//作成権限まで
+		if ($contentCreatable && ! $contentEditable) {
+			//自分で書いた記事と公開中の記事を取得
+			$conditions['or']['created_user'] = $userId;
+			$conditions['or']['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
 
-		//記事一覧取得//////////////////////////////////////////////////////////
-		$conditions['parent_id'] = $postId;
+		//作成・編集権限なし:公開中の記事のみ取得
+		if (! $contentCreatable && ! $contentEditable) {
+			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+		}
+
+		//記事一覧取得
 		$group = array('BbsPost.key');
 		$params = array(
 				'conditions' => $conditions,
@@ -177,7 +194,7 @@ class BbsPost extends BbsesAppModel {
 				'limit' => $visiblePostRow,
 				'page' => $currentPage,
 			);
-		$bbsPosts = $this->find('all',$params);
+		$bbsPosts = $this->find('all', $params);
 
 		//日時フォーマット（記事群）
 		return $this->__setDateTime($bbsPosts, true);
@@ -225,36 +242,36 @@ class BbsPost extends BbsesAppModel {
  * @param array $conditions
  * @return array
  */
-	public function getComments($userId, $contentEditable, $contentCreatable,
-			$sortOrder, $visibleCommentRow, $currentPage, $conditions) {
-
-		//作成権限まで
-		if ($contentCreatable && ! $contentEditable) {
-			//自分で書いた記事と公開中の記事を取得
-			$conditions['or']['created_user'] = $userId;
-			$conditions['or']['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-		}
-
-		//作成・編集権限なし:公開中の記事のみ取得
-		if (! $contentCreatable && ! $contentEditable) {
-			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-		}
-
-		//debug($conditions);
-		$group = array('BbsPost.key');
-		$params = array(
-				'conditions' => $conditions,
-				'recursive' => -1,
-				'order' => $sortOrder,
-				'group' => $group,
-				'limit' => $visibleCommentRow,
-				'page' => $currentPage,
-			);
-		$bbsComments = $this->find('all', $params);
-
-		//日時フォーマット（記事群）
-		return $this->__setDateTime($bbsComments, true);
-	}
+//	public function getComments($userId, $contentEditable, $contentCreatable,
+//			$sortOrder, $visibleCommentRow, $currentPage, $conditions) {
+//
+//		//作成権限まで
+//		if ($contentCreatable && ! $contentEditable) {
+//			//自分で書いた記事と公開中の記事を取得
+//			$conditions['or']['created_user'] = $userId;
+//			$conditions['or']['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+//		}
+//
+//		//作成・編集権限なし:公開中の記事のみ取得
+//		if (! $contentCreatable && ! $contentEditable) {
+//			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+//		}
+//
+//		//debug($conditions);
+//		$group = array('BbsPost.key');
+//		$params = array(
+//				'conditions' => $conditions,
+//				'recursive' => -1,
+//				'order' => $sortOrder,
+//				'group' => $group,
+//				'limit' => $visibleCommentRow,
+//				'page' => $currentPage,
+//			);
+//		$bbsComments = $this->find('all', $params);
+//
+//		//日時フォーマット（記事群）
+//		return $this->__setDateTime($bbsComments, true);
+//	}
 
 /**
  * save posts
@@ -275,7 +292,7 @@ class BbsPost extends BbsesAppModel {
 			if (!$this->validatePost($data)) {
 				return false;
 			}
-			$this->data['BbsPost']['bbs_key'] = (int)$this->data['Bbs']['key'];
+
 			$bbsPost = $this->save(null, false);
 			if (!$bbsPost) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));

@@ -122,6 +122,23 @@ class BbsCommentsController extends BbsesAppController {
 		//レスデータをセット
 		$this->__setComment($commentId, $currentPage, $sortParams, $visibleResponsRow, $narrowDownParams);
 
+		//コメント数をセットする
+		//$this->__setCommentNum($postId);
+		//Todo:メソッド化する
+		$conditions['parent_id'] = $this->viewVars['bbsCurrentComments']['id'];
+		if (! $posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentCreatable'],
+				$this->viewVars['contentEditable'],
+				false,
+				false,
+				false,
+				$conditions
+		)) {
+			$this->set('commentNum', 0);
+		}
+		$this->set('commentNum', count($posts));
+
 	}
 
 /**
@@ -137,17 +154,17 @@ class BbsCommentsController extends BbsesAppController {
 
 		$this->__setPost($postId);
 
+		//新規コメントデータセット
+		$bbsComment = $this->BbsPost->create();
+		$bbsComment['BbsPost']['title'] = '新規コメント_' . date('YmdHis');
+		$results = array(
+				'bbsComments' => $bbsComment['BbsPost'],
+				'contentStatus' => null,
+			);
+		$this->set($results);
+
 		if ($this->request->isGet()) {
 			CakeSession::write('backUrl', $this->request->referer());
-
-			//新規コメントデータセット
-			$bbsComment = $this->BbsPost->create();
-			$bbsComment['BbsPost']['title'] = '新規コメント_' . date('YmdHis');
-			$results = array(
-					'bbsComments' => $bbsComment['BbsPost'],
-					'contentStatus' => null,
-				);
-			$this->set($results);
 		}
 
 		if ($this->request->isPost()) {
@@ -163,7 +180,7 @@ class BbsCommentsController extends BbsesAppController {
 			//新規登録のため、データ生成
 			$bbsComment = $this->BbsPost->create(['key' => Security::hash('bbsPost' . mt_rand() . microtime(), 'md5')]);
 			//初期化
-			$bbsComment['BbsPost']['bbs_key'] = '';
+			$bbsComment['BbsPost']['bbs_key'] = $data['Bbs']['key'];
 			$data = Hash::merge($bbsComment, $data);
 
 			if (!$bbsComment = $this->BbsPost->savePost($data)) {
@@ -172,21 +189,36 @@ class BbsCommentsController extends BbsesAppController {
 				}
 			}
 
-			//親記事のコメント数の更新処理
-			$parentPosts = $this->BbsPost->getPosts(
-					$data['Bbs']['key'],
+			//親記事のコメント数の更新処理(公開中のコメント数のみカウントする)
+			//親記事(lft,rghtカラム)取得
+			$conditions['bbs_key'] = $data['Bbs']['key'];
+			$conditions['id'] = $parentId;
+			$parentPosts = $this->BbsPost->getOnePosts(
+					false,
+					false,
+					false,
+					$conditions
+				);
+
+			//条件初期化
+			$conditions = null;
+			//コメント一覧取得（page,limit,order等の指定しない）
+			$conditions['bbs_key'] = $parentPosts['BbsPost']['bbs_key'];
+			$conditions['or']['and']['lft >'] = $parentPosts['BbsPost']['lft'];
+			$conditions['or']['and']['rght <'] = $parentPosts['BbsPost']['rght'];
+			$comments = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
-					$this->viewVars['contentEditable'],
-					$this->viewVars['contentCreatable'],
-					$parentId,
-					null,
-					null,
-					null
-					);
-			//Treeビヘイビアでコメント数を取得してセットして登録
-			$parentPosts['BbsPost']['comment_num'] = $this->BbsPost->childCount($parentId);
-			//PostするためにBbsIdをセット
-			$parentPosts['Bbs']['id'] = $data['Bbs']['id'];
+					false,
+					false,
+					false,
+					false,
+					false,
+					$conditions
+				);
+
+			//Treeビヘイビアでコメント数を取得
+			$parentPosts['BbsPost']['comment_num'] = count($comments);
+			$parentPosts['Bbs']['key'] = $data['Bbs']['key'];
 			if (!$bbsComment = $this->BbsPost->savePost($parentPosts)) {
 				if (!$this->__handleValidationError($this->BbsPost->validationErrors)) {
 					return;
@@ -229,18 +261,13 @@ class BbsCommentsController extends BbsesAppController {
 			);
 
 			//編集データ取得
-			$bbsComment = $this->BbsPost->getPosts(
-					$data['Bbs']['key'],
+			$conditions['id'] = $postId;
+			$bbsComment = $this->BbsPost->getOnePosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
-					$postId,
-					null,
-					null,
-					null
+					$conditions
 					);
-			//編集者のIDを格納
-			//$bbsComment['BbsPost']['created_user'] = $data['User']['id'];
 
 			//更新時間をセット
 			$bbsComment['BbsPost']['modified'] = date('Y-m-d H:i:s');
@@ -381,19 +408,17 @@ class BbsCommentsController extends BbsesAppController {
  * @return void
  */
 	private function __setPost($postId) {
-		//Memo:BbsPostsController->__setPost()と同じ
-		//選択した記事を一件取得
-		$bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['key'],
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+		$conditions['id'] = $postId;
+
+		if (! $bbsPosts = $this->BbsPost->getOnePosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
-				$postId,	//選択された記事のId
-				null,
-				null,
-				null
-			);
-
+				$conditions
+		)) {
+			//return;
+		}
 		//取得した記事の作成者IDからユーザ情報を取得
 		$user = $this->User->find('first', array(
 				'recursive' => -1,
@@ -430,7 +455,6 @@ class BbsCommentsController extends BbsesAppController {
 		$user = $this->User->find('first', array(
 				'recursive' => -1,
 				'conditions' => array(
-					//[0]は気持ち悪い
 					'id' => $posts['BbsPost']['created_user'],
 				)
 			)
@@ -447,7 +471,7 @@ class BbsCommentsController extends BbsesAppController {
 	}
 
 /**
- * __setPost method
+ * __setComment method
  *
  * @param $postId
  * @param $currentPage
@@ -469,7 +493,7 @@ class BbsCommentsController extends BbsesAppController {
 		$conditions['or']['and']['lft >'] = $this->viewVars['bbsCurrentComments']['lft'];
 		$conditions['or']['and']['rght <'] = $this->viewVars['bbsCurrentComments']['rght'];
 
-		$bbsCommnets = $this->BbsPost->getComments(
+		$bbsCommnets = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -484,7 +508,6 @@ class BbsCommentsController extends BbsesAppController {
 			//空配列を渡す
 			//Todo:空ではなく、falseを渡して、Viewでは「空ならメッセージ」に修正
 			$this->set('bbsComments', array());
-			$this->set('commentNum', 0);
 			return;
 		}
 
@@ -503,15 +526,13 @@ class BbsCommentsController extends BbsesAppController {
 			$results[] = $bbsComment['BbsPost'];
 		}
 		$this->set('bbsComments', $results);
-		//コメント数をセット
-		$this->set('commentNum', count($results));
 
 		//前のページがあるか取得
 		if ($currentPage === 1) {
 			$this->set('hasPrevPage', false);
 		} else {
 			$prevPage = $currentPage - 1;
-			$prevPosts = $this->BbsPost->getComments(
+			$prevPosts = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -526,7 +547,7 @@ class BbsCommentsController extends BbsesAppController {
 
 		//次のページがあるか取得
 		$nextPage = $currentPage + 1;
-		$nextPosts = $this->BbsPost->getComments(
+		$nextPosts = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -540,7 +561,7 @@ class BbsCommentsController extends BbsesAppController {
 
 		//2ページ先のページがあるか取得
 		$nextSecondPage = $currentPage + 2;
-		$nextSecondPosts = $this->BbsPost->getComments(
+		$nextSecondPosts = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -555,7 +576,7 @@ class BbsCommentsController extends BbsesAppController {
 		//1,2ページの時のみ4,5ページがあるかどうか取得（モックとしてとりあえず）
 		//if ($currentPage === 1 || $currentPage === 2) {
 			//4ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getComments(
+			$posts = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
@@ -568,7 +589,7 @@ class BbsCommentsController extends BbsesAppController {
 			$this->set('hasFourPage', $hasFourPage);
 
 			//5ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getComments(
+			$posts = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],

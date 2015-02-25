@@ -126,7 +126,7 @@ class BbsesController extends BbsesAppController {
 		}
 
 		//記事一覧情報取得
-		$this->__setPost($postId = null, $currentPage, $sortParams, $visiblePostRow, $narrowDownParams);
+		$this->__setPost($currentPage, $sortParams, $visiblePostRow, $narrowDownParams);
 
 		//記事数取得
 		$this->__setPostNum();
@@ -150,9 +150,6 @@ class BbsesController extends BbsesAppController {
  */
 	public function edit() {
 		$this->__setBbs();
-		if (!isset($this->viewVars['bbses'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
 
 		if ($this->request->isGet()) {
 			$referer = $this->request->referer();
@@ -244,7 +241,7 @@ class BbsesController extends BbsesAppController {
 		) {
 			//掲示板が作成されていない場合
 			$bbses = $this->Bbs->create(['key' => Security::hash('bbs' . mt_rand() . microtime(), 'md5')]);
-			$bbses['Bbs']['name'] = '掲示板' . 1;
+			$bbses['Bbs']['name'] = '掲示板_' . date('YmdHis');
 			$bbses['Bbs']['use_comment'] = ($bbses['Bbs']['use_comment'] === '1') ? true : false;
 			$bbses['Bbs']['auto_approval'] = ($bbses['Bbs']['auto_approval'] === '1') ? true : false;
 			$bbses['Bbs']['use_like_button'] = ($bbses['Bbs']['use_like_button'] === '1') ? true : false;
@@ -267,24 +264,25 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	private function __setPost($postId, $currentPage, $sortParams, $visiblePostRow, $narrowDownParams) {
+	private function __setPost($currentPage, $sortParams, $visiblePostRow, $narrowDownParams) {
 		//ソート条件をセット
 		$sortOrder = $this->setSortOrder($sortParams);
 
 		//絞り込み条件をセット
 		$conditions = $this->setNarrowDown($narrowDownParams);
 
-		//BbsPost->find
+		//取得条件をセット
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+		$conditions['parent_id'] = null;
+
 		if (! $bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
-				$postId,			//欲しい記事のID指定
 				$sortOrder,			//order by指定
 				$visiblePostRow,	//limit指定
 				$currentPage,		//ページ番号指定
-				$conditions			//ステータス等の検索条件をセット
+				$conditions			//検索条件をセット
 		)) {
 			$bbsPosts = $this->BbsPost->create();
 			$results = array(
@@ -310,8 +308,8 @@ class BbsesController extends BbsesAppController {
 					//debug('既読');
 
 				} else {
-					//記事データにコメント数をセット
-					$bbsPost['BbsPost']['comment_num'] = $this->__setCommentNum($bbsPost['BbsPost']);
+					//公開データ以外を含めたコメント数をセット
+					$bbsPost['BbsPost']['all_comment_num'] = $this->__setCommentNum($bbsPost['BbsPost']);
 
 					//記事データを配列にセット
 					$results['bbsPosts'][] = $bbsPost['BbsPost'];
@@ -331,11 +329,6 @@ class BbsesController extends BbsesAppController {
 				$results['bbsPostNum'] = count($results['bbsPosts']);
 
 			}
-
-			//「コメントの多い順」の場合、取得したコメント数でソートをかける
-//			if ( === '2') {
-
-//			}
 		}
 		$this->set($results);
 
@@ -345,11 +338,9 @@ class BbsesController extends BbsesAppController {
 		} else {
 			$prevPage = $currentPage - 1;
 			$prevPosts = $this->BbsPost->getPosts(
-					$this->viewVars['bbses']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
-					$postId,			//欲しい記事のID指定
 					$sortOrder,			//order by指定
 					$visiblePostRow,	//limit指定
 					$prevPage,			//前のページ番号指定
@@ -362,11 +353,9 @@ class BbsesController extends BbsesAppController {
 		//次のページがあるか取得
 		$nextPage = $currentPage + 1;
 		$nextPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
-				$postId,			//欲しい記事のID指定
 				$sortOrder,			//order by指定
 				$visiblePostRow,	//limit指定
 				$nextPage,			//次のページ番号指定
@@ -378,11 +367,9 @@ class BbsesController extends BbsesAppController {
 		//2ページ先のページがあるか取得
 		$nextSecondPage = $currentPage + 2;
 		$nextSecondPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
-				$postId,			//欲しい記事のID指定
 				$sortOrder,			//order by指定
 				$visiblePostRow,	//limit指定
 				$nextSecondPage,	//2ページ先の番号指定
@@ -395,11 +382,9 @@ class BbsesController extends BbsesAppController {
 		//if ($currentPage === 1 || $currentPage === 2) {
 			//4ページがあるか取得（モックとしてとりあえず）
 			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['bbses']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
-					$postId,			//欲しい記事のID指定
 					$sortOrder,			//order by指定
 					$visiblePostRow,	//limit指定
 					4,					//4ページ先の番号指定
@@ -410,11 +395,9 @@ class BbsesController extends BbsesAppController {
 
 			//5ページがあるか取得（モックとしてとりあえず）
 			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['bbses']['key'],
 					$this->viewVars['userId'],
 					$this->viewVars['contentEditable'],
 					$this->viewVars['contentCreatable'],
-					$postId,			//欲しい記事のID指定
 					$sortOrder,			//order by指定
 					$visiblePostRow,	//limit指定
 					5,					//5ページ先の番号指定
@@ -432,11 +415,13 @@ class BbsesController extends BbsesAppController {
  * @return string order for search
  */
 	private function __setCommentNum($bbsPost) {
+		//検索条件をセット
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
 		$conditions['or']['and']['lft >'] = $bbsPost['lft'];
 		$conditions['or']['and']['rght <'] = $bbsPost['rght'];
 
-		$bbsCommnets = $this->BbsPost->getComments(
+		//公開データ以外も含めたコメント数を取得
+		$bbsCommnets = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -456,16 +441,17 @@ class BbsesController extends BbsesAppController {
  * @return string order for search
  */
 	private function __setPostNum() {
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+		$conditions['parent_id'] = '';
+
 		$bbsPosts = $this->BbsPost->getPosts(
-				$this->viewVars['bbses']['key'],
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
-				null,	//記事一覧を取得
 				null,
 				null,
 				null,
-				null
+				$conditions
 			);
 
 		$results['postNum'] = count($bbsPosts);

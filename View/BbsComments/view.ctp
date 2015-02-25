@@ -184,7 +184,7 @@
 										class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
 										<span class="glyphicon glyphicon-edit"></span>
 						</a>
-						&nbsp;
+						&ensp;
 					</span>
 				<?php endif; ?>
 			</span>
@@ -221,7 +221,7 @@
 									'class' => 'btn btn-success btn-xs',
 									'tooltip' => __d('bbses', 'Write comment'),
 								)); ?>
-						&nbsp;
+						&ensp;
 
 					<?php echo $this->Form->end(); ?>
 				<?php endif; ?>
@@ -278,13 +278,6 @@
 					<?php if ($bbses['use_unlike_button']) : ?>
 						<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsCurrentComments['unlike_num']; ?></span>
 					<?php endif; ?>
-
-				<!-- '5'(非承認) -->
-				<?php elseif ($bbsCurrentComments['status'] === '5' && $contentPublishable) : ?>
-					<!-- 承認するボタン -->
-					<?php echo $this->element('approving_buttons',
-									array('comment' => $bbsCurrentComments)); ?>
-
 				<?php endif; ?>
 				&nbsp;
 			</span>
@@ -321,7 +314,7 @@
 							class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
 							<span class="glyphicon glyphicon-edit"></span>
 					</a>
-					&nbsp;
+					&ensp;
 				</span>
 			<?php endif; ?>
 
@@ -357,9 +350,17 @@
 									'class' => 'btn btn-success btn-xs',
 									'tooltip' => __d('bbses', 'Write comment'),
 								)); ?>
-						&nbsp;
+						&ensp;
 
 					<?php echo $this->Form->end(); ?>
+				<?php endif; ?>
+
+				<!-- '5'(非承認) -->
+				<?php if ($bbsCurrentComments['status'] === '5' && $contentPublishable) : ?>
+					<!-- 承認するボタン -->
+					<?php echo $this->element('approving_buttons',
+									array('comment' => $bbsCurrentComments)); ?>
+					&emsp;
 				<?php endif; ?>
 			</span>
 		</div>
@@ -434,13 +435,6 @@
 						<?php if ($bbses['use_unlike_button']) : ?>
 							<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['unlike_num']; ?></span>
 						<?php endif; ?>
-
-					<!-- '5'(非承認) -->
-					<?php elseif ($comment['status'] === '5' && $contentPublishable) : ?>
-						<!-- 承認するボタン -->
-						<?php echo $this->element('approving_buttons',
-										array('comment' => $comment)); ?>
-
 					<?php endif; ?>
 					&nbsp;
 				</span>
@@ -478,7 +472,7 @@
 									class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
 									<span class="glyphicon glyphicon-edit"></span>
 							</a>
-							&nbsp;
+							&ensp;
 						</span>
 					<?php endif; ?>
 				</span>
@@ -516,9 +510,17 @@
 										'class' => 'btn btn-success btn-xs',
 										'tooltip' => __d('bbses', 'Write comment'),
 									)); ?>
-							&nbsp;
+							&ensp;
 
 						<?php echo $this->Form->end(); ?>
+					<?php endif; ?>
+
+					<!-- '5'(非承認) -->
+					<?php if ($comment['status'] === '5' && $contentPublishable) : ?>
+						<!-- 承認するボタン -->
+						<?php echo $this->element('approving_buttons',
+										array('comment' => $comment)); ?>
+						&emsp;
 					<?php endif; ?>
 				</span>
 			</div>
