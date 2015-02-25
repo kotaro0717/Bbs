@@ -28,7 +28,7 @@ class BbsFrameSetting extends BbsesAppModel {
  * @var array
  */
 	public $validate = array();
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
 /**
  * belongsTo associations
  *
@@ -82,7 +82,7 @@ class BbsFrameSetting extends BbsesAppModel {
 /**
  * get bbs setting data
  *
- * @param int $frameId frames.id
+ * @param int $frameKey frames.key
  * @return array
  */
 	public function getBbsSetting($frameKey) {

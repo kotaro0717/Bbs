@@ -333,14 +333,9 @@ class BbsPostsController extends BbsesAppController {
 
 		//掲示板データを取得
 		$bbses = $this->Bbs->getBbs(
-				$this->viewVars['blockId'],
-				$this->viewVars['userId'],
-				$this->viewVars['contentCreatable'],
-				$this->viewVars['contentEditable'],
-				false	//記事一覧ではない
+				$this->viewVars['blockId']
 			);
 
-		//Viewにセット
 		$this->set(array(
 			'bbses' => $bbses['Bbs']
 		));

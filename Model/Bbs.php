@@ -25,18 +25,7 @@ class Bbs extends BbsesAppModel {
  *
  * @var string
  */
-
 	public $useTable = 'bbses';
-/**
- * use behaviors
- *
- * @var array
- */
-	public $actsAs = array(
-		// TODO: disabled for debug
-		/* 'NetCommons.Publishable', */
-		'Containable'
-	);
 
 /**
  * Validation rules
@@ -44,7 +33,7 @@ class Bbs extends BbsesAppModel {
  * @var array
  */
 	public $validate = array();
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
 /**
  * belongsTo associations
  *
@@ -67,10 +56,10 @@ class Bbs extends BbsesAppModel {
  */
 	public $hasMany = array(
 		'BbsPost' => array(
-            'className' => 'Bbses.BbsPost',
-            'foreignKey' => 'bbs_key',
-            'dependent' => true
-        )
+			'className' => 'Bbses.BbsPost',
+			'foreignKey' => 'bbs_key',
+			'dependent' => true
+		)
 	);
 
 /**
@@ -99,7 +88,9 @@ class Bbs extends BbsesAppModel {
 					'required' => true,
 				)
 			),
+
 			//status to set in PublishableBehavior.
+
 			'is_auto_translated' => array(
 				'boolean' => array(
 					'rule' => array('boolean'),
@@ -119,22 +110,10 @@ class Bbs extends BbsesAppModel {
 /**
  * get bbs data
  *
- * @param int $frameId frames.id
  * @param int $blockId blocks.id
- * @param bool $contentEditable true can edit the content, false not can edit the content.
  * @return array
  */
-	public function getBbs($blockId, $userId, $contentCreatable, $contentEditable, $isPostList) {
-		//固定化
-		//$blockId = '30';
-		$contains = false;
-
-		//記事一覧の場合
-		if ($isPostList) {
-			//関係する記事のみ取得するための条件を設定
-			$contains = $this->__setContainableParams($userId, $contentCreatable, $contentEditable);
-		}
-
+	public function getBbs($blockId) {
 		$conditions = array(
 			'block_id' => $blockId,
 		);
@@ -142,7 +121,6 @@ class Bbs extends BbsesAppModel {
 		$bbses = $this->find('first', array(
 				'conditions' => $conditions,
 				'order' => 'Bbs.id DESC',
-				'contain' => $contains,
 			)
 		);
 
@@ -176,7 +154,6 @@ class Bbs extends BbsesAppModel {
 
 			//掲示板の登録
 			$this->data['Bbs']['block_id'] = (int)$block['Block']['id'];
-			//$this->data['Bbs']['block_id'] = (int)$this->data['Block']['id'];
 			$bbs = $this->save(null, false);
 			if (!$bbs) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
@@ -203,37 +180,6 @@ class Bbs extends BbsesAppModel {
 		$this->set($data);
 		$this->validates();
 		return $this->validationErrors ? false : true;
-	}
-
-/**
- * __setContainableParams method
- *
- * @return void
- */
-	private function __setContainableParams($userId, $contentCreatable, $contentEditable) {
-		//containableビヘイビア用の条件
-
-		//親記事のみ取得
-		$containConditions['BbsPost.parent_id ='] = null;
-
-		//作成権限あり:自分で書いた記事のみ取得
-		if ($contentCreatable && ! $contentEditable) {
-			$containConditions['BbsPost.created_user ='] = $userId;
-		}
-
-		//作成・編集権限なし:公開中の記事のみ取得
-		if (! $contentCreatable && ! $contentEditable) {
-			$containConditions['BbsPost.status ='] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-		}
-
-		$contains = array(
-			'BbsPost' => array(
-				'conditions' => $containConditions,
-				'order' => 'BbsPost.created DESC',
-				//'limit' => $visiblePostRow,
-			)
-		);
-		return $contains;
 	}
 
 }

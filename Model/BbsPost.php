@@ -26,9 +26,6 @@ class BbsPost extends BbsesAppModel {
  * @var array
  */
 	public $actsAs = array(
-		// TODO: disabled for debug
-		/* 'NetCommons.Publishable', */
-		'Containable',
 		'Tree',
 	);
 
@@ -38,7 +35,7 @@ class BbsPost extends BbsesAppModel {
  * @var array
  */
 	public $validate = array();
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
 /**
  * belongsTo associations
  *
@@ -52,13 +49,6 @@ class BbsPost extends BbsesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-//		'BbsPost' => array(
-//			'className' => 'Bbses.BbsPost',
-//			'foreignKey' => 'parent_id',
-//			'conditions' => '',
-//			'fields' => '',
-//			'order' => ''
-//		)
 	);
 
 /**
@@ -86,16 +76,9 @@ class BbsPost extends BbsesAppModel {
 					'required' => true,
 				)
 			),
-			//parent_id = null は親記事で許す
-			/*'parent_id' => array(
-				'notEmpty' => array(
-					'rule' => array('notEmpty'),
-					'message' => __d('net_commons', 'Invalid request.'),
-					'required' => true,
-				)
-			),*/
 
 			//status to set in PublishableBehavior.
+
 			'is_auto_translated' => array(
 				'boolean' => array(
 					'rule' => array('boolean'),
@@ -124,11 +107,10 @@ class BbsPost extends BbsesAppModel {
 /**
  * get bbs data
  *
- * @param int $bbsKey bbses.key
- * @param string $visibleRow
- * @param bool $contentCreatable true can edit the content, false not can edit the content.
- * @param int $postId
- * @param array $sortOrder
+ * @param int $userId users.id
+ * @param bool $contentEditable true can edit the content, false not can edit the content.
+ * @param bool $contentCreatable true can create the content, false not can create the content.
+ * @param array $conditions databese find condition
  * @return array
  */
 	public function getOnePosts($userId, $contentEditable, $contentCreatable, $conditions) {
@@ -162,16 +144,17 @@ class BbsPost extends BbsesAppModel {
 /**
  * get bbs data
  *
- * @param int $bbsKey bbses.key
- * @param string $visibleRow
- * @param bool $contentCreatable true can edit the content, false not can edit the content.
- * @param int $postId
- * @param array $sortOrder
+ * @param int $userId users.id
+ * @param bool $contentEditable true can edit the content, false not can edit the content.
+ * @param bool $contentCreatable true can create the content, false not can create the content.
+ * @param array $sortOrder databese find condition
+ * @param int $visiblePostRow databese find condition
+ * @param int $currentPage databese find condition
+ * @param array $conditions databese find condition
  * @return array
  */
 	public function getPosts($userId, $contentEditable, $contentCreatable,
 				$sortOrder, $visiblePostRow, $currentPage, $conditions = '') {
-
 		//作成権限まで
 		if ($contentCreatable && ! $contentEditable) {
 			//自分で書いた記事と公開中の記事を取得
@@ -204,10 +187,9 @@ class BbsPost extends BbsesAppModel {
  * get bbs data
  *
  * @param int $bbsKey bbses.key
- * @param string $visibleRow
- * @param bool $contentCreatable true can edit the content, false not can edit the content.
- * @param int $postId
- * @param array $sortOrder
+ * @param int $postId bbsPosts.id
+ * @param bool $contentEditable true can edit the content, false not can edit the content.
+ * @param bool $contentCreatable true can create the content, false not can create the content.
  * @return array
  */
 	public function getCurrentComments($bbsKey, $postId, $contentEditable, $contentCreatable) {
@@ -216,7 +198,7 @@ class BbsPost extends BbsesAppModel {
 			'id' => $postId
 		);
 
- 		if (! $contentCreatable && ! $contentEditable) {
+		if (! $contentCreatable && ! $contentEditable) {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
 
@@ -229,49 +211,6 @@ class BbsPost extends BbsesAppModel {
 		//日時フォーマット（一件）
 		return $this->__setDateTime(array($posts), false);
 	}
-
-/**
- * get bbs data
- *
- * @param string $userId
- * @param bool $contentEditable true can edit the content, false not can edit the content.
- * @param bool $contentCreatable true can create the content, false not can create the content.
- * @param array $sortOrder
- * @param string $visibleCommentRow
- * @param string $currentPage
- * @param array $conditions
- * @return array
- */
-//	public function getComments($userId, $contentEditable, $contentCreatable,
-//			$sortOrder, $visibleCommentRow, $currentPage, $conditions) {
-//
-//		//作成権限まで
-//		if ($contentCreatable && ! $contentEditable) {
-//			//自分で書いた記事と公開中の記事を取得
-//			$conditions['or']['created_user'] = $userId;
-//			$conditions['or']['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-//		}
-//
-//		//作成・編集権限なし:公開中の記事のみ取得
-//		if (! $contentCreatable && ! $contentEditable) {
-//			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-//		}
-//
-//		//debug($conditions);
-//		$group = array('BbsPost.key');
-//		$params = array(
-//				'conditions' => $conditions,
-//				'recursive' => -1,
-//				'order' => $sortOrder,
-//				'group' => $group,
-//				'limit' => $visibleCommentRow,
-//				'page' => $currentPage,
-//			);
-//		$bbsComments = $this->find('all', $params);
-//
-//		//日時フォーマット（記事群）
-//		return $this->__setDateTime($bbsComments, true);
-//	}
 
 /**
  * save posts
@@ -324,14 +263,16 @@ class BbsPost extends BbsesAppModel {
 /**
  * __setDateTime method
  *
+ * @param array $bbsPosts bbsPosts
+ * @param bool $isArray true is posts list, false is a posts
  * @return void
  */
-	private function __setDateTime($bbs_posts, $is_array) {
+	private function __setDateTime($bbsPosts, $isArray) {
 		$today = date("Y-m-d");
 		$year = date("Y");
 		$i = 0;
 		//再フォーマット
-		foreach ($bbs_posts as $post) {
+		foreach ($bbsPosts as $post) {
 			$date = $post['BbsPost']['created'];
 			//日付切り出し
 			$createdDay = substr($post['BbsPost']['created'], 0, 10);
@@ -340,21 +281,19 @@ class BbsPost extends BbsesAppModel {
 			//変換
 			if ($today === $createdDay) {
 				//今日
-				$bbs_posts[$i]['BbsPost']['create_time'] = date('G:i', strtotime($date));
-			} else if ($year !== $createdYear) {
+				$bbsPosts[$i]['BbsPost']['create_time'] = date('G:i', strtotime($date));
+			} elseif ($year !== $createdYear) {
 				//昨年以前
-				$bbs_posts[$i]['BbsPost']['create_time'] =  date('Y/m/d', strtotime($date));
-			} else if ($today > $createdDay) {
+				$bbsPosts[$i]['BbsPost']['create_time'] = date('Y/m/d', strtotime($date));
+			} elseif ($today > $createdDay) {
 				//今日より前 かつ 今年
-				$bbs_posts[$i]['BbsPost']['create_time'] =  date('m/d', strtotime($date));
+				$bbsPosts[$i]['BbsPost']['create_time'] = date('m/d', strtotime($date));
 			}
 			$i++;
 		}
-
-		if ($is_array) {
-			return $bbs_posts;
+		if ($isArray) {
+			return $bbsPosts;
 		}
-
-		return $bbs_posts[0];
+		return $bbsPosts[0];
 	}
 }

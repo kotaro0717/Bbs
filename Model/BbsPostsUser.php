@@ -20,16 +20,12 @@ App::uses('BbsesAppModel', 'Bbses.Model');
  */
 class BbsPostsUser extends BbsesAppModel {
 
-	public $useTable = 'bbs_posts_users';
 /**
- * use behaviors
+ * use tables
  *
- * @var array
+ * @var string
  */
-	public $actsAs = array(
-		// TODO: disabled for debug
-		/* 'NetCommons.Publishable' */
-	);
+	public $useTable = 'bbs_posts_users';
 
 /**
  * Validation rules
@@ -37,20 +33,20 @@ class BbsPostsUser extends BbsesAppModel {
  * @var array
  */
 	public $validate = array();
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
 /**
  * belongsTo associations
  *
  * @var array
  */
 	public $belongsTo = array(
-//		'Frame' => array(
-//			'className' => 'Frames.Frame',
-//			'foreignKey' => 'frame_key',
-//			'conditions' => '',
-//			'fields' => '',
-//			'order' => ''
-//		),
+		'Frame' => array(
+			'className' => 'Frames.Frame',
+			'foreignKey' => 'frame_key',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
 	);
 
 /**
@@ -82,12 +78,11 @@ class BbsPostsUser extends BbsesAppModel {
 		return parent::beforeValidate($options);
 	}
 /**
- * get bbs data
+ * getReadPostStatus
  *
- * @param int $frameId frames.id
- * @param int $blockId blocks.id
- * @param bool $contentEditable true can edit the content, false not can edit the content.
- * @return array
+ * @param int $postId bbsPosts.id
+ * @param int $userId users.id
+ * @return bool
  */
 	public function getReadPostStatus($postId, $userId) {
 		$conditions = array(

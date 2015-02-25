@@ -117,7 +117,7 @@ class BbsesController extends BbsesAppController {
 				$this->viewVars['bbsSettings']['visible_post_row'] : $visiblePostRow;
 		$this->set('currentVisibleRow', $visiblePostRow);
 
-		$this->__setBbs();
+		$this->__initBbs();
 
 		//フレーム置いた直後
 		if (! isset($this->viewVars['bbses']['id'])) {
@@ -149,7 +149,7 @@ class BbsesController extends BbsesAppController {
  * @return void
  */
 	public function edit() {
-		$this->__setBbs();
+		$this->__initBbs();
 
 		if ($this->request->isGet()) {
 			$referer = $this->request->referer();
@@ -162,15 +162,12 @@ class BbsesController extends BbsesAppController {
 			$data = $this->data;
 			//$blockId, $userId, $contentCreatable, $contentEditable, $is_post_list
 			if (!$bbs = $this->Bbs->getBbs(
-				isset($this->data['Block']['id']) ? (int)$this->data['Block']['id'] : null,
-				false,
-				false,
-				false,
-				false
+				isset($this->data['Block']['id']) ? (int)$this->data['Block']['id'] : null
 			)) {
 				//bbsテーブルデータ作成とkey格納
 				$bbs = $this->Bbs->create(['key' => Security::hash('bbs' . mt_rand() . microtime(), 'md5')]);
 				$bbs['Bbs']['block_id'] = 0;
+
 				//Todo:デフォルト値が文字列で判断されるがどうにかならないか？
 				$bbs['Bbs']['post_create_authority'] = ($bbs['Bbs']['post_create_authority'] === '1') ? true : false;
 				$bbs['Bbs']['post_publish_authority'] = ($bbs['Bbs']['post_publish_authority'] === '1') ? true : false;
@@ -178,6 +175,7 @@ class BbsesController extends BbsesAppController {
 			}
 
 			$bbs['Bbs']['name'] = $data['Bbs']['name'];
+
 			//Todo:デフォルト値が文字列で判断されるがどうにかならないか？
 			$bbs['Bbs']['use_comment'] = ($data['Bbs']['use_comment'] === '1') ? true : false;
 			$bbs['Bbs']['auto_approval'] = ($data['Bbs']['auto_approval'] === '1') ? true : false;
@@ -206,7 +204,7 @@ class BbsesController extends BbsesAppController {
 	}
 
 /**
- * __initBbs method
+ * __setBbsSetting method
  *
  * @return void
  */
@@ -226,17 +224,13 @@ class BbsesController extends BbsesAppController {
  *
  * @return void
  */
-	private function __setBbs() {
+	private function __initBbs() {
 		//ログインユーザIDを取得し、Viewにセット
 		$this->set('userId', $this->Session->read('Auth.User.id'));
 
 		//掲示板データを取得
 		if (!$bbses = $this->Bbs->getBbs(
-				(isset($this->viewVars['blockId'])? $this->viewVars['blockId'] : ''),
-				$this->viewVars['userId'],
-				$this->viewVars['contentCreatable'],
-				$this->viewVars['contentEditable'],
-				true	//記事一覧である
+				isset($this->viewVars['blockId'])? $this->viewVars['blockId'] : ''
 			)
 		) {
 			//掲示板が作成されていない場合
@@ -246,17 +240,15 @@ class BbsesController extends BbsesAppController {
 			$bbses['Bbs']['auto_approval'] = ($bbses['Bbs']['auto_approval'] === '1') ? true : false;
 			$bbses['Bbs']['use_like_button'] = ($bbses['Bbs']['use_like_button'] === '1') ? true : false;
 			$bbses['Bbs']['use_unlike_button'] = ($bbses['Bbs']['use_unlike_button'] === '1') ? true : false;
-			$results = array(
+			$this->set(array(
 				'bbses' => $bbses['Bbs'],
-			);
-			$this->set($results);
+			));
 			return;
 		}
-		$results = array(
+
+		$this->set(array(
 			'bbses' => $bbses['Bbs'],
-			//'bbsPostNum' => count($bbses['BbsPost'])
-		);
-		$this->set($results);
+		));
 	}
 
 /**

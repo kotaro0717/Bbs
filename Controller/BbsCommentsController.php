@@ -150,8 +150,10 @@ class BbsCommentsController extends BbsesAppController {
 		//引用フラグをURLパラメータからセット
 		$this->set('quotFlag', $this->params->query['quotFlag']);
 
+		//掲示板名等をセット
 		$this->__setBbs();
 
+		//親記事情報をセット
 		$this->__setPost($postId);
 
 		//新規コメントデータセット
@@ -389,14 +391,9 @@ class BbsCommentsController extends BbsesAppController {
 
 		//掲示板データを取得
 		$bbses = $this->Bbs->getBbs(
-				$this->viewVars['blockId'],
-				$this->viewVars['userId'],
-				$this->viewVars['contentCreatable'],
-				$this->viewVars['contentEditable'],
-				false	//記事一覧ではない
+				$this->viewVars['blockId']
 			);
 
-		//Viewにセット
 		$this->set(array(
 			'bbses' => $bbses['Bbs']
 		));
