@@ -1,7 +1,9 @@
+<strong><?php echo $roomRoleKey; ?></strong>
 <div id="nc-bbs-index-<?php echo (int)$frameId; ?>">
 
 	<!-- 管理ボタン:コンテンツが公開できる人ならば表示 -->
 	<?php if ($contentPublishable) : ?>
+
 		<div class="text-right">
 			<a href="<?php echo $this->Html->url(
 				'/bbses/bbses/edit/' . $frameId) ?>" class="btn btn-primary">
@@ -141,15 +143,15 @@
 						<a href="/bbses/bbsPosts/view/<?php echo $frameId; ?>/<?php echo $bbsPost['id']; ?>"
 						   class="text-left">
 
-							<!-- 記事のタイトル TODO:最大表示数をCONST化する -->
-							<?php echo mb_substr(strip_tags($bbsPost['title']), 0, 30, 'UTF-8'); ?>
-							<?php echo (mb_substr(strip_tags($bbsPost['title']), 31, null, 'UTF-8') === '')? '' : '…'; ?>
+							<!-- 記事のタイトル -->
+							<?php echo h(mb_strcut(strip_tags($bbsPost['title']), 0, BbsPost::DISPLAY_MAX_TITLE_LENGTH, 'UTF-8')); ?>
+							<?php echo (h(mb_strcut(strip_tags($bbsPost['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '<span class="glyphicon glyphicon-option-horizontal"></span>'; ?>
 
 							<!-- コメント数 -->
 							<?php if ($bbsPost['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 								<span class="glyphicon glyphicon-comment"></span>
-								<span tooltip="<?php echo __d('bbses', 'Publishing'); ?>"><?php echo $bbsPost['comment_num']; ?></span>
-								<span tooltip="<?php echo __d('bbses', 'Include the other status'); ?>"><?php echo ($contentCreatable)? '(' . $bbsPost['all_comment_num'] . ')' : ''; ?>
+								<span tooltip="<?php echo __d('bbses', 'Publishing comments'); ?>"><?php echo $bbsPost['comment_num']; ?></span>&nbsp;
+								<span tooltip="<?php echo __d('bbses', 'Comments Include the other status'); ?>"><?php echo ($contentCreatable)? '(' . $bbsPost['all_comment_num'] . ')' : ''; ?>
 
 							<?php endif; ?>
 						</a>
@@ -162,10 +164,11 @@
 					<!-- 作成日時 -->
 					<div class="text-left" style="float:right;"><?php echo $bbsPost['create_time']; ?></div>
 
-					<!-- 本文 Todo:最大表示数をCONST化する -->
+					<!-- 本文 -->
 					<p>
-						<?php echo mb_substr(strip_tags($bbsPost['content']), 0, 75, 'UTF-8'); ?>
-						<?php echo (mb_substr(strip_tags($bbsPost['title']), 76, null, 'UTF-8') === '')? '' : '…'; ?>
+						<?php echo mb_strcut(strip_tags($bbsPost['content']), 0, BbsPost::DISPLAY_MAX_CONTENT_LENGTH, 'UTF-8'); ?>
+						<?php echo (mb_strcut(strip_tags($bbsPost['content']), BbsPost::DISPLAY_MAX_CONTENT_LENGTH, null, 'UTF-8') === false)? '' : '<span class="glyphicon glyphicon-option-horizontal"></span>'; ?>
+
 					</p>
 
 					<!-- フッター -->

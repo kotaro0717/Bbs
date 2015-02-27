@@ -1,7 +1,7 @@
 <?php echo $this->Html->script('/net_commons/base/js/workflow.js', false); ?>
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
-
+<strong><?php echo $roomRoleKey; ?></strong>
 <div id="nc-bbs-post-view-<?php echo (int)$frameId; ?>"
 		ng-controller="BbsPost"
 		ng-init="initialize(<?php echo h(json_encode($bbsPosts)); ?>)">
@@ -13,8 +13,8 @@
 		<?php echo $bbses['name']; ?></a>
 	</li>
 	<li class="active">
-		<?php echo mb_substr(strip_tags($bbsPosts['title']), 0, 20, 'UTF-8'); ?>
-		<?php echo (mb_substr(strip_tags($bbsPosts['title']), 21, null, 'UTF-8') === '')? '' : '…'; ?>
+		<?php echo h(mb_strcut(strip_tags($bbsPosts['title']), 0, BbsPost::DISPLAY_MAX_TITLE_LENGTH, 'UTF-8')); ?>
+		<?php echo (h(mb_strcut(strip_tags($bbsPosts['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '<span class="glyphicon glyphicon-option-horizontal"></span>'; ?>
 	</li>
 </ol>
 
@@ -140,18 +140,24 @@
 				<!-- いいね！ -->
 				<?php if ($bbsPosts['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 					<?php if ($bbses['use_like_button']) : ?>
-						<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsPosts['like_num']; ?></span>
+						<a href="">
+							<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsPosts['like_num']; ?></span>
+						</a>&nbsp;
 					<?php endif; ?>
 					<?php if ($bbses['use_unlike_button']) : ?>
-						<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsPosts['unlike_num']; ?></span>
+						<a href="">
+							<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsPosts['unlike_num']; ?></span>
+						</a>
 					<?php endif; ?>
 				<?php endif; ?>
 				&nbsp;
 			</span>
 
-			<?php if ($bbsPosts['created_user'] === $userId && $contentCreatable
-							&& $bbsPosts['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED
-						|| $contentPublishable) : ?>
+			<?php if (($contentCreatable && $bbsPosts['created_user'] === $userId
+							&& $bbsPosts['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
+						($contentEditable
+							&& $bbsPosts['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
+						$contentPublishable) : ?>
 
 				<!-- 削除 -->
 				<span class="text-left" style="float:right;">
@@ -187,7 +193,7 @@
 
 			<!-- Warn:style 一行に表示するため指定 -->
 			<span class="text-left" style="float:right;">
-				<?php if ($contentCreatable && $bbses['use_comment']
+				<?php if ($commentCreatable && $bbses['use_comment']
 							&& $bbsPosts['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 
 					<?php echo $this->Form->create('',
@@ -295,10 +301,14 @@
 				<span class="text-left">
 					<?php if ($comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 						<?php if ($bbses['use_like_button']) : ?>
-							<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['like_num']; ?></span>
+							<a href="">
+								<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['like_num']; ?></span>
+							</a>&nbsp;
 						<?php endif; ?>
 						<?php if ($bbses['use_unlike_button']) : ?>
-							<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['unlike_num']; ?></span>
+							<a href="">
+								<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['unlike_num']; ?></span>
+							</a>
 						<?php endif; ?>
 					<?php endif; ?>
 					&nbsp;
@@ -306,9 +316,11 @@
 
 				<span class="text-left" style="float:right;">
 					<!-- コメント編集/削除 -->
-					<?php if ($comment['created_user'] === $userId && $contentCreatable
-									&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED
-								|| $contentPublishable) : ?>
+					<?php if (($contentCreatable && $comment['created_user'] === $userId
+									&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
+								($contentEditable
+									&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
+								$contentPublishable) : ?>
 
 						<!-- 削除 -->
 						<span class="text-left" style="float:right;">
@@ -344,7 +356,7 @@
 
 				<!-- Warn:style 一行に表示するため指定 -->
 				<span class="text-left" style="float:right;">
-					<?php if ($contentCreatable && $bbses['use_comment']
+					<?php if ($commentCreatable && $bbses['use_comment']
 								&& $comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 
 						<?php echo $this->Form->create('',

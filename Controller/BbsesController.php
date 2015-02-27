@@ -409,8 +409,8 @@ class BbsesController extends BbsesAppController {
 	private function __setCommentNum($bbsPost) {
 		//検索条件をセット
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
-		$conditions['or']['and']['lft >'] = $bbsPost['lft'];
-		$conditions['or']['and']['rght <'] = $bbsPost['rght'];
+		$conditions['and']['lft >'] = $bbsPost['lft'];
+		$conditions['and']['rght <'] = $bbsPost['rght'];
 
 		//公開データ以外も含めたコメント数を取得
 		$bbsCommnets = $this->BbsPost->getPosts(

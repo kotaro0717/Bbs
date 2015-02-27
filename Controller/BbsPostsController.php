@@ -106,21 +106,12 @@ class BbsPostsController extends BbsesAppController {
 		$this->__setComment($postId, $currentPage, $sortParams, $visibleCommentRow, $narrowDownParams);
 
 		//コメント数をセットする
-		//$this->__setCommentNum($postId);
-		//Todo:メソッド化する
-		$conditions['parent_id'] = $this->viewVars['bbsPosts']['id'];
-		if (! $posts = $this->BbsPost->getPosts(
-				$this->viewVars['userId'],
-				$this->viewVars['contentCreatable'],
-				$this->viewVars['contentEditable'],
-				false,
-				false,
-				false,
-				$conditions
-		)) {
-			$this->set('commentNum', 0);
-		}
-		$this->set('commentNum', count($posts));
+		//$this->viewVars['bbsPosts']がセットされていること前提
+		$this->setCommentNum($this->viewVars['bbsPosts']);
+
+		//コメント作成権限をセットする
+		//$this->viewVars['bbses']がセットされていること前提
+		$this->setCommentCreateAuth();
 
 		//既読情報を登録
 		$this->__saveReadStatus($postId);
@@ -136,7 +127,7 @@ class BbsPostsController extends BbsesAppController {
 		$this->__setBbs();
 
 		//記事初期データを取得
-		$this->__setPost();
+		$this->__initPost();
 
 		if ($this->request->isGet()) {
 			$referer = $this->request->referer();
@@ -342,11 +333,31 @@ class BbsPostsController extends BbsesAppController {
 	}
 
 /**
- * __setPost method
+ * __initPost method
  *
  * @return void
  */
-	private function __setPost($postId = '') {
+	private function __initPost() {
+		//新規記事データセット
+		$bbsPosts = $this->BbsPost->create();
+
+		//Todo:新規の記事名称 とりあえずdate('YmdHis')を付けている
+		$bbsPosts['BbsPost']['title'] = '新規記事_' . date('YmdHis');
+
+		$results = array(
+				'bbsPosts' => $bbsPosts['BbsPost'],
+				'contentStatus' => null,
+			);
+		$this->set($results);
+	}
+
+/**
+ * __setPost method
+ *
+ * @param $postId bbsPosts.id
+ * @return void
+ */
+	private function __setPost($postId) {
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
 		$conditions['id'] = $postId;
 
@@ -356,14 +367,8 @@ class BbsPostsController extends BbsesAppController {
 				$this->viewVars['contentCreatable'],
 				$conditions
 		)) {
-			//新規記事データセット
-			$bbsPosts = $this->BbsPost->create();
-			$bbsPosts['BbsPost']['title'] = '新規記事_' . date('YmdHis');
-			$results = array(
-					'bbsPosts' => $bbsPosts['BbsPost'],
-					'contentStatus' => null,
-				);
-			return $this->set($results);
+			throw new BadRequestException(__d('net_commons', 'Bad Request'));
+			return;
 		}
 
 		//取得した記事の作成者IDからユーザ情報を取得
@@ -405,9 +410,10 @@ class BbsPostsController extends BbsesAppController {
 		//絞り込み条件をセット
 		$conditions = $this->setNarrowDown($narrowDownParams);
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+
 		//Treeビヘイビアのlft,rghtカラムを利用して対象記事のコメントのみ取得
-		$conditions['or']['and']['lft >'] = $this->viewVars['bbsPosts']['lft'];
-		$conditions['or']['and']['rght <'] = $this->viewVars['bbsPosts']['rght'];
+		$conditions['and']['lft >'] = $this->viewVars['bbsPosts']['lft'];
+		$conditions['and']['rght <'] = $this->viewVars['bbsPosts']['rght'];
 
 		$bbsCommnets = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
@@ -489,34 +495,32 @@ class BbsPostsController extends BbsesAppController {
 		$hasNextSecondPage = (empty($nextSecondPosts))? false : true;
 		$this->set('hasNextSecondPage', $hasNextSecondPage);
 
-		//1,2ページの時のみ4,5ページがあるかどうか取得（モックとしてとりあえず）
-		//if ($currentPage === 1 || $currentPage === 2) {
-			//4ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['userId'],
-					$this->viewVars['contentEditable'],
-					$this->viewVars['contentCreatable'],
-					$sortOrder,			//order by指定
-					$visibleCommentRow,	//limit指定
-					4,					//4ページ先の番号指定
-					$conditions
-				);
-			$hasFourPage = (empty($posts))? false : true;
-			$this->set('hasFourPage', $hasFourPage);
+	//if ($currentPage === 1 || $currentPage === 2) {
+		//4ページがあるか取得（モックとしてとりあえず）
+		$posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visibleCommentRow,	//limit指定
+				4,					//4ページ先の番号指定
+				$conditions
+			);
+		$hasFourPage = (empty($posts))? false : true;
+		$this->set('hasFourPage', $hasFourPage);
 
-			//5ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['userId'],
-					$this->viewVars['contentEditable'],
-					$this->viewVars['contentCreatable'],
-					$sortOrder,			//order by指定
-					$visibleCommentRow,	//limit指定
-					5,					//5ページ先の番号指定
-					$conditions
-				);
-			$hasFivePage = (empty($posts))? false : true;
-			$this->set('hasFivePage', $hasFivePage);
-		//}
+		//5ページがあるか取得（モックとしてとりあえず）
+		$posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visibleCommentRow,	//limit指定
+				5,					//5ページ先の番号指定
+				$conditions
+			);
+		$hasFivePage = (empty($posts))? false : true;
+		$this->set('hasFivePage', $hasFivePage);
 	}
 
 /**

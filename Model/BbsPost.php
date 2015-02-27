@@ -20,6 +20,9 @@ App::uses('BbsesAppModel', 'Bbses.Model');
  */
 class BbsPost extends BbsesAppModel {
 
+	const DISPLAY_MAX_TITLE_LENGTH = '50';
+	const DISPLAY_MAX_CONTENT_LENGTH = '200';
+
 /**
  * use behaviors
  *
@@ -154,15 +157,15 @@ class BbsPost extends BbsesAppModel {
  * @return array
  */
 	public function getPosts($userId, $contentEditable, $contentCreatable,
-				$sortOrder, $visiblePostRow, $currentPage, $conditions = '') {
-		//作成権限まで
+				$sortOrder = '', $visiblePostRow = '', $currentPage = '', $conditions = '') {
+		//他人の編集中の記事・コメントが見れない人
 		if ($contentCreatable && ! $contentEditable) {
-			//自分で書いた記事と公開中の記事を取得
-			$conditions['or']['created_user'] = $userId;
 			$conditions['or']['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+			$conditions['or']['and']['created_user'] = $userId;
+			$conditions['or']['and']['status <>'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
 
-		//作成・編集権限なし:公開中の記事のみ取得
+		//公開中の記事・コメントしか見れない人
 		if (! $contentCreatable && ! $contentEditable) {
 			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
 		}
@@ -192,25 +195,25 @@ class BbsPost extends BbsesAppModel {
  * @param bool $contentCreatable true can create the content, false not can create the content.
  * @return array
  */
-	public function getCurrentComments($bbsKey, $postId, $contentEditable, $contentCreatable) {
-		$conditions = array(
-			'bbs_key' => $bbsKey,
-			'id' => $postId
-		);
-
-		if (! $contentCreatable && ! $contentEditable) {
-			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-		}
-
-		$posts = $this->find('first', array(
-				'recursive' => -1,
-				'conditions' => $conditions,
-			)
-		);
-
-		//日時フォーマット（一件）
-		return $this->__setDateTime(array($posts), false);
-	}
+//	public function getCurrentComments($bbsKey, $postId, $contentEditable, $contentCreatable) {
+//		$conditions = array(
+//			'bbs_key' => $bbsKey,
+//			'id' => $postId
+//		);
+//
+//		if (! $contentCreatable && ! $contentEditable) {
+//			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
+//		}
+//
+//		$posts = $this->find('first', array(
+//				'recursive' => -1,
+//				'conditions' => $conditions,
+//			)
+//		);
+//
+//		//日時フォーマット（一件）
+//		return $this->__setDateTime(array($posts), false);
+//	}
 
 /**
  * save posts

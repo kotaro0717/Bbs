@@ -10,9 +10,9 @@
 	<ul class="pagination">
 
 		<!-- [<<]の表示 -->
-		<li class="<?php echo ($currentPage < 4)? 'disabled' : ''; ?>">
+		<li class="<?php echo ($currentPage < 2)? 'disabled' : ''; ?>">
 			<?php $prevPager = $currentPage - 1 ?>
-			<a href="<?php echo ($currentPage < 4)? '' : $this->Html->url(
+			<a href="<?php echo ($currentPage < 2)? '' : $this->Html->url(
 					'/' . $baseUrl . '/' . $frameId . '/' . $prevPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ; ?>"
 				aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
 		</li>
@@ -49,19 +49,11 @@
 						'/' . $baseUrl . '/' . $frameId . '/' . $nextPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo $nextPageNum++; ?></a>
 			</li>
-		<?php else : ?>
-			<li class="disabled"><a href="">
-					<?php echo $nextPageNum++; ?></a>
-			</li>
 		<?php endif; ?>
 
 		<?php if ($hasNextSecondPage) : ?>
 			<li><a href="<?php echo $this->Html->url(
 						'/' . $baseUrl . '/' . $frameId . '/' . $nextPageNum . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
-					<?php echo $nextPageNum++; ?></a>
-			</li>
-		<?php else : ?>
-			<li class="disabled"><a href="">
 					<?php echo $nextPageNum++; ?></a>
 			</li>
 		<?php endif; ?>
@@ -73,20 +65,12 @@
 						'/' . $baseUrl . '/' . $frameId . '/' . 4 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo 4; ?></a>
 				</li>
-			<?php else : ?>
-				<li class="disabled">
-					<a href=""><?php echo 4; ?></a>
-				</li>
 			<?php endif; ?>
 
 			<?php if ($hasFivePage) : ?>
 				<li><a href="<?php echo $this->Html->url(
 						'/' . $baseUrl . '/' . $frameId . '/' . 5 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo 5; ?></a>
-				</li>
-			<?php else : ?>
-				<li class="disabled">
-					<a href=""><?php echo 5; ?></a>
 				</li>
 			<?php endif; ?>
 
@@ -98,21 +82,15 @@
 						'/' . $baseUrl . '/' . $frameId . '/' . 5 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
 					<?php echo 5; ?></a>
 				</li>
-			<?php else : ?>
-				<li class="disabled">
-					<a href=""><?php echo 5; ?></a>
-				</li>
 			<?php endif; ?>
 
 		<?php endif; ?>
 
 		<!-- [>>]の表示 -->
-		<li class="<?php echo ($hasNextPage &&
-								$hasFourPage &&	$hasFivePage &&
-								$hasNextPage && $hasNextSecondPage)? '' : 'disabled'; ?>">
+		<li class="<?php echo ($hasNextPage)? '' : 'disabled'; ?>">
 
 			<?php $nextPager = $currentPage + 1 ?>
-			<a href="<?php echo ($hasNextPage && $hasFourPage && $hasFivePage && $hasNextPage && $hasNextSecondPage)?
+			<a href="<?php echo ($hasNextPage)?
 					$this->Html->url(
 						'/' . $baseUrl . '/' . $frameId . '/' . $nextPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) : ''; ?>"
 					aria-label="Next">

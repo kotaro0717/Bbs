@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2015-02-18 04:13+0000\n"
-"PO-Revision-Date: 2015-02-25 20:07+0900\n"
+"PO-Revision-Date: 2015-02-26 14:24+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -230,3 +230,11 @@ msgstr "承認する"
 #: /View/Elements/status_label.ctp:24
 msgid "Remand"
 msgstr "差し戻し"
+
+#: /View/Bbses/view.ctp:151
+msgid "Publishing comments"
+msgstr "公開中のコメント"
+
+#: /View/Bbses/view.ctp:152
+msgid "Comments Include the other status"
+msgstr "全てのコメント"

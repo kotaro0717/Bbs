@@ -29,13 +29,52 @@ class BbsesAppController extends AppController {
 	);
 
 /**
+ * setCommentNum method
+ *
+ * @return void
+ */
+	public function setCommentNum($posts) {
+		$conditions['and']['lft >'] = $posts['lft'];
+		$conditions['and']['rght <'] = $posts['rght'];
+		if (! $comments = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				false,
+				false,
+				false,
+				$conditions
+		)) {
+			$this->set('commentNum', 0);
+		}
+		$this->set('commentNum', count($comments));
+	}
+
+/**
+ * setCommentCreateAuth method
+ *
+ * @return void
+ */
+	public function setCommentCreateAuth() {
+		if (((int)$this->viewVars['rolesRoomId'] < 4) ||
+				($this->viewVars['bbses']['comment_create_authority'] &&
+				$this->viewVars['contentCreatable'])) {
+
+			$this->set('commentCreatable', true);
+
+		} else {
+			$this->set('commentCreatable', false);
+
+		}
+	}
+
+/**
  * setSortOrder method
  *
  * @param $sortParams
  * @return string order for search
  */
 	public function setSortOrder($sortParams) {
-		//Todo:BbsesAppControllerで纏める
 		switch ($sortParams) {
 		case '1':
 		default :
@@ -63,10 +102,9 @@ class BbsesAppController extends AppController {
  * setNarrowDown method
  *
  * @param $narrowDownParams
- * @return string order for narrow down
+ * @return array order conditions for narrow down, or void
  */
 	public function setNarrowDown($narrowDownParams) {
-		//パラメータはNetCommonsBlockComponentに合わせている
 		switch ($narrowDownParams) {
 		case '1':
 			//公開
@@ -118,13 +156,13 @@ class BbsesAppController extends AppController {
 			//全件表示
 			$narrowDownStr = __d('bbses', 'Display all posts');
 			$this->set('narrowDown', $narrowDownStr);
-			return array();
+			return;
 
 		case '7':
 			//未読
 			$narrowDownStr = __d('bbses', 'Do not read');
 			$this->set('narrowDown', $narrowDownStr);
-			//__setPostの未読or既読セット中に未読のみ取得する
+			//未読or既読セット中に未読のみ取得する
 			return;
 		}
 	}

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-25 11:05+0000\n"
+"POT-Creation-Date: 2015-02-26 05:22+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -62,18 +62,18 @@ msgstr ""
 msgid "Do not read"
 msgstr ""
 
-#: /Model/Bbs.php:112
+#: /Model/Bbs.php:103
 #: /View/Elements/Bbses/edit.ctp:3
 msgid "Bbs name"
 msgstr ""
 
-#: /Model/BbsPost.php:108
+#: /Model/BbsPost.php:91
 #: /View/Elements/BbsComments/add_comment_form.ctp:15
 #: /View/Elements/BbsPosts/post_form.ctp:15
 msgid "Title"
 msgstr ""
 
-#: /Model/BbsPost.php:116
+#: /Model/BbsPost.php:99
 #: /View/Elements/BbsComments/add_comment_form.ctp:47
 #: /View/Elements/BbsPosts/post_form.ctp:45
 msgid "Content"
@@ -108,9 +108,9 @@ msgid "Create comment"
 msgstr ""
 
 #: /View/BbsComments/edit.ctp:21
-#: /View/BbsComments/view.ctp:184;321;478
+#: /View/BbsComments/view.ctp:184;314;472
 #: /View/BbsPosts/edit.ctp:21
-#: /View/BbsPosts/view.ctp:180;343
+#: /View/BbsPosts/view.ctp:181;337
 #: /View/Bbses/view.ctp:194
 msgid "Edit"
 msgstr ""
@@ -130,27 +130,27 @@ msgstr ""
 msgid "Older comment order"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:174;312;469
-#: /View/BbsPosts/view.ctp:170;334
+#: /View/BbsComments/view.ctp:174;305;463
+#: /View/BbsPosts/view.ctp:171;328
 msgid "Delete"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:212;348;507
-#: /View/BbsPosts/view.ctp:207;371
+#: /View/BbsComments/view.ctp:212;341;501
+#: /View/BbsPosts/view.ctp:208;365
 msgid "Quote this posts"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:222;358;517
-#: /View/BbsPosts/view.ctp:217;381
+#: /View/BbsComments/view.ctp:222;351;511
+#: /View/BbsPosts/view.ctp:218;375
 msgid "Write comment"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:374
+#: /View/BbsComments/view.ctp:375
 msgid "This comments has not yet been published"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:382
-#: /View/BbsPosts/view.ctp:241
+#: /View/BbsComments/view.ctp:383
+#: /View/BbsPosts/view.ctp:242
 msgid "There are not comments"
 msgstr ""
 
@@ -159,7 +159,7 @@ msgstr ""
 msgid "Create post"
 msgstr ""
 
-#: /View/BbsPosts/view.ctp:233
+#: /View/BbsPosts/view.ctp:234
 msgid "This posts has not yet been published"
 msgstr ""
 
@@ -169,6 +169,14 @@ msgstr ""
 
 #: /View/Bbses/view.ctp:61
 msgid "Posts"
+msgstr ""
+
+#: /View/Bbses/view.ctp:151
+msgid "Publishing comments"
+msgstr ""
+
+#: /View/Bbses/view.ctp:152
+msgid "Comments Include the other status"
 msgstr ""
 
 #: /View/Bbses/view.ctp:215
