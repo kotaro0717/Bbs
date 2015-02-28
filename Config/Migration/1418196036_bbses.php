@@ -1,4 +1,13 @@
 <?php
+/**
+ * Bbses CakeMigration
+ *
+ * @author Noriko Arai <arai@nii.ac.jp>
+ * @author Kotaro Hokada <kotaro.hokada@gmail.com>
+ * @link http://www.netcommons.org NetCommons Project
+ * @license http://www.netcommons.org/license.txt NetCommons License
+ * @copyright Copyright 2014, NetCommons Project
+ */
 class Bbses extends CakeMigration {
 
 /**
@@ -56,7 +65,7 @@ class Bbses extends CakeMigration {
 				'bbs_posts' => array(
 					'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary', 'comment' => 'ID | | | '),
 					'key' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'bbs posts key | 掲示板記事キー | Hash値 | ', 'charset' => 'utf8'),
-					'bbs_key' =>  array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'bbs key | 掲示板キー | Hash値 | ', 'charset' => 'utf8'),
+					'bbs_key' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'bbs key | 掲示板キー | Hash値 | ', 'charset' => 'utf8'),
 					'parent_id' => array('type' => 'integer', 'null' => true, 'default' => null),
 					'lft' => array('type' => 'integer', 'null' => false, 'default' => null),
 					'rght' => array('type' => 'integer', 'null' => false, 'default' => null),
@@ -64,8 +73,6 @@ class Bbses extends CakeMigration {
 					'title' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'title | タイトル | |', 'charset' => 'utf8'),
 					'content' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'content | 本文 | |', 'charset' => 'utf8'),
 					'comment_num' => array('type' => 'integer', 'null' => false, 'default' => '0'),
-					'like_num' => array('type' => 'integer', 'null' => false, 'default' => '0'),
-					'unlike_num' => array('type' => 'integer', 'null' => false, 'default' => '0'),
 					'is_auto_translated' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'translation type. 0:original , 1:auto translation | 翻訳タイプ 0:オリジナル、1:自動翻訳 | | '),
 					'translation_engine' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'translation engine | 翻訳エンジン | | ', 'charset' => 'utf8'),
 					'created_user' => array('type' => 'integer', 'null' => true, 'default' => '0', 'comment' => 'created user | 作成者 | users.id | '),
@@ -81,6 +88,8 @@ class Bbses extends CakeMigration {
 					'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary', 'comment' => 'ID | | | '),
 					'post_id' => array('type' => 'integer', 'null' => false, 'default' => null),
 					'user_id' => array('type' => 'integer', 'null' => false, 'default' => null),
+					'likes_flag' => array('type' => 'boolean', 'null' => false, 'default' => false),
+					'unlikes_flag' => array('type' => 'boolean', 'null' => false, 'default' => false),
 					'created_user' => array('type' => 'integer', 'null' => true, 'default' => '0', 'comment' => 'created user | 作成者 | users.id | '),
 					'created' => array('type' => 'datetime', 'null' => true, 'default' => null, 'comment' => 'created datetime | 作成日時 | | '),
 					'modified_user' => array('type' => 'integer', 'null' => true, 'default' => '0', 'comment' => 'modified user | 更新者 | users.id | '),
@@ -105,63 +114,6 @@ class Bbses extends CakeMigration {
  * @var array $records
  */
 	public $records = array(
-//		'plugins' => array(
-//			array(
-//				'language_id' => 2,
-//				'key' => 'bbses',
-//				'namespace' => 'netcommons/bbses',
-//				'name' => '掲示板',
-//				'type' => 1,
-//			),
-//		),
-//		'plugins_roles' => array(
-//			array(
-//				'role_key' => 'room_administrator',
-//				'plugin_key' => 'bbses'
-//			),
-//		),
-//		'plugins_rooms' => array(
-//			array(
-//				'room_id' => '1',
-//				'plugin_key' => 'bbses'
-//			),
-//		),
-//		'bbs_frame_settings' => array(
-//			array(
-//				'id' => '1',
-//				'frame_key' => 'frame_30',
-//				'visible_post_row' => '10',
-//				'visible_comment_row' => '10',
-//			)
-//		),
-//		'bbses' => array(
-//			array(
-//				'id' => '1',
-//				'key' => 'bbs_1',
-//				'block_id' => '30',
-//				'name' => 'サンプル掲示板',
-//				'use_comment' => true,
-//				'use_like_button' => true,
-//				'use_unlike_button' => true,
-//			)
-//		),
-//		'bbs_posts' => array(
-//			array(
-//				'id' => '3',
-//				'key' => 'bbs_post_3',
-//				'bbs_id' => '1',
-//				'parent_id' => null,
-//				'lft' => '21',
-//				'rght' => '30',
-//				'status' => '1',
-//				'title' => 'サンプル記事３',
-//				'content' => '<div>サンプル記事の内容です。</div><br /><div><strong>サンプル記事の内容です。サンプル記事の内容です。サンプル記事の内容です。</strong></div>',
-//				'like_num' => '34',
-//				'unlike_num' => '0',
-//				'created_user' => '1',
-//				'created' => '2015-02-18 11:22:57',
-//			),
-//		),
 	);
 
 /**

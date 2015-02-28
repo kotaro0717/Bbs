@@ -40,9 +40,16 @@ class BbsPostsUser extends BbsesAppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Frame' => array(
-			'className' => 'Frames.Frame',
-			'foreignKey' => 'frame_key',
+		'BbsPost' => array(
+			'className' => 'Bbses.BbsPost',
+			'foreignKey' => 'post_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'User' => array(
+			'className' => 'Users.User',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -74,32 +81,95 @@ class BbsPostsUser extends BbsesAppModel {
 					'required' => true,
 				)
 			),
+			'likes_flag' => array(
+				'boolean' => array(
+					'rule' => array('boolean'),
+					'message' => __d('net_commons', 'Invalid request.'),
+				)
+			),
+			'unlikes_flag' => array(
+				'boolean' => array(
+					'rule' => array('boolean'),
+					'message' => __d('net_commons', 'Invalid request.'),
+				)
+			),
 		));
 		return parent::beforeValidate($options);
 	}
+
 /**
  * getReadPostStatus
  *
  * @param int $postId bbsPosts.id
  * @param int $userId users.id
- * @return bool
+ * @return array or not find data is false
  */
-	public function getReadPostStatus($postId, $userId) {
+	public function getPostsUsers($postId, $userId) {
 		$conditions = array(
 			'post_id' => $postId,
 			'user_id' => $userId,
 		);
-		if (! $this->find('first', array(
+
+		if (! $postsUsers = $this->find('first', array(
 				'recursive' => -1,
 				'conditions' => $conditions,
-				//'order' => 'BbsPostsUsers.id DESC'
 			))
 		) {
-			//未読
 			return false;
+
 		}
-		//既読
-		return true;
+		return $postsUsers;
+	}
+
+/**
+ * getLikes
+ *
+ * @param int $postId bbsPosts.id
+ * @param int $userId users.id
+ * @return array
+ */
+	public function getLikes($postId, $userId) {
+		if (! $likesPosts = $this->find('all', array(
+				'recursive' => -1,
+				'conditions' => array(
+					'post_id' => $postId,
+					'likes_flag' => true,
+				),
+			))
+		) {
+			$results['likesNum'] = 0;
+
+		} else {
+			$results['likesNum'] = count($likesPosts);
+
+		}
+
+		if (! $unlikesPosts = $this->find('all', array(
+				'recursive' => -1,
+				'conditions' => array(
+					'post_id' => $postId,
+					'unlikes_flag' => true,
+				),
+			))
+		) {
+			$results['unlikesNum'] = 0;
+
+		} else {
+			$results['unlikesNum'] = count($unlikesPosts);
+
+		}
+
+		if (! $postsUsers = $this->getPostsUsers($postId, $userId)) {
+			$results['likesFlag'] = false;
+			$results['unlikesFlag'] = false;
+
+		} else {
+			$results['likesFlag'] = $postsUsers['BbsPostsUser']['likes_flag'];
+			$results['unlikesFlag'] = $postsUsers['BbsPostsUser']['unlikes_flag'];
+
+		}
+
+		return $results;
 	}
 
 /**
@@ -109,7 +179,7 @@ class BbsPostsUser extends BbsesAppModel {
  * @return mixed On success Model::$data if its not empty or true, false on failure
  * @throws InternalErrorException
  */
-	public function saveReadStatus($data) {
+	public function savePostsUsers($data) {
 		$this->loadModels([
 			'BbsPostsUser' => 'Bbses.BbsPostsUser',
 		]);

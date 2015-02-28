@@ -16,13 +16,13 @@
 	<li>
 		<a href="<?php echo $this->Html->url(
 				'/bbses/bbsPosts/view/' . $frameId . '/' . $bbsPosts['id']) ?>">
-			<?php echo h(mb_substr(strip_tags($bbsPosts['title']), 0, BbsPost::DISPLAY_MAX_TITLE_LENGTH, 'UTF-8')); ?>
-			<?php echo (h(mb_substr(strip_tags($bbsPosts['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '<span class="glyphicon glyphicon-option-horizontal"></span>'; ?>
+			<?php echo h(mb_strcut(strip_tags($bbsPosts['title']), 0, BbsPost::DISPLAY_MAX_TITLE_LENGTH, 'UTF-8')); ?>
+			<?php echo (h(mb_strcut(strip_tags($bbsPosts['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '...'; ?>
 		</a>
 	</li>
 	<li class="active">
-		<?php echo h(mb_substr(strip_tags($bbsCurrentComments['title']), 0, BbsPost::DISPLAY_MAX_TITLE_LENGTH, 'UTF-8')); ?>
-			<?php echo (h(mb_substr(strip_tags($bbsCurrentComments['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '<span class="glyphicon glyphicon-option-horizontal"></span>'; ?>
+		<?php echo h(mb_strcut(strip_tags($bbsCurrentComments['title']), 0, BbsPost::DISPLAY_MAX_TITLE_LENGTH, 'UTF-8')); ?>
+			<?php echo (h(mb_strcut(strip_tags($bbsCurrentComments['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '...'; ?>
 	</li>
 </ol>
 
@@ -47,14 +47,26 @@
 			<!-- URL:controller:BbsCommentsController action:view -->
 			<!--     argument:frameId, postId(記事), $bbsCurrentComments(対象コメント) -->
 			<!--     pageNumber(コメント一覧ページ番号), sortParams(ソート), visibleRow(表示件数), narrowDown(絞り込み) -->
-			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
-			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
-			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
-			<li><a href="<?php echo $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>"><?php echo __d('bbses', 'Disapproval'); ?></a></li>
+			<li>
+				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>">
+					<?php echo __d('bbses', 'Display all posts'); ?>
+				</a>
+			</li>
+			<li>
+				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>">
+					<?php echo __d('bbses', 'Published'); ?>
+				</a>
+			</li>
+			<li>
+				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>">
+					<?php echo __d('net_commons', 'Temporary'); ?>
+				</a>
+			</li>
+			<li>
+				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>">
+					<?php echo __d('bbses', 'Disapproval'); ?>
+				</a>
+			</li>
 		</ul>
 	</div>
 
@@ -76,10 +88,16 @@
 				<!-- URL:controller:BbsCommentsController action:view -->
 				<!--     argument:frameId, postId(記事), $bbsCurrentComments(対象コメント) -->
 				<!--     pageNumber(コメント一覧ページ番号), sortParams(ソート), visibleRow(表示件数), narrowDown(絞り込み) -->
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . 1 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Latest comment order'); ?></a></li>
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . 2 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Older comment order'); ?></a></li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . 1 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>">
+						<?php echo __d('bbses', 'Latest comment order'); ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . 2 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>">
+						<?php echo __d('bbses', 'Older comment order'); ?>
+					</a>
+				</li>
 			</ul>
 		</div>
 
@@ -96,18 +114,36 @@
 				<!-- URL:controller:BbsCommentsController action:view -->
 				<!--     argument:frameId, postId(記事), $bbsCurrentComments(対象コメント) -->
 				<!--     pageNumber(コメント一覧ページ番号), sortParams(ソート), visibleRow(表示件数), narrowDown(絞り込み) -->
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 1 . '/' . $narrowDownParams); ?>"><?php echo '1' . "件"; ?></a></li>
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 5 . '/' . $narrowDownParams); ?>"><?php echo '5' . "件"; ?></a></li>
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 10 . '/' . $narrowDownParams); ?>"><?php echo '10' . "件"; ?></a></li>
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 20 . '/' . $narrowDownParams); ?>"><?php echo '20' . "件"; ?></a></li>
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 50 . '/' . $narrowDownParams); ?>"><?php echo '50' . "件"; ?></a></li>
-				<li><a href="<?php echo $this->Html->url(
-								'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 100 . '/' . $narrowDownParams); ?>"><?php echo '100' . "件"; ?></a></li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 1 . '/' . $narrowDownParams); ?>">
+						<?php echo '1' . "件"; ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 5 . '/' . $narrowDownParams); ?>">
+						<?php echo '5' . "件"; ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 10 . '/' . $narrowDownParams); ?>">
+						<?php echo '10' . "件"; ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 20 . '/' . $narrowDownParams); ?>">
+						<?php echo '20' . "件"; ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 50 . '/' . $narrowDownParams); ?>">
+						<?php echo '50' . "件"; ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . 100 . '/' . $narrowDownParams); ?>">
+						<?php echo '100' . "件"; ?>
+					</a>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -123,7 +159,7 @@
 			<span class="text-left">
 				<!-- id -->
 				<span>
-					<?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?>
+					<?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?>
 				</span>
 
 				<!-- ユーザ情報 -->
@@ -136,7 +172,7 @@
 			<!-- 右に表示 -->
 			<span class="text-left" style="float:right;">
 				<!-- 作成時間 -->
-				<span><?php echo $bbsPosts['create_time']; ?></span>
+				<span><?php echo $bbsPosts['createTime']; ?></span>
 			</span>
 		</div>
 		<div class="panel-body">
@@ -148,14 +184,60 @@
 			<span class="text-left">
 				<?php if ($bbsPosts['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 					<?php if ($bbses['use_like_button']) : ?>
-						<a href="">
-							<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsPosts['like_num']; ?></span>
-						</a>&nbsp;
+						<!-- いいね -->
+						<span class="text-left" style="float:left;">
+							<!-- general user以上 -->
+							<?php if ((int)$this->viewVars['rolesRoomId'] !== 0 && (int)$this->viewVars['rolesRoomId'] < 5) : ?>
+								<?php $likesParams = ($bbsPosts['likesFlag'])? 0 : 1; ?>
+								<?php echo $this->Form->create('',
+										array(
+											'type' => 'post',
+											'url' => '/bbses/bbsPosts/likes/' . $frameId . '/' . $bbsPosts['id'] . '/' . $userId . '/' . $likesParams,
+										)); ?>
+
+										<?php echo $this->Form->button('<span class="glyphicon glyphicon-thumbs-up">' . $bbsPosts['likesNum'] . '</span>',
+												array(
+													'type' => 'submit',
+													'class' => 'btn btn-link',
+													'style' => 'padding: 0;',
+													'tooltip' => ($bbsPosts['likesFlag'])? __d('bbses', 'Remove likes') : __d('bbses', 'Do likes'),
+												)); ?>
+										&nbsp;
+								<?php echo $this->Form->end(); ?>
+
+							<!-- visitor -->
+							<?php else : ?>
+								<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsPosts['likesNum']; ?></span>
+								&nbsp;
+							<?php endif; ?>
+						</span>
 					<?php endif; ?>
 					<?php if ($bbses['use_unlike_button']) : ?>
-						<a href="">
-							<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsPosts['unlike_num']; ?></span>
-						</a>
+						<!-- よくないね -->
+						<span class="text-left" style="float:left;">
+							<!-- general user以上 -->
+							<?php if ((int)$this->viewVars['rolesRoomId'] !== 0 && (int)$this->viewVars['rolesRoomId'] < 5) : ?>
+								<?php $unlikesParams = ($bbsPosts['unlikesFlag'])? 0 : 1; ?>
+								<?php echo $this->Form->create('',
+										array(
+											'type' => 'post',
+											'url' => '/bbses/bbsPosts/unlikes/' . $frameId . '/' . $bbsPosts['id'] . '/' . $userId . '/' . $unlikesParams,
+										)); ?>
+
+										<?php echo $this->Form->button('<span class="glyphicon glyphicon-thumbs-up">' . $bbsPosts['unlikesNum'] . '</span>',
+												array(
+													'type' => 'submit',
+													'class' => 'btn btn-link',
+													'style' => 'padding: 0;',
+													'tooltip' => ($bbsPosts['unlikesFlag'])? __d('bbses', 'Remove unlikes') : __d('bbses', 'Do unlikes'),
+												)); ?>
+								<?php echo $this->Form->end(); ?>
+
+							<!-- visitor -->
+							<?php else : ?>
+								<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsPosts['unlikesNum']; ?></span>
+							<?php endif; ?>
+						</span>
 					<?php endif; ?>
 				<?php endif; ?>
 				&nbsp;
@@ -250,7 +332,7 @@
 			<span class="text-left">
 				<!-- id -->
 				<?php echo $bbsCurrentComments['id']; ?>.
-				<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
+				<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?></span>
 				<!-- ユーザ情報 -->
 				<span>
 					<a href="" ng-click="user.showUser(<?php echo $bbsCurrentComments['userId'] ?>)">
@@ -267,7 +349,7 @@
 
 			<span class="text-left" style="float:right;">
 				<!-- 作成時間 -->
-				<span><?php echo $bbsCurrentComments['create_time']; ?></span>
+				<span><?php echo $bbsCurrentComments['createTime']; ?></span>
 			</span>
 		</div>
 		<div class="panel-body">
@@ -286,14 +368,60 @@
 			<span class="text-left">
 				<?php if ($bbsCurrentComments['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 					<?php if ($bbses['use_like_button']) : ?>
-						<a href="">
-							<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsCurrentComments['like_num']; ?></span>
-						</a>&nbsp;
+						<!-- いいね -->
+						<span class="text-left" style="float:left;">
+							<!-- general user以上 -->
+							<?php if ((int)$this->viewVars['rolesRoomId'] !== 0 && (int)$this->viewVars['rolesRoomId'] < 5) : ?>
+								<?php $likesParams = ($bbsCurrentComments['likesFlag'])? 0 : 1; ?>
+								<?php echo $this->Form->create('',
+										array(
+											'type' => 'post',
+											'url' => '/bbses/bbsPosts/likes/' . $frameId . '/' . $bbsCurrentComments['id'] . '/' . $userId . '/' . $likesParams,
+										)); ?>
+
+										<?php echo $this->Form->button('<span class="glyphicon glyphicon-thumbs-up">' . $bbsCurrentComments['likesNum'] . '</span>',
+												array(
+													'type' => 'submit',
+													'class' => 'btn btn-link',
+													'style' => 'padding: 0;',
+													'tooltip' => ($bbsCurrentComments['likesFlag'])? __d('bbses', 'Remove likes') : __d('bbses', 'Do likes'),
+												)); ?>
+										&nbsp;
+								<?php echo $this->Form->end(); ?>
+
+							<!-- visitor -->
+							<?php else : ?>
+								<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsCurrentComments['likesNum']; ?></span>
+								&nbsp;
+							<?php endif; ?>
+						</span>
 					<?php endif; ?>
 					<?php if ($bbses['use_unlike_button']) : ?>
-						<a href="">
-							<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsCurrentComments['unlike_num']; ?></span>
-						</a>
+						<!-- よくないね -->
+						<span class="text-left" style="float:left;">
+							<!-- general user以上 -->
+							<?php if ((int)$this->viewVars['rolesRoomId'] !== 0 && (int)$this->viewVars['rolesRoomId'] < 5) : ?>
+								<?php $unlikesParams = ($bbsCurrentComments['unlikesFlag'])? 0 : 1; ?>
+								<?php echo $this->Form->create('',
+										array(
+											'type' => 'post',
+											'url' => '/bbses/bbsPosts/unlikes/' . $frameId . '/' . $bbsCurrentComments['id'] . '/' . $userId . '/' . $unlikesParams,
+										)); ?>
+
+										<?php echo $this->Form->button('<span class="glyphicon glyphicon-thumbs-up">' . $bbsCurrentComments['unlikesNum'] . '</span>',
+												array(
+													'type' => 'submit',
+													'class' => 'btn btn-link',
+													'style' => 'padding: 0;',
+													'tooltip' => ($bbsCurrentComments['unlikesFlag'])? __d('bbses', 'Remove unlikes') : __d('bbses', 'Do unlikes'),
+												)); ?>
+								<?php echo $this->Form->end(); ?>
+
+							<!-- visitor -->
+							<?php else : ?>
+								<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsCurrentComments['unlikesNum']; ?></span>
+							<?php endif; ?>
+						</span>
 					<?php endif; ?>
 				<?php endif; ?>
 				&nbsp;
@@ -329,7 +457,7 @@
 				<!-- 編集 -->
 				<span class="text-left" style="float:right;">
 					<a href="<?php echo $this->Html->url(
-							'/bbses/bbsComments/edit' . '/' . $frameId . '/' . $bbsCurrentComments['id']); ?>"
+							'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $bbsCurrentComments['id']); ?>"
 							class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
 							<span class="glyphicon glyphicon-edit"></span>
 					</a>
@@ -388,175 +516,222 @@
 
 <?php if ($bbsCurrentComments['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 
-	<!-- 記事が公開されていない場合 -->
-	<div class='col-md-offset-1 col-xs-offset-1'>
-		<hr />
-		<?php echo __d('bbses', 'This comments has not yet been published'); ?>
-	</div>
+		<!-- 記事が公開されていない場合 -->
+		<div class="col-md-offset-1 col-xs-offset-1">
+			<hr />
+			<?php echo __d('bbses', 'This comments has not yet been published'); ?>
+		</div>
 
-<?php elseif (empty($bbsComments)) : ?>
+<?php elseif (! $bbsComments) : ?>
 
-	<!-- コメントがない場合 -->
-	<div class='col-md-offset-1 col-xs-offset-1'>
-		<hr />
-		<?php echo __d('bbses', 'There are not comments'); ?>
-	</div>
+		<!-- コメントがない場合 -->
+		<div class="col-md-offset-1 col-xs-offset-1">
+			<hr />
+			<?php echo __d('bbses', 'There are not comments'); ?>
+		</div>
 
 <?php else : ?>
 
-	<!-- 全体の段落下げ -->
-	<?php foreach ($bbsComments as $comment) { ?>
-	<div class="panel-group col-md-offset-1 col-md-offset-1 col-xs-offset-1 col-sm-13 col-sm-13 col-xs-13">
-		<div class="panel panel-default">
-			<div class="panel-heading">
+		<!-- 全体の段落下げ -->
+		<?php foreach ($bbsComments as $comment) { ?>
+		<div class="panel-group col-md-offset-1 col-md-offset-1 col-xs-offset-1 col-sm-13 col-sm-13 col-xs-13">
+			<div class="panel panel-default">
+				<div class="panel-heading">
 
-				<span class="text-left">
-					<!-- id -->
-					<?php echo $comment['id']; ?>.<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt'=>'アバターが設定されていません')); ?></span>
-					<!-- ユーザ情報 -->
-					<span>
-						<a href="" ng-click="user.showUser(<?php echo $comment['userId'] ?>)">
-							<?php echo $comment['username']; ?>
-						</a>
-					</span>
-					<!-- タイトル -->
-					<a href="<?php echo $this->Html->url(
-									'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
-									<h4 style="display:inline;"><strong><?php echo $comment['title']; ?></strong></h4></a>
-					<!-- ステータス -->
-					<span><?php echo $this->element('Bbses.status_label',
-										array('status' => $comment['status'])); ?></span>
-				</span>
-
-				<span class="text-left" style="float:right;">
-					<!-- 時間 -->
-					<span><?php echo $comment['create_time']; ?></span>
-				</span>
-
-			</div>
-			<!-- 本文 -->
-			<div class="panel panel-body">
-				<?php if ($bbsCurrentComments['id'] !== $comment['parent_id']) : ?>
-					<div><a href="<?php echo $this->Html->url(
-								'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
-							>><?php echo $comment['parent_id']; ?></a></div>
-				<?php endif; ?>
-				<div><?php echo $comment['content']; ?></div>
-			</div>
-			<!-- フッター -->
-			<div class="panel-footer">
-				<!-- いいね！ -->
-				<span class="text-left">
-					<?php if ($comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
-						<?php if ($bbses['use_like_button']) : ?>
-							<a href="">
-								<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['like_num']; ?></span>
-							</a>&nbsp;
-						<?php endif; ?>
-						<?php if ($bbses['use_unlike_button']) : ?>
-							<a href="">
-								<span class="glyphicon glyphicon-thumbs-down"><?php echo $comment['unlike_num']; ?></span>
+					<span class="text-left">
+						<!-- id -->
+						<?php echo $comment['id']; ?>.
+						<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?></span>
+						<!-- ユーザ情報 -->
+						<span>
+							<a href="" ng-click="user.showUser(<?php echo $comment['userId'] ?>)">
+								<?php echo $comment['username']; ?>
 							</a>
-						<?php endif; ?>
+						</span>
+						<!-- タイトル -->
+						<a href="<?php echo $this->Html->url(
+										'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
+										<h4 style="display:inline;"><strong><?php echo $comment['title']; ?></strong></h4></a>
+						<!-- ステータス -->
+						<span><?php echo $this->element('Bbses.status_label',
+											array('status' => $comment['status'])); ?></span>
+					</span>
+
+					<span class="text-left" style="float:right;">
+						<!-- 時間 -->
+						<span><?php echo $comment['createTime']; ?></span>
+					</span>
+
+				</div>
+				<!-- 本文 -->
+				<div class="panel panel-body">
+					<?php if ($bbsCurrentComments['id'] !== $comment['parent_id']) : ?>
+						<div><a href="<?php echo $this->Html->url(
+									'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
+								>><?php echo $comment['parent_id']; ?></a></div>
 					<?php endif; ?>
-					&nbsp;
-				</span>
+					<div><?php echo $comment['content']; ?></div>
+				</div>
+				<!-- フッター -->
+				<div class="panel-footer">
+					<!-- いいね！ -->
+					<span class="text-left">
+						<?php if ($comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
+							<?php if ($bbses['use_like_button']) : ?>
+								<!-- いいね -->
+								<span class="text-left" style="float:left;">
+									<!-- general user以上 -->
+									<?php if ((int)$this->viewVars['rolesRoomId'] !== 0 && (int)$this->viewVars['rolesRoomId'] < 5) : ?>
+										<?php $likesParams = ($comment['likesFlag'])? 0 : 1; ?>
+										<?php echo $this->Form->create('',
+												array(
+													'type' => 'post',
+													'url' => '/bbses/bbsPosts/likes/' . $frameId . '/' . $comment['id'] . '/' . $userId . '/' . $likesParams,
+												)); ?>
 
-				<span class="text-left" style="float:right;">
-					<!-- コメント編集/削除 -->
-					<?php if (($contentCreatable && $comment['created_user'] === $userId
-									&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
-								($contentEditable
-									&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
-								$contentPublishable) : ?>
+												<?php echo $this->Form->button('<span class="glyphicon glyphicon-thumbs-up">' . $comment['likesNum'] . '</span>',
+														array(
+															'type' => 'submit',
+															'class' => 'btn btn-link',
+															'style' => 'padding: 0;',
+															'tooltip' => ($comment['likesFlag'])? __d('bbses', 'Remove likes') : __d('bbses', 'Do likes'),
+														)); ?>
+												&nbsp;
+										<?php echo $this->Form->end(); ?>
 
-						<!-- 削除 -->
-						<span class="text-left" style="float:right;">
+									<!-- visitor -->
+									<?php else : ?>
+										<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['likesNum']; ?></span>
+										&nbsp;
+									<?php endif; ?>
+								</span>
+							<?php endif; ?>
+							<?php if ($bbses['use_unlike_button']) : ?>
+								<!-- よくないね -->
+								<span class="text-left" style="float:left;">
+									<!-- general user以上 -->
+									<?php if ((int)$this->viewVars['rolesRoomId'] !== 0 && (int)$this->viewVars['rolesRoomId'] < 5) : ?>
+										<?php $unlikesParams = ($comment['unlikesFlag'])? 0 : 1; ?>
+										<?php echo $this->Form->create('',
+												array(
+													'type' => 'post',
+													'url' => '/bbses/bbsPosts/unlikes/' . $frameId . '/' . $comment['id'] . '/' . $userId . '/' . $unlikesParams,
+												)); ?>
+
+												<?php echo $this->Form->button('<span class="glyphicon glyphicon-thumbs-up">' . $comment['unlikesNum'] . '</span>',
+														array(
+															'type' => 'submit',
+															'class' => 'btn btn-link',
+															'style' => 'padding: 0;',
+															'tooltip' => ($comment['unlikesFlag'])? __d('bbses', 'Remove unlikes') : __d('bbses', 'Do unlikes'),
+														)); ?>
+										<?php echo $this->Form->end(); ?>
+
+									<!-- visitor -->
+									<?php else : ?>
+										<span class="glyphicon glyphicon-thumbs-up"><?php echo $comment['unlikesNum']; ?></span>
+									<?php endif; ?>
+								</span>
+							<?php endif; ?>
+						<?php endif; ?>
+						&nbsp;
+					</span>
+
+					<span class="text-left" style="float:right;">
+						<!-- コメント編集/削除 -->
+						<?php if (($contentCreatable && $comment['created_user'] === $userId
+										&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
+									($contentEditable
+										&& $comment['status'] !== NetCommonsBlockComponent::STATUS_PUBLISHED) ||
+									$contentPublishable) : ?>
+
+							<!-- 削除 -->
+							<span class="text-left" style="float:right;">
+								<?php echo $this->Form->create('',
+									array(
+										'div' => false,
+										'type' => 'post',
+										'url' => '/bbses/bbsComments/delete/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $comment['id']
+									)); ?>
+
+									<?php echo $this->Form->button('<span class="glyphicon glyphicon-trash"></span>',
+											array(
+												'label' => false,
+												'div' => false,
+												'type' => 'submit',
+												'class' => 'btn btn-danger btn-xs',
+												'tooltip' => __d('bbses', 'Delete'),
+											)); ?>
+								<?php echo $this->Form->end(); ?>
+							</span>
+
+							<!-- 編集 -->
+							<span class="text-left" style="float:right;">
+								<a href="<?php echo $this->Html->url(
+										'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $comment['id']); ?>"
+										class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
+										<span class="glyphicon glyphicon-edit"></span>
+								</a>
+								&ensp;
+							</span>
+						<?php endif; ?>
+					</span>
+
+					<!-- コメント作成 -->
+					<!-- Warn:style 一行に表示するため指定 -->
+					<span class="text-left" style="float:right;">
+						<?php if ($commentCreatable && $bbses['use_comment']
+									&& $comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
+
 							<?php echo $this->Form->create('',
-								array(
-									'div' => false,
-									'type' => 'post',
-									'url' => '/bbses/bbsComments/delete/' . $frameId . '/' .  $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . $comment['id']
-								)); ?>
+										array(
+											'div' => false,
+											'type' => 'get',
+											'url' => '/bbses/bbsComments/add/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']
+										)); ?>
 
-								<?php echo $this->Form->button('<span class="glyphicon glyphicon-trash"></span>',
+								<label>
+									<!-- 引用するか否か -->
+									<?php echo $this->Form->input('quotFlag',
+												array(
+													'label' => false,
+													'div' => false,
+													'type' => 'checkbox',
+												)); ?>
+									<?php echo __d('bbses', 'Quote this posts'); ?>
+								</label>
+								&nbsp;
+
+								<?php echo $this->Form->button('<span class="glyphicon glyphicon-comment"></span>',
 										array(
 											'label' => false,
 											'div' => false,
 											'type' => 'submit',
-											'class' => 'btn btn-danger btn-xs',
-											'tooltip' => __d('bbses', 'Delete'),
+											'class' => 'btn btn-success btn-xs',
+											'tooltip' => __d('bbses', 'Write comment'),
 										)); ?>
+								&ensp;
+
 							<?php echo $this->Form->end(); ?>
-						</span>
+						<?php endif; ?>
 
-						<!-- 編集 -->
-						<span class="text-left" style="float:right;">
-							<a href="<?php echo $this->Html->url(
-									'/bbses/bbsComments/edit' . '/' . $frameId . '/' . $comment['id']); ?>"
-									class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
-									<span class="glyphicon glyphicon-edit"></span>
-							</a>
-							&ensp;
-						</span>
-					<?php endif; ?>
-				</span>
-
-				<!-- コメント作成 -->
-				<!-- Warn:style 一行に表示するため指定 -->
-				<span class="text-left" style="float:right;">
-					<?php if ($commentCreatable && $bbses['use_comment']
-								&& $comment['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
-
-						<?php echo $this->Form->create('',
-									array(
-										'div' => false,
-										'type' => 'get',
-										'url' => '/bbses/bbsComments/add/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']
-									)); ?>
-
-							<label>
-								<!-- 引用するか否か -->
-								<?php echo $this->Form->input('quotFlag',
-											array(
-												'label' => false,
-												'div' => false,
-												'type' => 'checkbox',
-											)); ?>
-								<?php echo __d('bbses', 'Quote this posts'); ?>
-							</label>
-							&nbsp;
-
-							<?php echo $this->Form->button('<span class="glyphicon glyphicon-comment"></span>',
-									array(
-										'label' => false,
-										'div' => false,
-										'type' => 'submit',
-										'class' => 'btn btn-success btn-xs',
-										'tooltip' => __d('bbses', 'Write comment'),
-									)); ?>
-							&ensp;
-
-						<?php echo $this->Form->end(); ?>
-					<?php endif; ?>
-
-					<!-- '5'(非承認) -->
-					<?php if ($comment['status'] === '5' && $contentPublishable) : ?>
-						<!-- 承認するボタン -->
-						<?php echo $this->element('approving_buttons',
-										array('comment' => $comment)); ?>
-						&emsp;
-					<?php endif; ?>
-				</span>
+						<!-- '5'(非承認) -->
+						<?php if ($comment['status'] === '5' && $contentPublishable) : ?>
+							<!-- 承認するボタン -->
+							<?php echo $this->element('approving_buttons',
+											array('comment' => $comment)); ?>
+							&emsp;
+						<?php endif; ?>
+					</span>
+				</div>
 			</div>
 		</div>
-	</div>
-	<?php } ?>
+		<?php } ?>
 
-	<!-- ページャーの表示 -->
-	<div class="text-center">
-		<?php echo $this->element('BbsComments/pager'); ?>
-	</div>
+		<!-- ページャーの表示 -->
+		<div class="text-center">
+			<?php echo $this->element('BbsComments/pager'); ?>
+		</div>
 
 <?php endif; ?>
 

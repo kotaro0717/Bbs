@@ -1,7 +1,7 @@
 <?php echo $this->Form->create('BbsPost', array(
 		'div' => false,
 		'type' => 'post',
-		'url' => '/bbses/bbsComments/edit/' . $frameId . '/' . $comment['id'],
+		'url' => '/bbses/bbsPosts/edit/' . $frameId . '/' . $comment['id'],
 		'style' => 'float:left;'
 	)); ?>
 

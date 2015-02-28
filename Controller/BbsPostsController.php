@@ -43,8 +43,8 @@ class BbsPostsController extends BbsesAppController {
 		'NetCommons.NetCommonsRoomRole' => array(
 			//コンテンツの権限設定
 			'allowedActions' => array(
-				'contentEditable' => array('add', 'edit', 'delete'),
-				'contentCreatable' => array('add', 'edit', 'delete'),
+				'contentEditable' => array('add', 'edit', 'delete', 'likes', 'unlikes'),
+				'contentCreatable' => array('add', 'edit', 'delete', 'likes', 'unlikes'),
 			),
 		),
 	);
@@ -61,11 +61,16 @@ class BbsPostsController extends BbsesAppController {
 /**
  * view method
  *
+ * @param int $frameId frames.id
+ * @param int $postId posts.id
+ * @param int $currentPage currentPage
+ * @param int $sortParams sortParameter
+ * @param int $visibleCommentRow visibleCommentRow
+ * @param int $narrowDownParams narrowDownParameter
  * @return void
  */
 	public function view($frameId, $postId, $currentPage = '', $sortParams = '',
 							$visibleCommentRow = '', $narrowDownParams = '') {
-
 		if ($this->request->isGet()) {
 			CakeSession::write('backUrl', $this->request->referer());
 		}
@@ -107,7 +112,10 @@ class BbsPostsController extends BbsesAppController {
 
 		//コメント数をセットする
 		//$this->viewVars['bbsPosts']がセットされていること前提
-		$this->setCommentNum($this->viewVars['bbsPosts']);
+		$this->setCommentNum(
+				$this->viewVars['bbsPosts']['lft'],
+				$this->viewVars['bbsPosts']['rght']
+			);
 
 		//コメント作成権限をセットする
 		//$this->viewVars['bbses']がセットされていること前提
@@ -120,6 +128,7 @@ class BbsPostsController extends BbsesAppController {
 /**
  * add method
  *
+ * @param int $frameId frames.id
  * @return void
  */
 	public function add($frameId) {
@@ -136,7 +145,7 @@ class BbsPostsController extends BbsesAppController {
 			}
 		}
 
-        if ($this->request->isPost()) {
+		if ($this->request->isPost()) {
 			if (!$status = $this->__parseStatus()) {
 				return;
 			}
@@ -163,12 +172,14 @@ class BbsPostsController extends BbsesAppController {
 				$this->redirect($backUrl);
 			}
 			return;
-        }
+		}
 	}
 
 /**
  * edit method
  *
+ * @param int $frameId frames.id
+ * @param int $postId bbsPosts.id
  * @return void
  */
 	public function edit($frameId, $postId) {
@@ -182,7 +193,7 @@ class BbsPostsController extends BbsesAppController {
 			CakeSession::write('backUrl', $this->request->referer());
 		}
 
-        if ($this->request->isPost()) {
+		if ($this->request->isPost()) {
 			if (!$status = $this->__parseStatus()) {
 				return;
 			}
@@ -201,14 +212,12 @@ class BbsPostsController extends BbsesAppController {
 					$this->viewVars['contentCreatable'],
 					$conditions
 				);
-			//編集者のIDを格納
-			//$bbsPost['BbsPost']['created_user'] = $data['User']['id'];
 
 			//更新時間をセット
 			$bbsPosts['BbsPost']['modified'] = date('Y-m-d H:i:s');
 			$data = Hash::merge($bbsPosts, $data);
 
-			//Todo:UPDATE
+			//UPDATE
 			$data['BbsPost']['id'] = $bbsPosts['BbsPost']['id'];
 
 			if (!$bbsPosts = $this->BbsPost->savePost($data)) {
@@ -229,8 +238,8 @@ class BbsPostsController extends BbsesAppController {
 /**
  * delete method
  *
- * @param string $postId postId
- * @throws NotFoundException
+ * @param int $frameId frames.id
+ * @param int $postId postId
  * @return void
  */
 	public function delete($frameId, $postId) {
@@ -250,6 +259,84 @@ class BbsPostsController extends BbsesAppController {
 			);
 
 		//記事一覧へリダイレクト
+		$this->redirect($backUrl);
+	}
+
+/**
+ * likes method
+ *
+ * @param int $frameId frames.id
+ * @param int $postId bbsPosts.id
+ * @param int $userId users.id
+ * @param bool $likesFlag likes flag
+ * @return void
+ */
+	public function likes($frameId, $postId, $userId, $likesFlag) {
+		if (! $this->request->isPost()) {
+			return;
+		}
+
+		CakeSession::write('backUrl', $this->request->referer());
+
+		if (! $postsUsers = $this->BbsPostsUser->getPostsUsers(
+				$postId,
+				$userId
+		)) {
+			//データがなければ登録
+			$default = $this->BbsPostsUser->create();
+			$default['BbsPostsUser'] = array(
+						'post_id' => $postId,
+						'user_id' => $userId,
+						'likes_flag' => (int)$likesFlag,
+				);
+			$this->BbsPostsUser->savePostsUsers($default);
+
+		} else {
+			$postsUsers['BbsPostsUser']['likes_flag'] = (int)$likesFlag;
+			$this->BbsPostsUser->savePostsUsers($postsUsers);
+
+		}
+		$backUrl = CakeSession::read('backUrl');
+		CakeSession::delete('backUrl');
+		$this->redirect($backUrl);
+	}
+
+/**
+ * unlikes method
+ *
+ * @param int $frameId frames.id
+ * @param int $postId bbsPosts.id
+ * @param int $userId users.id
+ * @param bool $unlikesFlag unlikes flag
+ * @return void
+ */
+	public function unlikes($frameId, $postId, $userId, $unlikesFlag) {
+		if (! $this->request->isPost()) {
+			return;
+		}
+
+		CakeSession::write('backUrl', $this->request->referer());
+
+		if (! $postsUsers = $this->BbsPostsUser->getPostsUsers(
+				$postId,
+				$userId
+		)) {
+			//データがなければ登録
+			$default = $this->BbsPostsUser->create();
+			$default['BbsPostsUser'] = array(
+						'post_id' => $postId,
+						'user_id' => $userId,
+						'unlikes_flag' => (int)$unlikesFlag,
+				);
+			$this->BbsPostsUser->savePostsUsers($default);
+
+		} else {
+			$postsUsers['BbsPostsUser']['unlikes_flag'] = (int)$unlikesFlag;
+			$this->BbsPostsUser->savePostsUsers($postsUsers);
+
+		}
+		$backUrl = CakeSession::read('backUrl');
+		CakeSession::delete('backUrl');
 		$this->redirect($backUrl);
 	}
 
@@ -294,7 +381,6 @@ class BbsPostsController extends BbsesAppController {
 		return true;
 	}
 
-
 /**
  * __initBbs method
  *
@@ -310,7 +396,6 @@ class BbsPostsController extends BbsesAppController {
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
 		);
 		$this->set($results);
-
 	}
 
 /**
@@ -341,7 +426,7 @@ class BbsPostsController extends BbsesAppController {
 		//新規記事データセット
 		$bbsPosts = $this->BbsPost->create();
 
-		//Todo:新規の記事名称 とりあえずdate('YmdHis')を付けている
+		//新規の記事名称
 		$bbsPosts['BbsPost']['title'] = '新規記事_' . date('YmdHis');
 
 		$results = array(
@@ -354,7 +439,8 @@ class BbsPostsController extends BbsesAppController {
 /**
  * __setPost method
  *
- * @param $postId bbsPosts.id
+ * @param int $postId bbsPosts.id
+ * @throws BadRequestException
  * @return void
  */
 	private function __setPost($postId) {
@@ -368,7 +454,7 @@ class BbsPostsController extends BbsesAppController {
 				$conditions
 		)) {
 			throw new BadRequestException(__d('net_commons', 'Bad Request'));
-			return;
+
 		}
 
 		//取得した記事の作成者IDからユーザ情報を取得
@@ -380,30 +466,39 @@ class BbsPostsController extends BbsesAppController {
 			)
 		);
 
+		//いいね・よくないねを取得
+		$likes = $this->BbsPostsUser->getLikes(
+					$bbsPosts['BbsPost']['id'],
+					$this->viewVars['userId']
+				);
+
 		$results = array(
 			'bbsPosts' => $bbsPosts['BbsPost'],
 			'contentStatus' => $bbsPosts['BbsPost']['status'],
 		);
 
-		//取得した記事の配列にユーザ名、ID、コメント数を追加
+		//ユーザ名、ID、いいね、よくないねをセット
 		$results['bbsPosts']['username'] = $user['User']['username'];
-		$results['bbsPosts']['user_id'] = $user['User']['id'];
+		$results['bbsPosts']['userId'] = $user['User']['id'];
+		$results['bbsPosts']['likesNum'] = $likes['likesNum'];
+		$results['bbsPosts']['unlikesNum'] = $likes['unlikesNum'];
+		$results['bbsPosts']['likesFlag'] = $likes['likesFlag'];
+		$results['bbsPosts']['unlikesFlag'] = $likes['unlikesFlag'];
 		$this->set($results);
 	}
 
 /**
  * __setComment method
  *
- * @param $postId
- * @param $currentPage
- * @param $sortParams
- * @param $visibleCommentRow
- * @param $narrowDownParams
+ * @param int $postId bbsPosts.id
+ * @param int $currentPage currentPage
+ * @param int $sortParams sortParameter
+ * @param int $visibleCommentRow visibleCommentRow
+ * @param int $narrowDownParams narrowDownParameter
  * @return void
  */
 	private function __setComment($postId, $currentPage, $sortParams,
 									$visibleCommentRow, $narrowDownParams) {
-
 		//ソート条件をセット
 		$sortOrder = $this->setSortOrder($sortParams);
 
@@ -428,12 +523,17 @@ class BbsPostsController extends BbsesAppController {
 		//コメントなしの場合
 		if (empty($bbsCommnets)) {
 			//空配列を渡す
-			//Todo:空ではなく、falseを渡して、Viewでは「空ならメッセージ」に修正
-			$this->set('bbsComments', array());
+			$this->set('bbsComments', false);
 			return;
 		}
 
 		foreach ($bbsCommnets as $bbsComment) {
+			//いいね・よくないねを取得
+			$likes = $this->BbsPostsUser->getLikes(
+						$bbsComment['BbsPost']['id'],
+						$this->viewVars['userId']
+					);
+
 			//取得した記事の作成者IDからユーザ情報を取得
 			$user = $this->User->find('first', array(
 					'recursive' => -1,
@@ -445,6 +545,10 @@ class BbsPostsController extends BbsesAppController {
 			//取得した記事の配列にユーザ名を追加
 			$bbsComment['BbsPost']['username'] = $user['User']['username'];
 			$bbsComment['BbsPost']['userId'] = $user['User']['id'];
+			$bbsComment['BbsPost']['likesNum'] = $likes['likesNum'];
+			$bbsComment['BbsPost']['unlikesNum'] = $likes['unlikesNum'];
+			$bbsComment['BbsPost']['likesFlag'] = $likes['likesFlag'];
+			$bbsComment['BbsPost']['unlikesFlag'] = $likes['unlikesFlag'];
 			$results[] = $bbsComment['BbsPost'];
 		}
 		$this->set('bbsComments', $results);
@@ -495,7 +599,6 @@ class BbsPostsController extends BbsesAppController {
 		$hasNextSecondPage = (empty($nextSecondPosts))? false : true;
 		$this->set('hasNextSecondPage', $hasNextSecondPage);
 
-	//if ($currentPage === 1 || $currentPage === 2) {
 		//4ページがあるか取得（モックとしてとりあえず）
 		$posts = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],
@@ -526,11 +629,12 @@ class BbsPostsController extends BbsesAppController {
 /**
  * __saveReadStatus method
  *
+ * @param int $postId bbsPosts.id
  * @return void
  */
 	private function __saveReadStatus($postId) {
 		//既読情報がなければデータ登録
-		if (! $readStatus = $this->BbsPostsUser->getReadPostStatus(
+		if (! $this->BbsPostsUser->getPostsUsers(
 				$postId,
 				$this->viewVars['userId']
 		)) {
@@ -538,8 +642,10 @@ class BbsPostsController extends BbsesAppController {
 			$default['BbsPostsUser'] = array(
 						'post_id' => $postId,
 						'user_id' => $this->viewVars['userId'],
+						'likes_flag' => false,
+						'unlikes_flag' => false,
 				);
-			$results = $this->BbsPostsUser->saveReadStatus($default);
+			$results = $this->BbsPostsUser->savePostsUsers($default);
 		}
 	}
 

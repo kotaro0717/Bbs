@@ -35,18 +35,42 @@
 					<span class="sr-only">Toggle Dropdown</span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>"><?php echo __d('bbses', 'Display all posts'); ?></a></li>
-					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 7); ?>"><?php echo __d('bbses', 'Do not read'); ?></a></li>
-					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>"><?php echo __d('bbses', 'Published'); ?></a></li>
-					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>"><?php echo __d('net_commons', 'Temporary'); ?></a></li>
-					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_DISAPPROVED); ?>"><?php echo __d('bbses', 'Remand'); ?></a></li>
-					<li><a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_APPROVED); ?>"><?php echo __d('net_commons', 'Approving'); ?></a></li>
+					<li>
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>">
+								<?php echo __d('bbses', 'Display all posts'); ?>
+						</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 7); ?>">
+								<?php echo __d('bbses', 'Do not read'); ?>
+						</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>">
+								<?php echo __d('bbses', 'Published'); ?>
+						</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>">
+								<?php echo __d('net_commons', 'Temporary'); ?>
+						</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_DISAPPROVED); ?>">
+								<?php echo __d('bbses', 'Remand'); ?>
+						</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->Html->url(
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_APPROVED); ?>">
+								<?php echo __d('net_commons', 'Approving'); ?>
+						</a>
+					</li>
 				</ul>
 			</span>
 		<?php endif; ?>
@@ -74,17 +98,20 @@
 			<ul class="dropdown-menu" role="menu">
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 1 . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>"><?php echo __d('bbses', 'Latest post order'); ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 1 . '/' . $currentVisibleRow . '/' . $narrowDownParams) ?>">
+							<?php echo __d('bbses', 'Latest post order'); ?>
 					</a>
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 2 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Older post order'); ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 2 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>">
+							<?php echo __d('bbses', 'Older post order'); ?>
 					</a>
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 3 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"><?php echo __d('bbses', 'Descending order of comments'); ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . 3 . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>">
+							<?php echo __d('bbses', 'Descending order of comments'); ?>
 					</a>
 				</li>
 			</ul>
@@ -102,32 +129,38 @@
 			<ul class="dropdown-menu" role="menu">
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 1 . '/' . $narrowDownParams); ?>"><?php echo '1' . "件"; ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 1 . '/' . $narrowDownParams); ?>">
+							<?php echo '1' . "件"; ?>
 					</a>
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 5 . '/' . $narrowDownParams); ?>"><?php echo '5' . "件"; ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 5 . '/' . $narrowDownParams); ?>">
+							<?php echo '5' . "件"; ?>
 					</a>
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 10 . '/' . $narrowDownParams); ?>"><?php echo '10' . "件"; ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 10 . '/' . $narrowDownParams); ?>">
+							<?php echo '10' . "件"; ?>
 					</a>
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 20 . '/' . $narrowDownParams); ?>"><?php echo '20' . "件"; ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 20 . '/' . $narrowDownParams); ?>">
+							<?php echo '20' . "件"; ?>
 					</a>
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 50 . '/' . $narrowDownParams); ?>"><?php echo '50' . "件"; ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 50 . '/' . $narrowDownParams); ?>">
+							<?php echo '50' . "件"; ?>
 					</a>
 				</li>
 				<li>
 					<a href="<?php echo $this->Html->url(
-						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 100 . '/' . $narrowDownParams); ?>"><?php echo '100' . "件"; ?>
+						'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . 100 . '/' . $narrowDownParams); ?>">
+							<?php echo '100' . "件"; ?>
 					</a>
 				</li>
 			</ul>
@@ -139,35 +172,38 @@
 		<?php foreach ($bbsPosts as $bbsPost) : ?>
 			<tr>
 				<td>
-					<?php echo ($bbsPost['readStatus'])? '' : '<strong>' ; ?>
-						<a href="/bbses/bbsPosts/view/<?php echo $frameId; ?>/<?php echo $bbsPost['id']; ?>"
+					<?php echo ($bbsPost['readStatus'])? '' : '<strong>'; ?>
+						<a href="<?php echo $this->Html->url(
+									'/bbses/bbsPosts/view/' . $frameId . '/' . $bbsPost['id']); ?>"
 						   class="text-left">
 
 							<!-- 記事のタイトル -->
 							<?php echo h(mb_strcut(strip_tags($bbsPost['title']), 0, BbsPost::DISPLAY_MAX_TITLE_LENGTH, 'UTF-8')); ?>
-							<?php echo (h(mb_strcut(strip_tags($bbsPost['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '<span class="glyphicon glyphicon-option-horizontal"></span>'; ?>
+							<?php echo (h(mb_strcut(strip_tags($bbsPost['title']), BbsPost::DISPLAY_MAX_TITLE_LENGTH, null, 'UTF-8')) === false)? '' : '...'; ?>
 
 							<!-- コメント数 -->
 							<?php if ($bbsPost['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 								<span class="glyphicon glyphicon-comment"></span>
-								<span tooltip="<?php echo __d('bbses', 'Publishing comments'); ?>"><?php echo $bbsPost['comment_num']; ?></span>&nbsp;
-								<span tooltip="<?php echo __d('bbses', 'Comments Include the other status'); ?>"><?php echo ($contentCreatable)? '(' . $bbsPost['all_comment_num'] . ')' : ''; ?>
+								<span tooltip="<?php echo __d('bbses', 'Publishing comments'); ?>"
+									  ><?php echo $bbsPost['comment_num']; ?></span>&nbsp;
+								<span tooltip="<?php echo __d('bbses', 'Comments Include the other status'); ?>"
+									  ><?php echo ($contentCreatable)? '(' . $bbsPost['allCommentNum'] . ')' : ''; ?></span>
 
 							<?php endif; ?>
 						</a>
-					<?php echo ($bbsPost['readStatus'])? '' : '</strong>' ; ?>
+					<?php echo ($bbsPost['readStatus'])? '' : '</strong>'; ?>
 
 					<!-- ステータス -->
 					<?php echo $this->element('NetCommons.status_label',
 								array('status' => $bbsPost['status'])); ?>
 
 					<!-- 作成日時 -->
-					<div class="text-left" style="float:right;"><?php echo $bbsPost['create_time']; ?></div>
+					<div class="text-left" style="float:right;"><?php echo $bbsPost['createTime']; ?></div>
 
 					<!-- 本文 -->
 					<p>
 						<?php echo mb_strcut(strip_tags($bbsPost['content']), 0, BbsPost::DISPLAY_MAX_CONTENT_LENGTH, 'UTF-8'); ?>
-						<?php echo (mb_strcut(strip_tags($bbsPost['content']), BbsPost::DISPLAY_MAX_CONTENT_LENGTH, null, 'UTF-8') === false)? '' : '<span class="glyphicon glyphicon-option-horizontal"></span>'; ?>
+						<?php echo (mb_strcut(strip_tags($bbsPost['content']), BbsPost::DISPLAY_MAX_CONTENT_LENGTH, null, 'UTF-8') === false)? '' : '...'; ?>
 
 					</p>
 
@@ -175,12 +211,13 @@
 					<span class="text-left">
 						<?php if ($bbsPost['status'] === NetCommonsBlockComponent::STATUS_PUBLISHED) : ?>
 							<?php if ($bbses['use_like_button']) : ?>
-								<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsPost['like_num']; ?></span>
+								<span class="glyphicon glyphicon-thumbs-up"><?php echo $bbsPost['likesNum']; ?></span>&nbsp;
 							<?php endif; ?>
 							<?php if ($bbses['use_unlike_button']) : ?>
-								<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsPost['unlike_num']; ?></span>
+								<span class="glyphicon glyphicon-thumbs-down"><?php echo $bbsPost['unlikesNum']; ?></span>
 							<?php endif; ?>
-						<?php endif ?>&nbsp;
+						<?php endif ?>
+						&nbsp;
 					</span>
 
 					<!-- 公開権限があれば編集／削除できる -->
@@ -212,11 +249,11 @@
 
 <?php else : ?>
 
-	<hr />
-	<!-- メッセージの表示 -->
-	<div class="text-left">
-		<?php echo __d('bbses', 'There are not posts'); ?>
-	</div>
+		<hr />
+		<!-- メッセージの表示 -->
+		<div class="text-left">
+			<?php echo __d('bbses', 'There are not posts'); ?>
+		</div>
 
 <?php endif; ?>
 

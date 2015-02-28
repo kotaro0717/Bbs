@@ -1,10 +1,3 @@
-<?php //echo debug($currentPage); ?>
-<?php //echo debug($hasPrevPage); ?>
-<?php //echo debug($hasNextPage); ?>
-<?php //echo debug($hasNextSecondPage); ?>
-<?php //echo debug($hasFourPage); ?>
-<?php //echo debug($hasFivePage); ?>
-
 <nav>
 	<ul class="pagination">
 
@@ -12,7 +5,7 @@
 		<li class="<?php echo ($currentPage < 4)? 'disabled' : ''; ?>">
 			<?php $prevPager = $currentPage - 1 ?>
 			<a href="<?php echo ($currentPage < 4)? '' : $this->Html->url(
-					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $prevPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams) ; ?>"
+					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $prevPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"
 				aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
 		</li>
 

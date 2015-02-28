@@ -134,11 +134,13 @@ class BbsPost extends BbsesAppModel {
 		}
 
 		//対象記事のみ取得
-		$bbsPosts = $this->find('first', array(
+		if (! $bbsPosts = $this->find('first', array(
 				'recursive' => -1,
 				'conditions' => $conditions,
-			)
-		);
+		))) {
+			return false;
+
+		}
 
 		//日時フォーマット（一件）
 		return $this->__setDateTime(array($bbsPosts), false);
@@ -185,35 +187,6 @@ class BbsPost extends BbsesAppModel {
 		//日時フォーマット（記事群）
 		return $this->__setDateTime($bbsPosts, true);
 	}
-
-/**
- * get bbs data
- *
- * @param int $bbsKey bbses.key
- * @param int $postId bbsPosts.id
- * @param bool $contentEditable true can edit the content, false not can edit the content.
- * @param bool $contentCreatable true can create the content, false not can create the content.
- * @return array
- */
-//	public function getCurrentComments($bbsKey, $postId, $contentEditable, $contentCreatable) {
-//		$conditions = array(
-//			'bbs_key' => $bbsKey,
-//			'id' => $postId
-//		);
-//
-//		if (! $contentCreatable && ! $contentEditable) {
-//			$conditions['status'] = NetCommonsBlockComponent::STATUS_PUBLISHED;
-//		}
-//
-//		$posts = $this->find('first', array(
-//				'recursive' => -1,
-//				'conditions' => $conditions,
-//			)
-//		);
-//
-//		//日時フォーマット（一件）
-//		return $this->__setDateTime(array($posts), false);
-//	}
 
 /**
  * save posts
@@ -284,13 +257,13 @@ class BbsPost extends BbsesAppModel {
 			//変換
 			if ($today === $createdDay) {
 				//今日
-				$bbsPosts[$i]['BbsPost']['create_time'] = date('G:i', strtotime($date));
+				$bbsPosts[$i]['BbsPost']['createTime'] = date('G:i', strtotime($date));
 			} elseif ($year !== $createdYear) {
 				//昨年以前
-				$bbsPosts[$i]['BbsPost']['create_time'] = date('Y/m/d', strtotime($date));
+				$bbsPosts[$i]['BbsPost']['createTime'] = date('Y/m/d', strtotime($date));
 			} elseif ($today > $createdDay) {
 				//今日より前 かつ 今年
-				$bbsPosts[$i]['BbsPost']['create_time'] = date('m/d', strtotime($date));
+				$bbsPosts[$i]['BbsPost']['createTime'] = date('m/d', strtotime($date));
 			}
 			$i++;
 		}

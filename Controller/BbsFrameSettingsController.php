@@ -61,18 +61,11 @@ class BbsFrameSettingsController extends BbsesAppController {
  * @return void
  */
 	public function edit() {
-		//不要:defaultでBbsFrameSettings/editを見てくれる
-		//$this->view = 'BbsFrameSettings/edit';
-
 		$this->__setBbsSetting();
-		if (!isset($this->viewVars['bbsSettings'])) {
-			throw new NotFoundException(__d('net_commons', 'Not Found'));
-		}
 
 		if ($this->request->isPost()) {
 			$data = $this->data;
 
-			//$blockId, $userId, $contentCreatable, $contentEditable, $is_post_list
 			if (!$bbsSetting = $this->BbsFrameSetting->getBbsSetting(
 				isset($this->data['Frame']['key']) ? $this->data['Frame']['key'] : null
 			)) {
@@ -98,7 +91,6 @@ class BbsFrameSettingsController extends BbsesAppController {
 			}
 			return;
 		}
-
 	}
 
 /**
@@ -111,12 +103,10 @@ class BbsFrameSettingsController extends BbsesAppController {
 		$bbsSettings = $this->BbsFrameSetting->getBbsSetting(
 										$this->viewVars['frameKey']);
 
-		//camelize
 		$results = array(
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
 		);
-		$this->set($this->camelizeKeyRecursive($results));
-
+		$this->set($results);
 	}
 
 /**

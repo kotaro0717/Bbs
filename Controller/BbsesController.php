@@ -60,16 +60,15 @@ class BbsesController extends BbsesAppController {
 /**
  * index method
  *
- * @param $frameId frame.id フレームID
- * @param $currentPage ページ番号
- * @param $sortParams ソートID
- * @param $visiblePostRow 表示件数
- * @param $narrowDownParams 絞り込みID
+ * @param int $frameId frames.id
+ * @param int $currentPage currentPage
+ * @param int $sortParams sortParameter
+ * @param int $visiblePostRow visiblePostRow
+ * @param int $narrowDownParams narrowDownParameter
  * @return void
  */
 	public function index($frameId, $currentPage = '', $sortParams = '',
 								$visiblePostRow = '', $narrowDownParams = '') {
-
 		$this->view = 'Bbses/view';
 		$this->view($frameId, $currentPage, $sortParams, $visiblePostRow, $narrowDownParams);
 	}
@@ -77,16 +76,15 @@ class BbsesController extends BbsesAppController {
 /**
  * index method
  *
- * @param $frameId frame.id フレームID
- * @param $currentPage ページ番号
- * @param $sortParams ソートID
- * @param $visiblePostRow 表示件数
- * @param $narrowDownParams 絞り込みID
+ * @param int $frameId frames.id
+ * @param int $currentPage currentPage
+ * @param int $sortParams sortParameter
+ * @param int $visiblePostRow visiblePostRow
+ * @param int $narrowDownParams narrowDownParameter
  * @return void
  */
 	public function view($frameId, $currentPage = '', $sortParams = '',
 								$visiblePostRow = '', $narrowDownParams = '') {
-
 		//一覧ページのURLをBackURLに保持
 		if ($this->request->isGet()) {
 				CakeSession::write('backUrl', Router::url(null, true));
@@ -130,7 +128,6 @@ class BbsesController extends BbsesAppController {
 
 		//記事数取得
 		$this->__setPostNum();
-
 	}
 
 /**
@@ -167,16 +164,12 @@ class BbsesController extends BbsesAppController {
 				//bbsテーブルデータ作成とkey格納
 				$bbs = $this->Bbs->create(['key' => Security::hash('bbs' . mt_rand() . microtime(), 'md5')]);
 				$bbs['Bbs']['block_id'] = 0;
-
-				//Todo:デフォルト値が文字列で判断されるがどうにかならないか？
 				$bbs['Bbs']['post_create_authority'] = ($bbs['Bbs']['post_create_authority'] === '1') ? true : false;
 				$bbs['Bbs']['post_publish_authority'] = ($bbs['Bbs']['post_publish_authority'] === '1') ? true : false;
 				$bbs['Bbs']['comment_create_authority'] = ($bbs['Bbs']['comment_create_authority'] === '1') ? true : false;
 			}
 
 			$bbs['Bbs']['name'] = $data['Bbs']['name'];
-
-			//Todo:デフォルト値が文字列で判断されるがどうにかならないか？
 			$bbs['Bbs']['use_comment'] = ($data['Bbs']['use_comment'] === '1') ? true : false;
 			$bbs['Bbs']['auto_approval'] = ($data['Bbs']['auto_approval'] === '1') ? true : false;
 			$bbs['Bbs']['use_like_button'] = ($data['Bbs']['use_like_button'] === '1') ? true : false;
@@ -200,7 +193,6 @@ class BbsesController extends BbsesAppController {
 			}
 			return;
 		}
-
 	}
 
 /**
@@ -216,7 +208,6 @@ class BbsesController extends BbsesAppController {
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
 		);
 		$this->set($results);
-
 	}
 
 /**
@@ -254,6 +245,10 @@ class BbsesController extends BbsesAppController {
 /**
  * __setPost method
  *
+ * @param int $currentPage currentPage
+ * @param int $sortParams sortParameter
+ * @param int $visiblePostRow visiblePostRow
+ * @param int $narrowDownParams narrowDownParameter
  * @return void
  */
 	private function __setPost($currentPage, $sortParams, $visiblePostRow, $narrowDownParams) {
@@ -287,9 +282,18 @@ class BbsesController extends BbsesAppController {
 			//記事を$results['bbsPosts']にセット
 			foreach ($bbsPosts as $bbsPost) {
 
+				//いいね・よくないねを取得
+				$likes = $this->BbsPostsUser->getLikes(
+							$bbsPost['BbsPost']['id'],
+							$this->viewVars['userId']
+						);
+
+				$bbsPost['BbsPost']['likesNum'] = $likes['likesNum'];
+				$bbsPost['BbsPost']['unlikesNum'] = $likes['unlikesNum'];
+
 				//未読or既読セット
 				//$readStatus true:read, false:not read
-				$readStatus = $this->BbsPostsUser->getReadPostStatus(
+				$readStatus = $this->BbsPostsUser->getPostsUsers(
 									$bbsPost['BbsPost']['id'],
 									$this->viewVars['userId']
 								);
@@ -301,7 +305,11 @@ class BbsesController extends BbsesAppController {
 
 				} else {
 					//公開データ以外を含めたコメント数をセット
-					$bbsPost['BbsPost']['all_comment_num'] = $this->__setCommentNum($bbsPost['BbsPost']);
+					$bbsPost['BbsPost']['allCommentNum'] =
+							$this->__setCommentNum(
+								$bbsPost['BbsPost']['lft'],
+								$bbsPost['BbsPost']['rght']
+						);
 
 					//記事データを配列にセット
 					$results['bbsPosts'][] = $bbsPost['BbsPost'];
@@ -370,47 +378,45 @@ class BbsesController extends BbsesAppController {
 		$hasNextSecondPage = (empty($nextSecondPosts))? false : true;
 		$this->set('hasNextSecondPage', $hasNextSecondPage);
 
-		//1,2ページの時のみ4,5ページがあるかどうか取得（モックとしてとりあえず）
-		//if ($currentPage === 1 || $currentPage === 2) {
-			//4ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['userId'],
-					$this->viewVars['contentEditable'],
-					$this->viewVars['contentCreatable'],
-					$sortOrder,			//order by指定
-					$visiblePostRow,	//limit指定
-					4,					//4ページ先の番号指定
-					$conditions
-				);
-			$hasFourPage = (empty($posts))? false : true;
-			$this->set('hasFourPage', $hasFourPage);
+		//4ページがあるか取得（モックとしてとりあえず）
+		$posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visiblePostRow,	//limit指定
+				4,					//4ページ先の番号指定
+				$conditions
+			);
+		$hasFourPage = (empty($posts))? false : true;
+		$this->set('hasFourPage', $hasFourPage);
 
-			//5ページがあるか取得（モックとしてとりあえず）
-			$posts = $this->BbsPost->getPosts(
-					$this->viewVars['userId'],
-					$this->viewVars['contentEditable'],
-					$this->viewVars['contentCreatable'],
-					$sortOrder,			//order by指定
-					$visiblePostRow,	//limit指定
-					5,					//5ページ先の番号指定
-					$conditions
-				);
-			$hasFivePage = (empty($posts))? false : true;
-			$this->set('hasFivePage', $hasFivePage);
-		//}
+		//5ページがあるか取得（モックとしてとりあえず）
+		$posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visiblePostRow,	//limit指定
+				5,					//5ページ先の番号指定
+				$conditions
+			);
+		$hasFivePage = (empty($posts))? false : true;
+		$this->set('hasFivePage', $hasFivePage);
 	}
 
 /**
  * __setCommentNum method
  *
- * @param $bbsPost
+ * @param int $lft bbsPosts.lft
+ * @param int $rght bbsPosts.rght
  * @return string order for search
  */
-	private function __setCommentNum($bbsPost) {
+	private function __setCommentNum($lft, $rght) {
 		//検索条件をセット
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
-		$conditions['and']['lft >'] = $bbsPost['lft'];
-		$conditions['and']['rght <'] = $bbsPost['rght'];
+		$conditions['and']['lft >'] = $lft;
+		$conditions['and']['rght <'] = $rght;
 
 		//公開データ以外も含めたコメント数を取得
 		$bbsCommnets = $this->BbsPost->getPosts(
@@ -427,9 +433,8 @@ class BbsesController extends BbsesAppController {
 	}
 
 /**
- * __setCommentNum method
+ * __setPostNum method
  *
- * @param $bbsPost
  * @return string order for search
  */
 	private function __setPostNum() {
@@ -448,7 +453,6 @@ class BbsesController extends BbsesAppController {
 
 		$results['postNum'] = count($bbsPosts);
 		$this->set($results);
-		return;
 	}
 
 /**
