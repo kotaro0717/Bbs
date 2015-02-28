@@ -1,6 +1,6 @@
 NetCommonsApp.controller('Bbses',
-  function($scope, NetCommonsBase, NetCommonsWysiwyg,
-           NetCommonsTab, NetCommonsUser) {
+    function($scope, NetCommonsBase, NetCommonsWysiwyg,
+            NetCommonsTab, NetCommonsUser) {
 
       $scope.tab = NetCommonsTab.new();
 
@@ -31,8 +31,8 @@ NetCommonsApp.controller('Bbses',
     });
 
 NetCommonsApp.controller('BbsPost',
-  function($scope, NetCommonsBase, NetCommonsWysiwyg,
-           NetCommonsTab, NetCommonsUser) {
+    function($scope, NetCommonsBase, NetCommonsWysiwyg,
+            NetCommonsTab, NetCommonsUser) {
 
       $scope.tab = NetCommonsTab.new();
 
@@ -49,8 +49,8 @@ NetCommonsApp.controller('BbsPost',
     });
 
 NetCommonsApp.controller('BbsComment',
-  function($scope, NetCommonsBase, NetCommonsWysiwyg,
-           NetCommonsTab, NetCommonsUser) {
+    function($scope, NetCommonsBase, NetCommonsWysiwyg,
+            NetCommonsTab, NetCommonsUser) {
 
       $scope.tab = NetCommonsTab.new();
 
@@ -68,15 +68,15 @@ NetCommonsApp.controller('BbsComment',
 
         //引用するONの場合、データをセット
         if (quotFlag === '1') {
-           //引用文に加工する
-           $scope.bbsComments['title'] = 'Re:' + $scope.bbsPosts['title'];
-           $scope.bbsComments['content'] = $scope.bbsPosts['content'];
+          //引用文に加工する
+          $scope.bbsComments['title'] = 'Re:' + $scope.bbsPosts['title'];
+          $scope.bbsComments['content'] = $scope.bbsPosts['content'];
         }
       };
     });
 
 NetCommonsApp.controller('BbsEdit',
-  function($scope, NetCommonsBase, NetCommonsTab) {
+    function($scope, NetCommonsBase, NetCommonsTab) {
 
       $scope.tab = NetCommonsTab.new();
 
@@ -96,7 +96,7 @@ NetCommonsApp.controller('BbsEdit',
     });
 
 NetCommonsApp.controller('BbsFrameSettings',
-  function($scope, NetCommonsBase, NetCommonsTab) {
+    function($scope, NetCommonsBase, NetCommonsTab) {
 
       $scope.tab = NetCommonsTab.new();
 
@@ -116,7 +116,7 @@ NetCommonsApp.controller('BbsFrameSettings',
     });
 
 NetCommonsApp.controller('BbsAuthoritySettings',
-  function($scope, NetCommonsBase, NetCommonsTab) {
+    function($scope, NetCommonsBase, NetCommonsTab) {
 
       $scope.tab = NetCommonsTab.new();
 
