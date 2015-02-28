@@ -29,6 +29,249 @@ class BbsesAppController extends AppController {
 	);
 
 /**
+ * Parse content status from request
+ *
+ * @throws BadRequestException
+ * @return mixed status on success, false on error
+ */
+	public function parseStatus() {
+		if ($matches = preg_grep('/^save_\d/', array_keys($this->data))) {
+			list(, $status) = explode('_', array_shift($matches));
+		} else {
+			if ($this->request->is('ajax')) {
+				$this->renderJson(
+					['error' => ['validationErrors' => ['status' => __d('net_commons', 'Invalid request.')]]],
+					__d('net_commons', 'Bad Request'), 400
+				);
+			} else {
+				throw new BadRequestException(__d('net_commons', 'Bad Request'));
+			}
+			return false;
+		}
+		return $status;
+	}
+
+/**
+ * Handle validation error
+ *
+ * @param array $errors validation errors
+ * @return bool true on success, false on error
+ */
+	public function handleValidationError($errors) {
+		if (is_array($errors)) {
+			$this->validationErrors = $errors;
+			if ($this->request->is('ajax')) {
+				$results = ['error' => ['validationErrors' => $errors]];
+				$this->renderJson($results, __d('net_commons', 'Bad Request'), 400);
+			}
+			return false;
+		}
+		return true;
+	}
+
+/**
+ * setBbsSetting method
+ *
+ * @param int $currentPage currentPage
+ * @param int $sortParams sortParameter
+ * @param int $visibleRow visibleRow
+ * @param int $narrowDownParams narrowDownParameter
+ * @return void
+ */
+	public function initParams($currentPage = '', $sortParams = '', $visibleRow = '', $narrowDownParams = '') {
+		$baseUrl = Inflector::variable($this->plugin) . '/' .
+				Inflector::variable($this->name) . '/' . $this->action;
+		$this->set('baseUrl', $baseUrl);
+
+		//現在の一覧表示ページ番号をセット
+		$currentPage = ($currentPage === '')? 1: (int)$currentPage;
+		$this->set('currentPage', $currentPage);
+
+		//現在のソートパラメータをセット
+		$sortParams = ($sortParams === '')? '1': $sortParams;
+		$this->set('sortParams', $sortParams);
+
+		//表示件数をセット
+		$visibleRow =
+			($visibleRow === '')? $this->viewVars['bbsSettings']['visible_comment_row'] : $visibleRow;
+		$this->set('currentVisibleRow', $visibleRow);
+
+		//現在の絞り込みをセット
+		$narrowDownParams = ($narrowDownParams === '')? '6' : $narrowDownParams;
+		$this->set('narrowDownParams', $narrowDownParams);
+	}
+
+/**
+ * setBbsSetting method
+ *
+ * @return void
+ */
+	public function setBbsSetting() {
+		//掲示板の表示設定情報を取得
+		$bbsSettings = $this->BbsFrameSetting->getBbsSetting(
+										$this->viewVars['frameKey']);
+		$results = array(
+			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
+		);
+		$this->set($results);
+	}
+
+/**
+ * setBbs method
+ *
+ * @return void
+ */
+	public function setBbs() {
+		//ログインユーザIDを取得し、Viewにセット
+		$this->set('userId', $this->Session->read('Auth.User.id'));
+
+		//掲示板データを取得
+		$bbses = $this->Bbs->getBbs(
+				$this->viewVars['blockId']
+			);
+
+		$this->set(array(
+			'bbses' => $bbses['Bbs']
+		));
+	}
+
+/**
+ * setComment method
+ *
+ * @param int $postId bbsPosts.id
+ * @param int $currentPage currentPage
+ * @param int $sortParams sortParameter
+ * @param int $visibleRow visibleRow
+ * @param int $narrowDownParams narrowDownParameter
+ * @param array $conditions condition for search
+ * @return void
+ */
+	public function setComment($postId, $currentPage, $sortParams,
+								$visibleRow, $narrowDownParams, $conditions) {
+		//ソート条件をセット
+		$sortOrder = $this->setSortOrder($sortParams);
+
+		//絞り込み条件をセット
+		$conditions[] = $this->setNarrowDown($narrowDownParams);
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+
+		$bbsCommnets = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visibleRow,		//limit指定
+				$currentPage,		//ページ番号指定
+				$conditions
+			);
+
+		//コメントなしの場合
+		if (empty($bbsCommnets)) {
+			$this->set('bbsComments', false);
+			return;
+		}
+
+		foreach ($bbsCommnets as $bbsComment) {
+			//いいね・よくないねを取得
+			$likes = $this->BbsPostsUser->getLikes(
+						$bbsComment['BbsPost']['id'],
+						$this->viewVars['userId']
+					);
+
+			//取得した記事の作成者IDからユーザ情報を取得
+			$user = $this->User->find('first', array(
+					'recursive' => -1,
+					'conditions' => array(
+						'id' => $bbsComment['BbsPost']['created_user'],
+					)
+				)
+			);
+			//取得した記事の配列にユーザ名を追加
+			$bbsComment['BbsPost']['username'] = $user['User']['username'];
+			$bbsComment['BbsPost']['userId'] = $user['User']['id'];
+			$bbsComment['BbsPost']['likesNum'] = $likes['likesNum'];
+			$bbsComment['BbsPost']['unlikesNum'] = $likes['unlikesNum'];
+			$bbsComment['BbsPost']['likesFlag'] = $likes['likesFlag'];
+			$bbsComment['BbsPost']['unlikesFlag'] = $likes['unlikesFlag'];
+
+			$results[] = $bbsComment['BbsPost'];
+		}
+		$this->set('bbsComments', $results);
+
+		//前のページがあるか取得
+		if ($currentPage === 1) {
+			$this->set('hasPrevPage', false);
+		} else {
+			$prevPage = $currentPage - 1;
+			$prevPosts = $this->BbsPost->getPosts(
+					$this->viewVars['userId'],
+					$this->viewVars['contentEditable'],
+					$this->viewVars['contentCreatable'],
+					$sortOrder,			//order by指定
+					$visibleRow,		//limit指定
+					$prevPage,			//前のページ番号指定
+					$conditions
+				);
+			$hasPrevPage = (empty($prevPosts))? false : true;
+			$this->set('hasPrevPage', $hasPrevPage);
+		}
+
+		//次のページがあるか取得
+		$nextPage = $currentPage + 1;
+		$nextPosts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visibleRow,		//limit指定
+				$nextPage,			//次のページ番号指定
+				$conditions
+			);
+		$hasNextPage = (empty($nextPosts))? false : true;
+		$this->set('hasNextPage', $hasNextPage);
+
+		//2ページ先のページがあるか取得
+		$nextSecondPage = $currentPage + 2;
+		$nextSecondPosts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visibleRow,		//limit指定
+				$nextSecondPage,	//2ページ先の番号指定
+				$conditions
+			);
+		$hasNextSecondPage = (empty($nextSecondPosts))? false : true;
+		$this->set('hasNextSecondPage', $hasNextSecondPage);
+
+		//4ページがあるか取得（モックとしてとりあえず）
+		$posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visibleRow,		//limit指定
+				4,					//4ページ先の番号指定
+				$conditions
+			);
+		$hasFourPage = (empty($posts))? false : true;
+		$this->set('hasFourPage', $hasFourPage);
+
+		//5ページがあるか取得（モックとしてとりあえず）
+		$posts = $this->BbsPost->getPosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$sortOrder,			//order by指定
+				$visibleRow,		//limit指定
+				5,					//5ページ先の番号指定
+				$conditions
+			);
+		$hasFivePage = (empty($posts))? false : true;
+		$this->set('hasFivePage', $hasFivePage);
+	}
+
+/**
  * setCommentNum method
  *
  * @param int $lft bbsPosts.lft
