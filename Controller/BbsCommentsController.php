@@ -39,6 +39,7 @@ class BbsCommentsController extends BbsesAppController {
 		'Bbses.BbsFrameSetting',
 		'Bbses.BbsPost',
 		'Bbses.BbsPostsUser',
+		'Comments.Comment',
 	);
 
 /**
@@ -77,10 +78,15 @@ class BbsCommentsController extends BbsesAppController {
  * @param int $sortParams sortParameter
  * @param int $visibleRow visibleRow
  * @param int $narrowDownParams narrowDownParameter
+ * @throws BadRequestException throw new
  * @return void
  */
-	public function view($frameId, $postId, $commentId, $currentPage = '',
+	public function view($frameId, $postId = '', $commentId = '', $currentPage = '',
 				$sortParams = '', $visibleRow = '', $narrowDownParams = '') {
+		if (! $postId || ! $commentId) {
+			BadRequestException(__d('net_commons', 'Bad Request'));
+		}
+
 		if ($this->request->isGet()) {
 			CakeSession::write('backUrl', $this->request->referer());
 		}
@@ -152,18 +158,18 @@ class BbsCommentsController extends BbsesAppController {
 			);
 
 			//新規登録のため、データ生成
-			$bbsComment = $this->BbsPost->create(['key' => Security::hash('bbsPost' . mt_rand() . microtime(), 'md5')]);
+			$comment = $this->BbsPost->create(['key' => Security::hash('bbsPost' . mt_rand() . microtime(), 'md5')]);
 			//初期化
-			$bbsComment['BbsPost']['bbs_key'] = $data['Bbs']['key'];
-			$data = Hash::merge($bbsComment, $data);
+			$comment['BbsPost']['bbs_key'] = $data['Bbs']['key'];
+			$data = Hash::merge($comment, $data);
 
-			if (!$bbsComment = $this->BbsPost->savePost($data)) {
+			if (!$comment = $this->BbsPost->saveComment($data)) {
 				if (!$this->handleValidationError($this->BbsPost->validationErrors)) {
 					return;
 				}
 			}
 
-			//親記事のコメント数の更新処理(公開中のコメント数のみカウントする)
+			//親記事のコメント数の更新処理(公開中のコメント数のみカウント)
 			//親記事(lft,rghtカラム)取得
 			$conditions['bbs_key'] = $data['Bbs']['key'];
 			$conditions['id'] = $parentId;
@@ -180,7 +186,7 @@ class BbsCommentsController extends BbsesAppController {
 			$conditions['bbs_key'] = $parentPosts['BbsPost']['bbs_key'];
 			$conditions['and']['lft >'] = $parentPosts['BbsPost']['lft'];
 			$conditions['and']['rght <'] = $parentPosts['BbsPost']['rght'];
-			$comments = $this->BbsPost->getPosts(
+			$bbsComments = $this->BbsPost->getPosts(
 					$this->viewVars['userId'],
 					false,
 					false,
@@ -190,9 +196,10 @@ class BbsCommentsController extends BbsesAppController {
 					$conditions
 				);
 
-			$parentPosts['BbsPost']['comment_num'] = count($comments);
+			$parentPosts['BbsPost']['comment_num'] = count($bbsComments);
 			$parentPosts['Bbs']['key'] = $data['Bbs']['key'];
-			if (!$bbsComment = $this->BbsPost->savePost($parentPosts)) {
+			$parentPosts['Comment']['comment'] = '';
+			if (! $bbsComment = $this->BbsPost->savePost($parentPosts)) {
 				if (!$this->handleValidationError($this->BbsPost->validationErrors)) {
 					return;
 				}
@@ -203,6 +210,67 @@ class BbsCommentsController extends BbsesAppController {
 				CakeSession::delete('backUrl');
 				$this->redirect($backUrl);
 			}
+			return;
+		}
+	}
+
+/**
+ * edit method
+ *
+ * @param int $frameId frames.id
+ * @param int $postId bbsPosts.id
+ * @return void
+ */
+	public function edit($frameId, $postId) {
+		//掲示板名を取得
+		$this->setBbs();
+
+		//編集する記事を取得
+		$this->__setPost($postId);
+
+		if ($this->request->isGet()) {
+			CakeSession::write('backUrl', $this->request->referer());
+		}
+
+		if ($this->request->isPost()) {
+			if (!$status = $this->parseStatus()) {
+				return;
+			}
+
+			$data = Hash::merge(
+				$this->data,
+				['BbsPost' => ['status' => $status]]
+			);
+
+			//編集データ取得
+			$conditions['bbs_key'] = $data['Bbs']['key'];
+			$conditions['id'] = $postId;
+			$comments = $this->BbsPost->getOnePosts(
+					$this->viewVars['userId'],
+					$this->viewVars['contentEditable'],
+					$this->viewVars['contentCreatable'],
+					$conditions
+				);
+
+			//更新時間をセット
+			$comments['BbsPost']['modified'] = date('Y-m-d H:i:s');
+			$data = Hash::merge($comments, $data);
+
+			//UPDATE
+			$data['BbsPost']['id'] = $comments['BbsPost']['id'];
+
+			if (!$comments = $this->BbsPost->saveComment($data)) {
+				if (!$this->handleValidationError($this->BbsPost->validationErrors)) {
+					return;
+				}
+			}
+
+			if (!$this->request->is('ajax')) {
+				$backUrl = CakeSession::read('backUrl');
+				CakeSession::delete('backUrl');
+				$this->redirect($backUrl);
+			}
+			return;
 		}
 	}
 

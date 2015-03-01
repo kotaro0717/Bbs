@@ -36,12 +36,21 @@
 
 	<div class="panel panel-default">
 		<div class="panel-body has-feedback">
+
 			<?php echo $this->element('BbsPosts/post_form'); ?>
+
+			<hr />
+
+			<?php echo $this->element('Comments.form'); ?>
+
 		</div>
 		<div class="panel-footer text-center">
+
 			<?php echo $this->element('Bbses.post_workflow_buttons'); ?>
+
 		</div>
 	</div>
+	<?php echo $this->element('Comments.index'); ?>
 
 <?php echo $this->Form->end(); ?>
 </div>

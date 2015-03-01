@@ -30,6 +30,7 @@ class BbsPostsController extends BbsesAppController {
 		'Bbses.BbsFrameSetting',
 		'Bbses.BbsPost',
 		'Bbses.BbsPostsUser',
+		'Comments.Comment',
 	);
 
 /**
@@ -67,10 +68,15 @@ class BbsPostsController extends BbsesAppController {
  * @param int $sortParams sortParameter
  * @param int $visibleRow visibleRow
  * @param int $narrowDownParams narrowDownParameter
+ * @throws BadRequestException throw new
  * @return void
  */
-	public function view($frameId, $postId, $currentPage = '', $sortParams = '',
+	public function view($frameId, $postId = '', $currentPage = '', $sortParams = '',
 							$visibleRow = '', $narrowDownParams = '') {
+		if (! $postId) {
+			BadRequestException(__d('net_commons', 'Bad Request'));
+		}
+
 		if ($this->request->isGet()) {
 			CakeSession::write('backUrl', $this->request->referer());
 		}
@@ -333,10 +339,16 @@ class BbsPostsController extends BbsesAppController {
 		//新規の記事名称
 		$bbsPosts['BbsPost']['title'] = '新規記事_' . date('YmdHis');
 
-		$results = array(
-				'bbsPosts' => $bbsPosts['BbsPost'],
-				'contentStatus' => null,
-			);
+		$comments = $this->Comment->getComments(
+			array(
+				'plugin_key' => 'bbsPosts',
+				'content_key' => isset($bbsPosts['BbsPost']['key']) ? $bbsPosts['BbsPost']['key'] : null,
+			)
+		);
+		$results['comments'] = $comments;
+		$results = $this->camelizeKeyRecursive($results);
+		$results['bbsPosts'] = $bbsPosts['BbsPost'];
+		$results['contentStatus'] = null;
 		$this->set($results);
 	}
 
@@ -376,10 +388,16 @@ class BbsPostsController extends BbsesAppController {
 					$this->viewVars['userId']
 				);
 
-		$results = array(
-			'bbsPosts' => $bbsPosts['BbsPost'],
-			'contentStatus' => $bbsPosts['BbsPost']['status'],
+		$comments = $this->Comment->getComments(
+			array(
+				'plugin_key' => 'bbsPosts',
+				'content_key' => isset($bbsPosts['BbsPost']['key']) ? $bbsPosts['BbsPost']['key'] : null,
+			)
 		);
+		$results['comments'] = $comments;
+		$results = $this->camelizeKeyRecursive($results);
+		$results['bbsPosts'] = $bbsPosts['BbsPost'];
+		$results['contentStatus'] = $bbsPosts['BbsPost']['status'];
 
 		//ユーザ名、ID、いいね、よくないねをセット
 		$results['bbsPosts']['username'] = $user['User']['username'];

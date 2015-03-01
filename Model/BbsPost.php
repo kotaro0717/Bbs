@@ -29,6 +29,7 @@ class BbsPost extends BbsesAppModel {
  * @var array
  */
 	public $actsAs = array(
+		'NetCommons.Publishable',
 		'Tree',
 	);
 
@@ -198,6 +199,7 @@ class BbsPost extends BbsesAppModel {
 	public function savePost($data) {
 		$this->loadModels([
 			'BbsPost' => 'Bbses.BbsPost',
+			'Comment' => 'Comments.Comment',
 		]);
 
 		//トランザクションBegin
@@ -207,10 +209,25 @@ class BbsPost extends BbsesAppModel {
 			if (!$this->validatePost($data)) {
 				return false;
 			}
+			if (!$this->Comment->validateByStatus($data, array('caller' => $this->name))) {
+				$this->validationErrors = Hash::merge($this->validationErrors, $this->Comment->validationErrors);
+				return false;
+			}
 
 			$bbsPost = $this->save(null, false);
 			if (!$bbsPost) {
+				// @codeCoverageIgnoreStart
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+				// @codeCoverageIgnoreEnd
+			}
+
+			//コメントの登録
+			if ($this->Comment->data) {
+				if (! $this->Comment->save(null, false)) {
+					// @codeCoverageIgnoreStart
+					throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+					// @codeCoverageIgnoreEnd
+				}
 			}
 			//トランザクションCommit
 			$dataSource->commit();
@@ -222,6 +239,45 @@ class BbsPost extends BbsesAppModel {
 			throw $ex;
 		}
 		return $bbsPost;
+	}
+
+/**
+ * save posts
+ *
+ * @param array $data received post data
+ * @return mixed On success Model::$data if its not empty or true, false on failure
+ * @throws InternalErrorException
+ */
+	public function saveComment($data) {
+		$this->loadModels([
+			'BbsPost' => 'Bbses.BbsPost',
+		]);
+
+		//トランザクションBegin
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+		try {
+			if (!$this->validatePost($data)) {
+				return false;
+			}
+
+			$comments = $this->save(null, false);
+			if (! $comments) {
+				// @codeCoverageIgnoreStart
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+				// @codeCoverageIgnoreEnd
+			}
+
+			//トランザクションCommit
+			$dataSource->commit();
+		} catch (Exception $ex) {
+			//トランザクションRollback
+			$dataSource->rollback();
+			//エラー出力
+			CakeLog::write(LOG_ERR, $ex);
+			throw $ex;
+		}
+		return $comments;
 	}
 
 /**
@@ -246,7 +302,7 @@ class BbsPost extends BbsesAppModel {
 	private function __setDateTime($bbsPosts, $isArray) {
 		$today = date("Y-m-d");
 		$year = date("Y");
-		$i = 0;
+		$index = 0;
 		//再フォーマット
 		foreach ($bbsPosts as $post) {
 			$date = $post['BbsPost']['created'];
@@ -257,15 +313,15 @@ class BbsPost extends BbsesAppModel {
 			//変換
 			if ($today === $createdDay) {
 				//今日
-				$bbsPosts[$i]['BbsPost']['createTime'] = date('G:i', strtotime($date));
+				$bbsPosts[$index]['BbsPost']['createTime'] = date('G:i', strtotime($date));
 			} elseif ($year !== $createdYear) {
 				//昨年以前
-				$bbsPosts[$i]['BbsPost']['createTime'] = date('Y/m/d', strtotime($date));
+				$bbsPosts[$index]['BbsPost']['createTime'] = date('Y/m/d', strtotime($date));
 			} elseif ($today > $createdDay) {
 				//今日より前 かつ 今年
-				$bbsPosts[$i]['BbsPost']['createTime'] = date('m/d', strtotime($date));
+				$bbsPosts[$index]['BbsPost']['createTime'] = date('m/d', strtotime($date));
 			}
-			$i++;
+			$index++;
 		}
 		if ($isArray) {
 			return $bbsPosts;

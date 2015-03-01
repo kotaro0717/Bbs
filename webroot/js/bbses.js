@@ -32,13 +32,15 @@ NetCommonsApp.controller('Bbses',
 
 NetCommonsApp.controller('BbsPost',
     function($scope, NetCommonsBase, NetCommonsWysiwyg,
-            NetCommonsTab, NetCommonsUser) {
+            NetCommonsTab, NetCommonsUser, NetCommonsWorkflow) {
 
       $scope.tab = NetCommonsTab.new();
 
       $scope.user = NetCommonsUser.new();
 
       $scope.tinymce = NetCommonsWysiwyg.new();
+
+      $scope.workflow = NetCommonsWorkflow.new($scope);
 
       $scope.serverValidationClear = NetCommonsBase.serverValidationClear;
 

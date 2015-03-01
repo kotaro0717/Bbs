@@ -25,7 +25,7 @@
 	</span>
 
 	<!-- NetCommonsBlockComponent::STATUS_DISAPPROVED = '5' -->
-	<span class="label label-danger"
+	<span class="label label-warning"
 			ng-switch-when="<?php echo '5' ?>">
 		<?php echo __d('bbses', 'Disapproval'); ?>
 	</span>

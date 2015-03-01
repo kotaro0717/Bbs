@@ -457,7 +457,7 @@
 				<!-- 編集 -->
 				<span class="text-left" style="float:right;">
 					<a href="<?php echo $this->Html->url(
-							'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $bbsCurrentComments['id']); ?>"
+							'/bbses/bbsComments/edit' . '/' . $frameId . '/' . $bbsCurrentComments['id']); ?>"
 							class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
 							<span class="glyphicon glyphicon-edit"></span>
 					</a>
@@ -668,7 +668,7 @@
 							<!-- 編集 -->
 							<span class="text-left" style="float:right;">
 								<a href="<?php echo $this->Html->url(
-										'/bbses/bbsPosts/edit' . '/' . $frameId . '/' . $comment['id']); ?>"
+										'/bbses/bbsComments/edit' . '/' . $frameId . '/' . $comment['id']); ?>"
 										class="btn btn-primary btn-xs" tooltip="<?php echo __d('bbses', 'Edit'); ?>">
 										<span class="glyphicon glyphicon-edit"></span>
 								</a>
