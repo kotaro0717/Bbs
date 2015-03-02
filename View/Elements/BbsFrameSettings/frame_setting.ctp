@@ -9,8 +9,8 @@
 					'type' => 'select',
 					'class' => 'form-control',
 					'options' => BbsFrameSetting::getDisplayNumberOptions(),
-					'selected' => $dataForView['bbsSettings']['visiblePostRow'],
-					'ng-model' => 'bbses.bbsSettings.visiblePostRow',
+					'selected' => $bbsSettings['visible_post_row'],
+					'ng-model' => 'bbsSettings.visible_post_row',
 					'autofocus' => true,
 				)
 			);
@@ -28,8 +28,8 @@
 					'type' => 'select',
 					'class' => 'form-control',
 					'options' => BbsFrameSetting::getDisplayNumberOptions(),
-					'selected' => $dataForView['bbsSettings']['visibleCommentRow'],
-					'ng-model' => 'bbses.bbsSettings.visibleCommentRow',
+					'selected' => $bbsSettings['visible_comment_row'],
+					'ng-model' => 'bbsSettings.visible_comment_row',
 				)
 			);
 	?>

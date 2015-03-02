@@ -82,22 +82,21 @@
 		</li>
 		<li>
 		<?php
-			echo $this->Form->input('', array(
+			echo $this->Form->input('Bbs.editor_publish_authority', array(
 						'label' => __d('bbses', 'Editor'),
 						'div' => false,
 						'type' => 'checkbox',
-						//'checked' => true,
-						//'disabled' => true
+						'ng-model' => 'bbses.editor_publish_authority',
 				));
 		?>
 		</li>
 		<li>
 		<?php
-			echo $this->Form->input('Bbs.post_publish_authority', array(
+			echo $this->Form->input('Bbs.general_publish_authority', array(
 						'label' => __d('bbses', 'General'),
 						'div' => false,
 						'type' => 'checkbox',
-						'ng-model' => 'bbses.post_publish_authority',
+						'ng-model' => 'bbses.general_publish_authority',
 					)
 				);
 		?>

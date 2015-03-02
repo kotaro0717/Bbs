@@ -2,9 +2,9 @@
 	<ul class="pagination">
 
 		<!-- [<<]の表示 -->
-		<li class="<?php echo ($currentPage < 4)? 'disabled' : ''; ?>">
+		<li class="<?php echo ($currentPage < 2)? 'disabled' : ''; ?>">
 			<?php $prevPager = $currentPage - 1 ?>
-			<a href="<?php echo ($currentPage < 4)? '' : $this->Html->url(
+			<a href="<?php echo ($currentPage < 2)? '' : $this->Html->url(
 					'/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $prevPager . '/' . $sortParams . '/' . $currentVisibleRow . '/' . $narrowDownParams); ?>"
 				aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
 		</li>

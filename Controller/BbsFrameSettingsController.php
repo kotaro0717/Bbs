@@ -61,70 +61,41 @@ class BbsFrameSettingsController extends BbsesAppController {
  * @return void
  */
 	public function edit() {
-		$this->__setBbsSetting();
-
-		if ($this->request->isPost()) {
-			$data = $this->data;
-
-			if (!$bbsSetting = $this->BbsFrameSetting->getBbsSetting(
-				isset($this->data['Frame']['key']) ? $this->data['Frame']['key'] : null
-			)) {
-				//bbsFrameSettingテーブルデータ生成
-				$bbsSetting = $this->BbsFrameSetting->create();
-			}
-
-			//作成時間,更新時間を再セット
-			unset($bbsSetting['BbsFrameSetting']['created'], $bbsSetting['BbsFrameSetting']['modified']);
-			$data = Hash::merge($bbsSetting, $data);
-
-			if (!$bbsSetting = $this->BbsFrameSetting->saveBbsSetting($data)) {
-				if (!$this->__handleValidationError($this->BbsFrameSetting->validationErrors)) {
-					return;
-				}
-			}
-
-			$this->set('frameKey', $bbsSetting['BbsFrameSetting']['frame_key']);
-			if (!$this->request->is('ajax')) {
-				$backUrl = CakeSession::read('backUrl');
-				CakeSession::delete('backUrl');
-				$this->redirect($backUrl);
-			}
-			return;
-		}
-	}
-
-/**
- * __initBbs method
- *
- * @return void
- */
-	private function __setBbsSetting() {
 		//掲示板の表示設定情報を取得
 		$bbsSettings = $this->BbsFrameSetting->getBbsSetting(
 										$this->viewVars['frameKey']);
-
 		$results = array(
 			'bbsSettings' => $bbsSettings['BbsFrameSetting'],
 		);
 		$this->set($results);
-	}
 
-/**
- * Handle validation error
- *
- * @param array $errors validation errors
- * @return bool true on success, false on error
- */
-	private function __handleValidationError($errors) {
-		if (is_array($errors)) {
-			$this->validationErrors = $errors;
-			if ($this->request->is('ajax')) {
-				$results = ['error' => ['validationErrors' => $errors]];
-				$this->renderJson($results, __d('net_commons', 'Bad Request'), 400);
-			}
-			return false;
+		if (! $this->request->isPost()) {
+			return;
 		}
-		return true;
-	}
 
+		$data = $this->data;
+
+		if (! $bbsSetting = $this->BbsFrameSetting->getBbsSetting(
+			isset($data['Frame']['key']) ? $data['Frame']['key'] : null
+		)) {
+			//bbsFrameSettingテーブルデータ生成
+			$bbsSetting = $this->BbsFrameSetting->create();
+		}
+
+		//作成時間,更新時間を再セット
+		unset($bbsSetting['BbsFrameSetting']['created'], $bbsSetting['BbsFrameSetting']['modified']);
+		$data = Hash::merge($bbsSetting, $data);
+
+		if (! $bbsSetting = $this->BbsFrameSetting->saveBbsSetting($data)) {
+			if (! $this->handleValidationError($this->BbsFrameSetting->validationErrors)) {
+				return;
+			}
+		}
+
+		$this->set('frameKey', $bbsSetting['BbsFrameSetting']['frame_key']);
+
+		if (!$this->request->is('ajax')) {
+			$this->redirectBackUrl();
+		}
+	}
 }

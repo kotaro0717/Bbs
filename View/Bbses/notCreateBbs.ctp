@@ -9,5 +9,5 @@
 <?php endif; ?>
 
 <div class="text-left">
-	<?php echo __d('bbses', 'There are not published bbs now'); ?>
+	<?php echo __d('bbses', 'There are not published bbs'); ?>
 </div>

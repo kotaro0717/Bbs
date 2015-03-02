@@ -3,7 +3,7 @@
 
 <div id="nc-bbs-display-change-<?php echo (int)$frameId; ?>"
 		ng-controller="BbsFrameSettings"
-		ng-init="initialize(<?php echo h(json_encode($this->viewVars)); ?>)">
+		ng-init="initialize(<?php echo h(json_encode($bbsSettings)); ?>)">
 
 <?php $formName = 'BbsForm'; ?>
 

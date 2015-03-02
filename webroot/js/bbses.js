@@ -104,17 +104,9 @@ NetCommonsApp.controller('BbsFrameSettings',
 
       $scope.serverValidationClear = NetCommonsBase.serverValidationClear;
 
-      $scope.initialize = function(data) {
-        $scope.bbses = angular.copy(data);
-        console.debug($scope.bbses);
-        //編集データセット
-        //$scope.edit.data = angular.copy($scope.bbses.bbsPosts);
+      $scope.initialize = function(bbsSettings) {
+        $scope.bbsSettings = angular.copy(bbsSettings);
       };
-
-      $scope.save = function() {
-        console.debug(3);
-      };
-
     });
 
 NetCommonsApp.controller('BbsAuthoritySettings',

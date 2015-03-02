@@ -61,62 +61,66 @@ class BbsAuthoritySettingsController extends BbsesAppController {
  * @return void
  */
 	public function edit() {
-		$this->__setBbs();
+		$this->setBbs();
 
 		if (! $this->request->isPost()) {
 			return;
 		}
 
-		$data = $this->data;
-		if (! $bbs = $this->Bbs->getBbs(
-			isset($this->data['Block']['id']) ? (int)$this->data['Block']['id'] : null
-		)) {
-			//bbsテーブルデータ作成とkey格納
-			$bbs = $this->Bbs->create(['key' => Security::hash('bbs' . mt_rand() . microtime(), 'md5')]);
-		}
+		$blockId = isset($this->data['Block']['id']) ?
+					(int)$this->data['Block']['id'] : null;
 
-		//boolean値が文字列になっているため個別で格納し直し
-		$bbs['Bbs']['post_create_authority'] = ($data['Bbs']['post_create_authority'] === '1') ? true : false;
-		$bbs['Bbs']['post_publish_authority'] = ($data['Bbs']['post_publish_authority'] === '1') ? true : false;
-		$bbs['Bbs']['comment_create_authority'] = ($data['Bbs']['comment_create_authority'] === '1') ? true : false;
+		$data = $this->__setEditSaveData($this->data, $blockId);
 
-		//IDリセット
-		unset($data['Bbs']['id']);
-		$data = Hash::merge($data, $bbs);
-
-		if (!$bbs = $this->Bbs->saveBbs($data)) {
-			if (!$this->handleValidationError($this->Bbs->validationErrors)) {
+		if (! $this->Bbs->saveBbs($data)) {
+			if (! $this->handleValidationError($this->Bbs->validationErrors)) {
 				return;
 			}
 		}
 
-		if (!$this->request->is('ajax')) {
-			$backUrl = CakeSession::read('backUrl');
-			CakeSession::delete('backUrl');
-			$this->redirect($backUrl);
+		if (! $this->request->is('ajax')) {
+			$this->redirectBackUrl();
 		}
 	}
 
 /**
- * __initBbs method
+ * setEditSaveData
  *
- * @return void
+ * @param array $postData post data
+ * @param int $blockId blocks.id
+ * @return array
  */
-	private function __setBbs() {
-		//掲示板データを取得
-		if (! $bbses = $this->Bbs->getBbs(
-				$this->viewVars['blockId']
-			)
-		) {
-			$bbses = $this->Bbs->create();
-			$bbses['Bbs']['post_create_authority'] = ($bbses['Bbs']['post_create_authority'] === '1') ? true : false;
-			$bbses['Bbs']['post_publish_authority'] = ($bbses['Bbs']['post_publish_authority'] === '1') ? true : false;
-			$bbses['Bbs']['comment_create_authority'] = ($bbses['Bbs']['comment_create_authority'] === '1') ? true : false;
+	private function __setEditSaveData($postData, $blockId) {
+		if (! $bbs = $this->Bbs->getBbs($blockId)) {
+			//bbsテーブルデータ作成とkey格納
+			$bbs = $this->initBbs();
+
 		}
 
-		$this->set(array(
-			'bbses' => $bbses['Bbs']
-		));
+		$bbs = $this->__convertStringToBoolean($postData, $bbs);
+
+		$results = Hash::merge($postData, $bbs);
+
+		//IDリセット
+		unset($results['Bbs']['id']);
+
+		return $results;
 	}
 
+/**
+ * convertStringToBoolean
+ *
+ * @param array $postData post data
+ * @param array $bbs bbses
+ * @return array
+ */
+	private function __convertStringToBoolean($postData, $bbs) {
+		//boolean値が文字列になっているため個別で格納し直し
+		return $bbs['Bbs'] = array(
+			'post_create_authority' => ($postData['Bbs']['post_create_authority'] === '1') ? true : false,
+			'editor_publish_authority' => ($postData['Bbs']['editor_publish_authority'] === '1') ? true : false,
+			'general_publish_authority' => ($postData['Bbs']['general_publish_authority'] === '1') ? true : false,
+			'comment_create_authority' => ($postData['Bbs']['comment_create_authority'] === '1') ? true : false,
+		);
+	}
 }

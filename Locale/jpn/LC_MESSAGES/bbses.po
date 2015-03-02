@@ -1,80 +1,69 @@
 # LANGUAGE translation of CakePHP Application
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 #
+# fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-18 04:13+0000\n"
-"PO-Revision-Date: 2015-02-26 14:24+0900\n"
+"POT-Creation-Date: 2015-03-02 04:50+0000\n"
+"PO-Revision-Date: 2015-03-02 14:23+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: ja_JP\n"
 "X-Generator: Poedit 1.7.4\n"
+"Language: ja_JP\n"
 
-#: /Controller/BbsCommentsController.php:335
-#: /Controller/BbsPostsController.php:487 /View/BbsPosts/view.ctp:40
-#: /View/BbsPosts/viewForComment.ctp:32
-msgid "Latest comment order"
-msgstr "最新のコメント順"
-
-#: /Controller/BbsCommentsController.php:340
-#: /Controller/BbsPostsController.php:492 /View/BbsPosts/view.ctp:42
-#: /View/BbsPosts/viewForComment.ctp:34
-msgid "Older comment order"
-msgstr "古いコメント順"
-
-#: /Controller/BbsCommentsController.php:345
-#: /Controller/BbsPostsController.php:497 /Controller/BbsesController.php:374
-#: /View/BbsPosts/view.ctp:45 /View/BbsPosts/viewForComment.ctp:37
-#: /View/Bbses/view.ctp:60
-msgid "Status order"
-msgstr "ステータス順"
-
-#: /Controller/BbsPostsController.php:121 /View/Bbses/notCreatePost.ctp:6
-#: /View/Bbses/view.ctp:27
-msgid "Create post"
-msgstr "記事作成"
-
-#: /Controller/BbsPostsController.php:129
-msgid "Create comment"
-msgstr "コメント作成"
-
-#: /Controller/BbsPostsController.php:161 /View/BbsPosts/view.ctp:120;207
-#: /View/BbsPosts/viewForComment.ctp:108;176;241 /View/Bbses/view.ctp:155
-msgid "Edit"
-msgstr "編集"
-
-#: /Controller/BbsesController.php:354 /View/Bbses/view.ctp:50
+#: /Controller/BbsesAppController.php:328 /View/Bbses/view.ctp:102
 msgid "Latest post order"
 msgstr "最新の記事順"
 
-#: /Controller/BbsesController.php:359 /View/Bbses/view.ctp:52
+#: /Controller/BbsesAppController.php:334 /View/Bbses/view.ctp:108
 msgid "Older post order"
 msgstr "古い記事順"
 
-#: /Controller/BbsesController.php:364 /View/Bbses/view.ctp:55
-msgid "Do not read"
-msgstr "未読"
-
-#: /Controller/BbsesController.php:369 /View/Bbses/view.ctp:57
+#: /Controller/BbsesAppController.php:340 /View/Bbses/view.ctp:114
 msgid "Descending order of comments"
 msgstr "コメントの多い順"
 
-#: /Model/Bbs.php:115 /View/Elements/Bbses/edit.ctp:3
+#: /Controller/BbsesAppController.php:357 /View/BbsComments/view.ctp:57
+#: /View/BbsPosts/view.ctp:48 /View/Bbses/view.ctp:53
+msgid "Published"
+msgstr "公開中"
+
+#: /Controller/BbsesAppController.php:384 /View/Bbses/view.ctp:65
+#: /View/Elements/post_workflow_buttons.ctp:20
+#: /View/Elements/status_label.ctp:24
+msgid "Remand"
+msgstr "差し戻し"
+
+#: /Controller/BbsesAppController.php:393 /View/BbsComments/view.ctp:67
+#: /View/BbsPosts/view.ctp:54 /View/Elements/status_label.ctp:30
+msgid "Disapproval"
+msgstr "不承認"
+
+#: /Controller/BbsesAppController.php:403 /View/BbsComments/view.ctp:52
+#: /View/BbsPosts/view.ctp:45 /View/Bbses/view.ctp:41
+msgid "Display all posts"
+msgstr "全て表示"
+
+#: /Controller/BbsesAppController.php:409 /View/Bbses/view.ctp:47
+msgid "Unread"
+msgstr "未読"
+
+#: /Model/Bbs.php:103 /View/Elements/Bbses/edit.ctp:3
 msgid "Bbs name"
 msgstr "掲示板名称"
 
-#: /Model/BbsPost.php:121 /View/BbsPosts/comment.ctp:29
-#: /View/BbsPosts/viewForAdd.ctp:28
+#: /Model/BbsPost.php:95 /View/Elements/BbsComments/add_comment_form.ctp:15
+#: /View/Elements/BbsPosts/post_form.ctp:3
 msgid "Title"
 msgstr "タイトル"
 
-#: /Model/BbsPost.php:129 /View/BbsPosts/comment.ctp:58
-#: /View/BbsPosts/viewForAdd.ctp:57
+#: /Model/BbsPost.php:103 /View/Elements/BbsComments/add_comment_form.ctp:47
+#: /View/Elements/BbsPosts/post_form.ctp:33
 msgid "Content"
 msgstr "本文"
 
@@ -98,87 +87,115 @@ msgstr "表示方法変更"
 msgid "Authority setting"
 msgstr "権限設定"
 
-#: /View/BbsPosts/view.ctp:15
-msgid "Display posts"
-msgstr "記事表示"
+#: /View/BbsComments/add.ctp:21
+msgid "Create comment"
+msgstr "コメント作成"
 
-#: /View/BbsPosts/view.ctp:34
+#: /View/BbsComments/edit.ctp:21 /View/BbsComments/view.ctp:279;461;672
+#: /View/BbsPosts/edit.ctp:21 /View/BbsPosts/view.ctp:265;474
+#: /View/Bbses/view.ctp:234
+msgid "Edit"
+msgstr "編集"
+
+#: /View/BbsComments/view.ctp:76 /View/BbsPosts/view.ctp:64
 msgid "Comments"
 msgstr "コメント"
 
-#: View/BbsPosts/view.ctp:176;326
-msgid "Quote this posts"
-msgstr "引用する"
+#: /View/BbsComments/view.ctp:93 /View/BbsPosts/view.ctp:80
+msgid "Latest comment order"
+msgstr "最新のコメント順"
 
-#: /View/BbsPosts/view.ctp:110;198
-#: /View/BbsPosts/viewForComment.ctp:98;166;232
-msgid "Write comment"
-msgstr "コメントを書く"
+#: /View/BbsComments/view.ctp:98 /View/BbsPosts/view.ctp:85
+msgid "Older comment order"
+msgstr "古いコメント順"
 
-#: /View/BbsPosts/view.ctp:124;210
-#: /View/BbsPosts/viewForComment.ctp:112;180;244 /View/Bbses/view.ctp:159
+#: /View/BbsComments/view.ctp:203;387;597 /View/BbsPosts/view.ctp:191;220;399
+msgid "Remove likes"
+msgstr "いいね!を取り消す"
+
+#: /View/BbsComments/view.ctp:203;387;597 /View/BbsPosts/view.ctp:191;220;399
+msgid "Do likes"
+msgstr "いいね!する"
+
+#: /View/BbsComments/view.ctp:232;416;626 /View/BbsPosts/view.ctp:428
+msgid "Remove unlikes"
+msgstr "良くないね!する"
+
+#: /View/BbsComments/view.ctp:232;416;626 /View/BbsPosts/view.ctp:428
+msgid "Do unlikes"
+msgstr "良くないね!を取り消す"
+
+#: /View/BbsComments/view.ctp:269;452;663 /View/BbsPosts/view.ctp:255;465
 msgid "Delete"
 msgstr "削除"
 
-#: /View/BbsPosts/view.ctp:138
-msgid "This posts has not yet been published"
-msgstr "この記事はまだ公開されていません"
+#: /View/BbsComments/view.ctp:307;488;701 /View/BbsPosts/view.ctp:292;502
+msgid "Quote this posts"
+msgstr "引用する"
 
-#: /View/BbsComments/view.ctp:138
+#: /View/BbsComments/view.ctp:317;498;711 /View/BbsPosts/view.ctp:302;512
+msgid "Write comment"
+msgstr "コメントを書く"
+
+#: /View/BbsComments/view.ctp:522
 msgid "This comments has not yet been published"
 msgstr "このコメントはまだ公開されていません"
 
-#: /View/BbsPosts/view.ctp:146
+#: /View/BbsComments/view.ctp:530 /View/BbsPosts/view.ctp:326
 msgid "There are not comments"
 msgstr "コメントはありません"
 
-#: /View/Bbses/notCreateBbs.ctp:2
-msgid "There are not published bbs now"
-msgstr "現在作成されている掲示板はありません"
+#: /View/BbsPosts/add.ctp:15 /View/Bbses/view.ctp:23
+msgid "Create post"
+msgstr "記事作成"
 
-#: /View/Bbses/notCreatePost.ctp:17
-msgid "There are not posts"
-msgstr "記事はありません"
+#: /View/BbsPosts/view.ctp:318
+msgid "This posts has not yet been published"
+msgstr "この記事はまだ公開されていません"
 
-#: /View/Bbses/view.ctp:39
+#: /View/Bbses/notCreateBbs.ctp:12
+msgid "There are not published bbs"
+msgstr "公開されている掲示板はありません"
+
+#: /View/Bbses/view.ctp:87
 msgid "Posts"
 msgstr "記事"
 
-#: /View/Elements/BbsAuthoritySettings/authSetting.ctp:3
+#: /View/Bbses/view.ctp:187
+msgid "Publishing comments"
+msgstr "公開中のコメント"
+
+#: /View/Bbses/view.ctp:189
+msgid "Comments Include the other status"
+msgstr "全てのコメント"
+
+#: /View/Bbses/view.ctp:255
+msgid "There are not posts"
+msgstr "記事はありません"
+
+#: /View/Elements/approving_buttons.ctp:30
+msgid "Approving"
+msgstr "承認する"
+
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:3
 msgid "Post creatable authority"
 msgstr "記事投稿権限"
 
-#: /View/Elements/BbsAuthoritySettings/authSetting.ctp:8
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:10;64;117
 msgid "Room administrator"
 msgstr "ルーム管理者"
 
-#: /View/Elements/BbsAuthoritySettings/authSetting.ctp:18
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:21;75;128
 msgid "Cheif editor"
 msgstr "編集長"
 
-#: /View/Elements/BbsAuthoritySettings/authSetting.ctp:28
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:32;86;139
 msgid "Editor"
 msgstr "編集者"
 
-#: /View/Elements/BbsAuthoritySettings/authSetting.ctp:38
+#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:43;97;150
 msgid "General"
 msgstr "一般"
-
-#: /View/Elements/BbsFrameSettings/frameSetting.ctp:3
-msgid "Visible post row"
-msgstr "記事表示件数"
-
-#: /View/Elements/BbsFrameSettings/frameSetting.ctp:22
-msgid "Visible comment row"
-msgstr "コメント表示件数"
-
-#: /View/Elements/Bbses/edit.ctp:30
-msgid "Can comments"
-msgstr "コメント投稿有無"
-
-#: /View/Elements/Bbses/edit.ctp:42
-msgid "Can votes"
-msgstr "投票有無"
 
 #: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:57
 msgid "Post publishable authority"
@@ -188,53 +205,26 @@ msgstr "記事公開権限"
 msgid "Comment creatable authority"
 msgstr "コメント作成権限"
 
-#: /View/Elements/BbsAuthoritySettings/auth_setting.ctp:163
-msgid "Comment publishable authority"
-msgstr "コメント公開権限"
+#: /View/Elements/BbsFrameSettings/frame_setting.ctp:3
+msgid "Visible post row"
+msgstr "記事表示件数"
+
+#: /View/Elements/BbsFrameSettings/frame_setting.ctp:22
+msgid "Visible comment row"
+msgstr "コメント表示件数"
 
 #: /View/Elements/Bbses/edit.ctp:32
 msgid "Use comment"
 msgstr "コメントを利用する"
 
 #: /View/Elements/Bbses/edit.ctp:44
-msgid "Use like button"
-msgstr "いいねボタンを利用する"
-
-#: /View/Elements/Bbses/edit.ctp:57
-msgid "Use unlike button"
-msgstr "よくないねボタンを利用する"
-
-#: /View/Bbses/view.ctp:35
-msgid "Display all posts"
-msgstr "全て表示"
-
-#: /View/Bbses/view.ctp:39
-msgid "Published"
-msgstr "公開中"
-
-#: /Controller/BbsesController.php:519 /View/Bbses/view.ctp:46
-#: /View/Elements/workflow_buttons.ctp:20 /View/Elements/status_label.ctp:23
-msgid "Disapproval"
-msgstr "非承認"
-
-#: /View/Elements/Bbses/edit.ctp:44
 msgid "Auto approval"
 msgstr "自動承認する"
 
-#: /View/Elements/approving_buttons.ctp:30
-msgid "Approving"
-msgstr "承認する"
+#: /View/Elements/Bbses/edit.ctp:56
+msgid "Use like button"
+msgstr "いいね!ボタンを利用する"
 
-#: /Controller/BbsesAppController.php:100 /View/Bbses/view.ctp:45
-#: /View/Elements/post_workflow_buttons.ctp:20
-#: /View/Elements/status_label.ctp:24
-msgid "Remand"
-msgstr "差し戻し"
-
-#: /View/Bbses/view.ctp:151
-msgid "Publishing comments"
-msgstr "公開中のコメント"
-
-#: /View/Bbses/view.ctp:152
-msgid "Comments Include the other status"
-msgstr "全てのコメント"
+#: /View/Elements/Bbses/edit.ctp:69
+msgid "Use unlike button"
+msgstr "良くないね!ボタンを利用する"

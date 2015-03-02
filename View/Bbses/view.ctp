@@ -44,7 +44,7 @@
 					<li>
 						<a href="<?php echo $this->Html->url(
 							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 7); ?>">
-								<?php echo __d('bbses', 'Do not read'); ?>
+								<?php echo __d('bbses', 'Unread'); ?>
 						</a>
 					</li>
 					<li>

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-26 05:22+0000\n"
+"POT-Creation-Date: 2015-03-02 04:50+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,52 +14,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Controller/BbsesAppController.php:43
-#: /View/Bbses/view.ctp:75
+#: /Controller/BbsesAppController.php:328
+#: /View/Bbses/view.ctp:102
 msgid "Latest post order"
 msgstr ""
 
-#: /Controller/BbsesAppController.php:49
-#: /View/Bbses/view.ctp:80
+#: /Controller/BbsesAppController.php:334
+#: /View/Bbses/view.ctp:108
 msgid "Older post order"
 msgstr ""
 
-#: /Controller/BbsesAppController.php:55
-#: /View/Bbses/view.ctp:85
+#: /Controller/BbsesAppController.php:340
+#: /View/Bbses/view.ctp:114
 msgid "Descending order of comments"
 msgstr ""
 
-#: /Controller/BbsesAppController.php:73
-#: /View/BbsComments/view.ctp:53
-#: /View/BbsPosts/view.ctp:45
-#: /View/Bbses/view.ctp:41
+#: /Controller/BbsesAppController.php:357
+#: /View/BbsComments/view.ctp:57
+#: /View/BbsPosts/view.ctp:48
+#: /View/Bbses/view.ctp:53
 msgid "Published"
 msgstr ""
 
-#: /Controller/BbsesAppController.php:100
-#: /View/Bbses/view.ctp:45
+#: /Controller/BbsesAppController.php:384
+#: /View/Bbses/view.ctp:65
 #: /View/Elements/post_workflow_buttons.ctp:20
 #: /View/Elements/status_label.ctp:24
 msgid "Remand"
 msgstr ""
 
-#: /Controller/BbsesAppController.php:109
-#: /View/BbsComments/view.ctp:57
-#: /View/BbsPosts/view.ctp:49
+#: /Controller/BbsesAppController.php:393
+#: /View/BbsComments/view.ctp:67
+#: /View/BbsPosts/view.ctp:54
 #: /View/Elements/status_label.ctp:30
 msgid "Disapproval"
 msgstr ""
 
-#: /Controller/BbsesAppController.php:119
-#: /View/BbsComments/view.ctp:51
-#: /View/BbsPosts/view.ctp:43
-#: /View/Bbses/view.ctp:37
+#: /Controller/BbsesAppController.php:403
+#: /View/BbsComments/view.ctp:52
+#: /View/BbsPosts/view.ctp:45
+#: /View/Bbses/view.ctp:41
 msgid "Display all posts"
 msgstr ""
 
-#: /Controller/BbsesAppController.php:125
-#: /View/Bbses/view.ctp:39
-msgid "Do not read"
+#: /Controller/BbsesAppController.php:409
+#: /View/Bbses/view.ctp:47
+msgid "Unread"
 msgstr ""
 
 #: /Model/Bbs.php:103
@@ -67,15 +67,15 @@ msgstr ""
 msgid "Bbs name"
 msgstr ""
 
-#: /Model/BbsPost.php:91
+#: /Model/BbsPost.php:95
 #: /View/Elements/BbsComments/add_comment_form.ctp:15
-#: /View/Elements/BbsPosts/post_form.ctp:15
+#: /View/Elements/BbsPosts/post_form.ctp:3
 msgid "Title"
 msgstr ""
 
-#: /Model/BbsPost.php:99
+#: /Model/BbsPost.php:103
 #: /View/Elements/BbsComments/add_comment_form.ctp:47
-#: /View/Elements/BbsPosts/post_form.ctp:45
+#: /View/Elements/BbsPosts/post_form.ctp:33
 msgid "Content"
 msgstr ""
 
@@ -108,78 +108,98 @@ msgid "Create comment"
 msgstr ""
 
 #: /View/BbsComments/edit.ctp:21
-#: /View/BbsComments/view.ctp:184;314;472
+#: /View/BbsComments/view.ctp:279;461;672
 #: /View/BbsPosts/edit.ctp:21
-#: /View/BbsPosts/view.ctp:181;337
-#: /View/Bbses/view.ctp:194
+#: /View/BbsPosts/view.ctp:265;474
+#: /View/Bbses/view.ctp:234
 msgid "Edit"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:64
-#: /View/BbsPosts/view.ctp:57
+#: /View/BbsComments/view.ctp:76
+#: /View/BbsPosts/view.ctp:64
 msgid "Comments"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:80
-#: /View/BbsPosts/view.ctp:72
+#: /View/BbsComments/view.ctp:93
+#: /View/BbsPosts/view.ctp:80
 msgid "Latest comment order"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:82
-#: /View/BbsPosts/view.ctp:74
+#: /View/BbsComments/view.ctp:98
+#: /View/BbsPosts/view.ctp:85
 msgid "Older comment order"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:174;305;463
-#: /View/BbsPosts/view.ctp:171;328
+#: /View/BbsComments/view.ctp:203;387;597
+#: /View/BbsPosts/view.ctp:191;220;399
+msgid "Remove likes"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:203;387;597
+#: /View/BbsPosts/view.ctp:191;220;399
+msgid "Do likes"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:232;416;626
+#: /View/BbsPosts/view.ctp:428
+msgid "Remove unlikes"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:232;416;626
+#: /View/BbsPosts/view.ctp:428
+msgid "Do unlikes"
+msgstr ""
+
+#: /View/BbsComments/view.ctp:269;452;663
+#: /View/BbsPosts/view.ctp:255;465
 msgid "Delete"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:212;341;501
-#: /View/BbsPosts/view.ctp:208;365
+#: /View/BbsComments/view.ctp:307;488;701
+#: /View/BbsPosts/view.ctp:292;502
 msgid "Quote this posts"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:222;351;511
-#: /View/BbsPosts/view.ctp:218;375
+#: /View/BbsComments/view.ctp:317;498;711
+#: /View/BbsPosts/view.ctp:302;512
 msgid "Write comment"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:375
+#: /View/BbsComments/view.ctp:522
 msgid "This comments has not yet been published"
 msgstr ""
 
-#: /View/BbsComments/view.ctp:383
-#: /View/BbsPosts/view.ctp:242
+#: /View/BbsComments/view.ctp:530
+#: /View/BbsPosts/view.ctp:326
 msgid "There are not comments"
 msgstr ""
 
 #: /View/BbsPosts/add.ctp:15
-#: /View/Bbses/view.ctp:21
+#: /View/Bbses/view.ctp:23
 msgid "Create post"
 msgstr ""
 
-#: /View/BbsPosts/view.ctp:234
+#: /View/BbsPosts/view.ctp:318
 msgid "This posts has not yet been published"
 msgstr ""
 
 #: /View/Bbses/notCreateBbs.ctp:12
-msgid "There are not published bbs now"
+msgid "There are not published bbs"
 msgstr ""
 
-#: /View/Bbses/view.ctp:61
+#: /View/Bbses/view.ctp:87
 msgid "Posts"
 msgstr ""
 
-#: /View/Bbses/view.ctp:151
+#: /View/Bbses/view.ctp:187
 msgid "Publishing comments"
 msgstr ""
 
-#: /View/Bbses/view.ctp:152
+#: /View/Bbses/view.ctp:189
 msgid "Comments Include the other status"
 msgstr ""
 
-#: /View/Bbses/view.ctp:215
+#: /View/Bbses/view.ctp:255
 msgid "There are not posts"
 msgstr ""
 
