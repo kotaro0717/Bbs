@@ -95,6 +95,10 @@ class BbsesController extends BbsesAppController {
 
 		//フレーム置いた直後
 		if (! isset($this->viewVars['bbses']['id'])) {
+			if ((int)$this->viewVars['rolesRoomId'] === 0) {
+				$this->autoRender = false;
+				return;
+			}
 			$this->view = 'Bbses/notCreateBbs';
 			return;
 		}
@@ -324,17 +328,18 @@ class BbsesController extends BbsesAppController {
 			$bbs['Bbs']['block_id'] = 0;
 		}
 
-		$bbs['Bbs']['name'] = $postData['Bbs']['name'];
-		$bbs = $this->__convertStringToBoolean($postData, $bbs);
+		$data['Bbs'] = $this->__convertStringToBoolean($postData, $bbs);
 
-		//作成時間,更新時間を再セット
-		unset($bbs['Bbs']['created'], $bbs['Bbs']['modified']);
+		$results = Hash::merge($postData, $bbs, $data);
 
-		return Hash::merge($bbs, $postData);
+		//IDリセット
+		unset($results['Bbs']['id']);
+
+		return $results;
 	}
 
 /**
- * convertStringToBoolean
+ * __convertStringToBoolean
  *
  * @param array $data post data
  * @param array $bbs bbses
@@ -342,12 +347,12 @@ class BbsesController extends BbsesAppController {
  */
 	private function __convertStringToBoolean($data, $bbs) {
 		//boolean値が文字列になっているため個別で格納し直し
-		return $bbs['Bbs'] = array(
-			'use_comment' => ($data['Bbs']['use_comment'] === '1') ? true : false,
-			'auto_approval' => ($data['Bbs']['auto_approval'] === '1') ? true : false,
-			'use_like_button' => ($data['Bbs']['use_like_button'] === '1') ? true : false,
-			'use_unlike_button' => ($data['Bbs']['use_unlike_button'] === '1') ? true : false,
-		);
+		return $data['Bbs'] = array(
+				'name' => $data['Bbs']['name'],
+				'use_comment' => ($data['Bbs']['use_comment'] === '1') ? true : false,
+				'auto_approval' => ($data['Bbs']['auto_approval'] === '1') ? true : false,
+				'use_like_button' => ($data['Bbs']['use_like_button'] === '1') ? true : false,
+				'use_unlike_button' => ($data['Bbs']['use_unlike_button'] === '1') ? true : false,
+			);
 	}
-
 }

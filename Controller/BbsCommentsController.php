@@ -127,7 +127,18 @@ class BbsCommentsController extends BbsesAppController {
 			);
 
 		//コメント作成権限をセットする
-		$this->setCommentCreateAuth();
+		//$this->setCommentCreateAuth();
+		if (((int)$this->viewVars['rolesRoomId'] !== 0 &&
+				(int)$this->viewVars['rolesRoomId'] < 4) ||
+				($this->viewVars['bbses']['comment_create_authority'] &&
+				$this->viewVars['contentCreatable'])) {
+
+			$this->set('commentCreatable', true);
+
+		} else {
+			$this->set('commentCreatable', false);
+
+		}
 	}
 
 /**
@@ -163,7 +174,7 @@ class BbsCommentsController extends BbsesAppController {
 			return;
 		}
 
-		$data = $this->setAddSaveData($this->data, $status);
+		$data = $this->setAddSaveData($this->data, $status, $parentId);
 
 		if (! $this->BbsPost->saveComment($data)) {
 			if (!$this->handleValidationError($this->BbsPost->validationErrors)) {
@@ -171,8 +182,8 @@ class BbsCommentsController extends BbsesAppController {
 			}
 		}
 
-		//親記事のコメント数の更新処理(公開中のコメント数)
-		if (! $this->__updateCommentNum($data['Bbs']['key'], $parentId)) {
+		//親記事の更新処理(公開中のコメント数、コメント番号)
+		if (! $this->__updateParentPosts($data['Bbs']['key'], $parentId)) {
 			return;
 		}
 
@@ -330,7 +341,7 @@ class BbsCommentsController extends BbsesAppController {
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
 		$conditions['id'] = $postId;
 
-		if (! $posts = $this->BbsPost->getOnePosts(
+		if (! $currentPosts = $this->BbsPost->getOnePosts(
 				$this->viewVars['userId'],
 				$this->viewVars['contentEditable'],
 				$this->viewVars['contentCreatable'],
@@ -340,9 +351,20 @@ class BbsCommentsController extends BbsesAppController {
 
 		}
 
+		$conditions = '';
+		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+		$conditions['id'] = $currentPosts['BbsPost']['parent_id'];
+		//親記事の記事取得
+		$parentPosts = $this->BbsPost->getOnePosts(
+			$this->viewVars['userId'],
+			$this->viewVars['contentEditable'],
+			$this->viewVars['contentCreatable'],
+			$conditions
+		);
+
 		//いいね・よくないねを取得
 		$likes = $this->BbsPostsUser->getLikes(
-					$posts['BbsPost']['id'],
+					$currentPosts['BbsPost']['id'],
 					$this->viewVars['userId']
 				);
 
@@ -350,15 +372,17 @@ class BbsCommentsController extends BbsesAppController {
 		$user = $this->User->find('first', array(
 				'recursive' => -1,
 				'conditions' => array(
-					'id' => $posts['BbsPost']['created_user'],
+					'id' => $currentPosts['BbsPost']['created_user'],
 				)
 			)
 		);
 
 		$results = array(
-			'bbsCurrentComments' => $posts['BbsPost'],
-			'currentCommentStatus' => $posts['BbsPost']['status']
+			'bbsCurrentComments' => $currentPosts['BbsPost'],
+			'currentCommentStatus' => $currentPosts['BbsPost']['status']
 		);
+		//取得した情報を配列に追加
+		$results['bbsCurrentComments']['parent_comment_index'] = $parentPosts['BbsPost']['comment_index'];
 		$results['bbsCurrentComments']['username'] = $user['User']['username'];
 		$results['bbsCurrentComments']['userId'] = $user['User']['id'];
 		$results['bbsCurrentComments']['likesNum'] = $likes['likesNum'];
@@ -369,13 +393,13 @@ class BbsCommentsController extends BbsesAppController {
 	}
 
 /**
- * Set current comment method
+ * updateParentPosts
  *
  * @param string $bbsKey bbses.key
  * @param int $parentId bbsPosts.id
  * @return true is save successful, or false is failure
  */
-	private function __updateCommentNum($bbsKey, $parentId) {
+	private function __updateParentPosts($bbsKey, $parentId) {
 		//親記事(lft,rghtカラム)取得
 		$conditions['bbs_key'] = $bbsKey;
 		$conditions['id'] = $parentId;
@@ -404,6 +428,7 @@ class BbsCommentsController extends BbsesAppController {
 			);
 
 		$parentPosts['BbsPost']['comment_num'] = count($bbsComments);
+		$parentPosts['BbsPost']['comment_index'] = ++$parentPosts['BbsPost']['comment_index'];
 		$parentPosts['Bbs']['key'] = $bbsKey;
 		$parentPosts['Comment']['comment'] = '';
 

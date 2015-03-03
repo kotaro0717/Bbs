@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2015-03-02 04:50+0000\n"
-"PO-Revision-Date: 2015-03-02 14:23+0900\n"
+"PO-Revision-Date: 2015-03-03 12:30+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -119,11 +119,11 @@ msgstr "いいね!する"
 
 #: /View/BbsComments/view.ctp:232;416;626 /View/BbsPosts/view.ctp:428
 msgid "Remove unlikes"
-msgstr "良くないね!する"
+msgstr "良くないね!を取り消す"
 
 #: /View/BbsComments/view.ctp:232;416;626 /View/BbsPosts/view.ctp:428
 msgid "Do unlikes"
-msgstr "良くないね!を取り消す"
+msgstr "良くないね!する"
 
 #: /View/BbsComments/view.ctp:269;452;663 /View/BbsPosts/view.ctp:255;465
 msgid "Delete"

@@ -114,7 +114,18 @@ class BbsPostsController extends BbsesAppController {
 			);
 
 		//コメント作成権限をセットする
-		$this->setCommentCreateAuth();
+		//$this->setCommentCreateAuth();
+		if (((int)$this->viewVars['rolesRoomId'] !== 0 &&
+				(int)$this->viewVars['rolesRoomId'] < 4) ||
+				($this->viewVars['bbses']['comment_create_authority'] &&
+				$this->viewVars['contentCreatable'])) {
+
+			$this->set('commentCreatable', true);
+
+		} else {
+			$this->set('commentCreatable', false);
+
+		}
 
 		//既読情報を登録
 		$this->__saveReadStatus($postId);

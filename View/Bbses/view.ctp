@@ -1,9 +1,8 @@
-<strong><?php echo $roomRoleKey; ?></strong>
+<strong><?php echo 'デバッグ用 : ' . $roomRoleKey; ?></strong>
+
 <div id="nc-bbs-index-<?php echo (int)$frameId; ?>">
 
-	<!-- 管理ボタン:コンテンツが公開できる人ならば表示 -->
 	<?php if ($contentPublishable) : ?>
-
 		<div class="text-right">
 			<a href="<?php echo $this->Html->url(
 				'/bbses/bbses/edit/' . $frameId) ?>" class="btn btn-primary">
@@ -12,13 +11,11 @@
 		</div>
 	<?php endif; ?>
 
-	<!-- 掲示板名称:フレームに表示できるならばいらない -->
 	<div class="text-left">
 		<strong><?php echo $bbses['name']; ?></strong>
 	</div>
 
 	<span class="text-left">
-		<!-- 記事作成ボタン:コンテンツが作成できる人ならば表示 -->
 		<?php if ($contentCreatable) : ?>
 			<span class="nc-tooltip" tooltip="<?php echo __d('bbses', 'Create post'); ?>">
 				<a href="<?php echo $this->Html->url(
@@ -26,6 +23,7 @@
 					<span class="glyphicon glyphicon-plus"> </span></a>
 			</span>
 
+			<?php if ($narrowDownParams !== '6' || $bbsPostNum) : ?>
 			<span class="btn-group">
 				<button type="button" class="btn btn-default">
 					<?php echo $narrowDown; ?>
@@ -73,10 +71,11 @@
 					</li>
 				</ul>
 			</span>
+			<?php endif; ?>
 		<?php endif; ?>
 	</span>
 
-<!-- 記事が0件の時、ソート／表示件数変更を表示しない -->
+<!-- 記事なし -->
 <?php if ($bbsPostNum) : ?>
 
 	<!-- 右に表示 -->
@@ -251,7 +250,7 @@
 
 		<hr />
 		<!-- メッセージの表示 -->
-		<div class="text-left">
+		<div class="text-left col-md-offset-1 col-xs-offset-1">
 			<?php echo __d('bbses', 'There are not posts'); ?>
 		</div>
 

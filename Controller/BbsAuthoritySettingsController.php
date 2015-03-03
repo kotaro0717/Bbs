@@ -67,10 +67,7 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 			return;
 		}
 
-		$blockId = isset($this->data['Block']['id']) ?
-					(int)$this->data['Block']['id'] : null;
-
-		$data = $this->__setEditSaveData($this->data, $blockId);
+		$data = $this->__setEditSaveData($this->data);
 
 		if (! $this->Bbs->saveBbs($data)) {
 			if (! $this->handleValidationError($this->Bbs->validationErrors)) {
@@ -87,19 +84,20 @@ class BbsAuthoritySettingsController extends BbsesAppController {
  * setEditSaveData
  *
  * @param array $postData post data
- * @param int $blockId blocks.id
  * @return array
  */
-	private function __setEditSaveData($postData, $blockId) {
+	private function __setEditSaveData($postData) {
+		$blockId = isset($this->data['Block']['id']) ? (int)$this->data['Block']['id'] : null;
+
 		if (! $bbs = $this->Bbs->getBbs($blockId)) {
 			//bbsテーブルデータ作成とkey格納
 			$bbs = $this->initBbs();
-
+			$bbs['Bbs']['block_id'] = 0;
 		}
 
-		$bbs = $this->__convertStringToBoolean($postData, $bbs);
+		$data['Bbs'] = $results = $this->__convertStringToBoolean($postData, $bbs);
 
-		$results = Hash::merge($postData, $bbs);
+		$results = Hash::merge($postData, $bbs, $data);
 
 		//IDリセット
 		unset($results['Bbs']['id']);
@@ -110,17 +108,17 @@ class BbsAuthoritySettingsController extends BbsesAppController {
 /**
  * convertStringToBoolean
  *
- * @param array $postData post data
+ * @param array $data post data
  * @param array $bbs bbses
  * @return array
  */
-	private function __convertStringToBoolean($postData, $bbs) {
+	private function __convertStringToBoolean($data, $bbs) {
 		//boolean値が文字列になっているため個別で格納し直し
-		return $bbs['Bbs'] = array(
-			'post_create_authority' => ($postData['Bbs']['post_create_authority'] === '1') ? true : false,
-			'editor_publish_authority' => ($postData['Bbs']['editor_publish_authority'] === '1') ? true : false,
-			'general_publish_authority' => ($postData['Bbs']['general_publish_authority'] === '1') ? true : false,
-			'comment_create_authority' => ($postData['Bbs']['comment_create_authority'] === '1') ? true : false,
-		);
+		return $data['Bbs'] = array(
+				'post_create_authority' => ($data['Bbs']['post_create_authority'] === '1') ? true : false,
+				'editor_publish_authority' => ($data['Bbs']['editor_publish_authority'] === '1') ? true : false,
+				'general_publish_authority' => ($data['Bbs']['general_publish_authority'] === '1') ? true : false,
+				'comment_create_authority' => ($data['Bbs']['comment_create_authority'] === '1') ? true : false,
+			);
 	}
 }

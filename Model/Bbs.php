@@ -113,18 +113,19 @@ class Bbs extends BbsesAppModel {
  * @param int $blockId blocks.id
  * @return array
  */
-	public function getBbs($blockId) {
+	public function getBbs($blockId = '') {
 		$conditions = array(
 			'block_id' => $blockId,
 		);
 
-		$bbses = $this->find('first', array(
+		$bbs = $this->find('first', array(
+				'recursive' => -1,
 				'conditions' => $conditions,
 				'order' => 'Bbs.id DESC',
 			)
 		);
 
-		return $bbses;
+		return $bbs;
 	}
 
 /**
@@ -145,7 +146,6 @@ class Bbs extends BbsesAppModel {
 		$dataSource->begin();
 
 		try {
-			/* var_dump($this->Comment); */
 			if (!$this->validateBbs($data)) {
 				return false;
 			}

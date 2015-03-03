@@ -1,7 +1,7 @@
 <?php echo $this->Html->script('/net_commons/base/js/workflow.js', false); ?>
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
-<strong><?php echo $roomRoleKey; ?></strong>
+<strong><?php echo 'デバッグ用 : ' . $roomRoleKey; ?></strong>
 <div id="nc-bbs-post-view-<?php echo (int)$frameId; ?>"
 		ng-controller="BbsPost"
 		ng-init="initialize(<?php echo h(json_encode($bbsPosts)); ?>)">
@@ -143,9 +143,10 @@
 	<div class="panel panel-info">
 		<div class="panel-heading">
 			<div class="text-left">
-
-				<!-- id -->
-				<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?></span>
+				<!-- アバター表示 -->
+				<span>
+					<?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?>
+				</span>
 
 				<!-- ユーザ情報 -->
 				<span>
@@ -217,7 +218,7 @@
 													'type' => 'submit',
 													'class' => 'btn btn-link',
 													'style' => 'padding: 0;',
-													'tooltip' => ($bbsPosts['unlikesFlag'])? __d('bbses', 'Remove likes') : __d('bbses', 'Do likes'),
+													'tooltip' => ($bbsPosts['unlikesFlag'])? __d('bbses', 'Remove unlikes') : __d('bbses', 'Do unlikes'),
 												)); ?>
 								<?php echo $this->Form->end(); ?>
 
@@ -335,7 +336,7 @@
 				<div class="panel-heading">
 					<span class="text-left">
 						<!-- id -->
-						<?php echo $comment['id']; ?>.
+						<?php echo $comment['comment_index'] . '.'; ?>
 						<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?></span>
 						<!-- ユーザ情報 -->
 						<span>
@@ -367,7 +368,7 @@
 					<?php if ($bbsPosts['id'] !== $comment['parent_id']) : ?>
 						<div><a href="<?php echo $this->Html->url(
 									'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['parent_id']); ?>">
-								>><?php echo $comment['parent_id']; ?></a></div>
+								<?php echo '>>' . $comment['parent_comment_index']; ?></a></div>
 					<?php endif; ?>
 
 					<!-- コンテンツ -->

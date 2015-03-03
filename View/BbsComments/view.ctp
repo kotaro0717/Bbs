@@ -1,7 +1,7 @@
 <?php echo $this->Html->script('/net_commons/base/js/workflow.js', false); ?>
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
-<strong><?php echo $roomRoleKey; ?></strong>
+<strong><?php echo 'デバッグ用 : ' . $roomRoleKey; ?></strong>
 <div id="nc-bbs-comment-view-<?php echo (int)$frameId; ?>"
 		ng-controller="BbsComment"
 		ng-init="initialize(<?php echo h(json_encode($bbsPosts)); ?>,
@@ -157,7 +157,7 @@
 	<div class="panel panel-info">
 		<div class="panel-heading">
 			<span class="text-left">
-				<!-- id -->
+				<!-- アバター表示 -->
 				<span>
 					<?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?>
 				</span>
@@ -331,7 +331,7 @@
 		<div class="panel-heading">
 			<span class="text-left">
 				<!-- id -->
-				<?php echo $bbsCurrentComments['id']; ?>.
+				<?php echo $bbsCurrentComments['comment_index'] . '.'; ?>
 				<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?></span>
 				<!-- ユーザ情報 -->
 				<span>
@@ -357,7 +357,7 @@
 			<?php if ($bbsPosts['id'] !== $bbsCurrentComments['parent_id']) : ?>
 				<div><a href="<?php echo $this->Html->url(
 							'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['parent_id']); ?>">
-						>><?php echo $bbsCurrentComments['parent_id']; ?></a></div>
+						<?php echo '>>' . $bbsCurrentComments['parent_comment_index']; ?></a></div>
 			<?php endif; ?>
 			<div><?php echo $bbsCurrentComments['content']; ?></div>
 		</div>
@@ -540,7 +540,7 @@
 
 					<span class="text-left">
 						<!-- id -->
-						<?php echo $comment['id']; ?>.
+						<?php echo $comment['comment_index'] . '.'; ?>
 						<span><?php echo $this->Html->image('/bbses/img/avatar.PNG', array('alt' => 'アバターが設定されていません')); ?></span>
 						<!-- ユーザ情報 -->
 						<span>
@@ -567,8 +567,8 @@
 				<div class="panel panel-body">
 					<?php if ($bbsCurrentComments['id'] !== $comment['parent_id']) : ?>
 						<div><a href="<?php echo $this->Html->url(
-									'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
-								>><?php echo $comment['parent_id']; ?></a></div>
+									'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['parent_id']); ?>">
+								<?php echo '>>' . $comment['parent_comment_index']; ?></a></div>
 					<?php endif; ?>
 					<div><?php echo $comment['content']; ?></div>
 				</div>

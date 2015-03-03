@@ -68,9 +68,10 @@ class BbsesAppController extends AppController {
  *
  * @param array $postData post data
  * @param int $status bbsPosts.status
+ * @param int $parentId bbsPosts.id
  * @return array
  */
-	public function setAddSaveData($postData, $status) {
+	public function setAddSaveData($postData, $status, $parentId = '') {
 		$data = Hash::merge(
 			$postData,
 			['BbsPost' => ['status' => $status]]
@@ -80,6 +81,20 @@ class BbsesAppController extends AppController {
 		$comment = $this->BbsPost->create(['key' => Security::hash('bbsPost' . mt_rand() . microtime(), 'md5')]);
 
 		$comment['BbsPost']['bbs_key'] = $data['Bbs']['key'];
+
+		if ($parentId) {
+			//コメント番号取得のために親記事情報取得
+			$conditions['bbs_key'] = $data['Bbs']['key'];
+			$conditions['id'] = $parentId;
+			$parentPosts = $this->BbsPost->getOnePosts(
+					false,
+					false,
+					false,
+					$conditions
+				);
+
+			$comment['BbsPost']['comment_index'] = $parentPosts['BbsPost']['comment_index'];
+		}
 
 		return Hash::merge($comment, $data);
 	}
@@ -224,6 +239,17 @@ class BbsesAppController extends AppController {
 		}
 
 		foreach ($bbsCommnets as $bbsComment) {
+			$conditions = '';
+			$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
+			$conditions['id'] = $bbsComment['BbsPost']['parent_id'];
+			//親記事の記事取得
+			$parentPosts = $this->BbsPost->getOnePosts(
+				$this->viewVars['userId'],
+				$this->viewVars['contentEditable'],
+				$this->viewVars['contentCreatable'],
+				$conditions
+			);
+
 			//いいね・よくないねを取得
 			$likes = $this->BbsPostsUser->getLikes(
 						$bbsComment['BbsPost']['id'],
@@ -238,7 +264,8 @@ class BbsesAppController extends AppController {
 					)
 				)
 			);
-			//取得した記事の配列にユーザ名を追加
+			//取得した情報を配列に追加
+			$bbsComment['BbsPost']['parent_comment_index'] = $parentPosts['BbsPost']['comment_index'];
 			$bbsComment['BbsPost']['username'] = $user['User']['username'];
 			$bbsComment['BbsPost']['userId'] = $user['User']['id'];
 			$bbsComment['BbsPost']['likesNum'] = $likes['likesNum'];
@@ -395,25 +422,6 @@ class BbsesAppController extends AppController {
 			$this->set('commentNum', 0);
 		}
 		$this->set('commentNum', count($comments));
-	}
-
-/**
- * setCommentCreateAuth method
- *
- * @return void
- */
-	public function setCommentCreateAuth() {
-		if (((int)$this->viewVars['rolesRoomId'] !== 0 &&
-				(int)$this->viewVars['rolesRoomId'] < 4) ||
-				($this->viewVars['bbses']['comment_create_authority'] &&
-				$this->viewVars['contentCreatable'])) {
-
-			$this->set('commentCreatable', true);
-
-		} else {
-			$this->set('commentCreatable', false);
-
-		}
 	}
 
 /**
