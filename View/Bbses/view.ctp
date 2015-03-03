@@ -21,7 +21,7 @@
 					<span class="glyphicon glyphicon-plus"> </span></a>
 			</span>
 
-			<?php if ($narrowDownParams !== '6' || $bbsPostNum) : ?>
+			<?php if ($narrowDownParams !== '5' || $bbsPostNum) : ?>
 			<span class="btn-group">
 				<button type="button" class="btn btn-default">
 					<?php echo $narrowDown; ?>
@@ -33,13 +33,13 @@
 				<ul class="dropdown-menu" role="menu">
 					<li>
 						<a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>">
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>">
 								<?php echo __d('bbses', 'Display all posts'); ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?php echo $this->Html->url(
-							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 7); ?>">
+							'/bbses/bbses/view' . '/' . $frameId . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>">
 								<?php echo __d('bbses', 'Unread'); ?>
 						</a>
 					</li>

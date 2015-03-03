@@ -29,7 +29,7 @@ class BbsPost extends BbsesAppModel {
  * @var array
  */
 	public $actsAs = array(
-		'NetCommons.Publishable',
+		//'NetCommons.Publishable',
 		'Tree',
 	);
 
@@ -82,6 +82,16 @@ class BbsPost extends BbsesAppModel {
 			),
 
 			//status to set in PublishableBehavior.
+			'status' => array(
+				'numeric' => array(
+					'rule' => array('numeric'),
+					'message' => __d('net_commons', 'Invalid request.'),
+				),
+				'range' => array(
+					'rule' => array('range', 0, 5),
+					'message' => __d('net_commons', 'Invalid request.'),
+				),
+			),
 
 			'is_auto_translated' => array(
 				'boolean' => array(
@@ -262,6 +272,7 @@ class BbsPost extends BbsesAppModel {
 			}
 
 			$comments = $this->save(null, false);
+
 			if (! $comments) {
 				// @codeCoverageIgnoreStart
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));

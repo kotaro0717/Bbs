@@ -218,7 +218,7 @@ class BbsesAppController extends AppController {
 		$sortOrder = $this->setSortOrder($this->viewVars['sortParams']);
 
 		//絞り込み条件をセット
-		$conditions = $this->setNarrowDown($conditions, $this->viewVars['narrowDownParams']);
+		$conditions = $this->setNarrowDown($conditions, $this->viewVars['narrowDownParams'], true);
 
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
 
@@ -295,7 +295,7 @@ class BbsesAppController extends AppController {
 		$conditions['bbs_key'] = $this->viewVars['bbses']['key'];
 
 		//絞り込み条件をセット
-		$conditions = $this->setNarrowDown($conditions, $this->viewVars['narrowDownParams']);
+		$conditions = $this->setNarrowDown($conditions, $this->viewVars['narrowDownParams'], false);
 
 		//前のページがあるか取得
 		if ($this->viewVars['currentPage'] === 1) {
@@ -396,7 +396,7 @@ class BbsesAppController extends AppController {
 		$this->set('sortParams', $sortParams);
 
 		//現在の絞り込みをセット
-		$narrowDownParams = ($narrowDownParams === '')? '6' : $narrowDownParams;
+		$narrowDownParams = ($narrowDownParams === '')? '5' : $narrowDownParams;
 		$this->set('narrowDownParams', $narrowDownParams);
 	}
 
@@ -459,9 +459,10 @@ class BbsesAppController extends AppController {
  *
  * @param array $conditions find conditions
  * @param int $narrowDownParams narrowDownParams
+ * @param bool $isComments true is comments list, or false is posts list
  * @return array order conditions for narrow down, or void
  */
-	public function setNarrowDown($conditions, $narrowDownParams) {
+	public function setNarrowDown($conditions, $narrowDownParams, $isComments) {
 		switch ($narrowDownParams) {
 		case '1':
 				//公開
@@ -471,8 +472,8 @@ class BbsesAppController extends AppController {
 				return $conditions;
 
 		case '2':
-				//承認待ち
-				$narrowDownStr = __d('net_commons', 'Approving');
+				//承認待ち/不承認
+				$narrowDownStr = ($isComments)? __d('bbses', 'Disapproval') : __d('net_commons', 'Approving');
 				$this->set('narrowDown', $narrowDownStr);
 				$conditions['status'] = NetCommonsBlockComponent::STATUS_APPROVED;
 				return $conditions;
@@ -485,34 +486,27 @@ class BbsesAppController extends AppController {
 				return $conditions;
 
 		case '4':
-				//非承認
+				//差し戻し
 				$narrowDownStr = __d('bbses', 'Remand');
 				$this->set('narrowDown', $narrowDownStr);
 				$conditions['status'] = NetCommonsBlockComponent::STATUS_DISAPPROVED;
 				return $conditions;
 
 		case '5':
-				//非承認
-				$narrowDownStr = __d('bbses', 'Disapproval');
-				$this->set('narrowDown', $narrowDownStr);
-				$conditions['status'] = '5';
-				return $conditions;
-
-		case '6':
 		default :
 				//全件表示
 				$narrowDownStr = __d('bbses', 'Display all posts');
 				$this->set('narrowDown', $narrowDownStr);
 				$conditions['and']['status >='] = '1';
-				$conditions['and']['status <='] = '5';
+				$conditions['and']['status <='] = '4';
 				return $conditions;
 
-		case '7':
+		case '6':
 				//未読
 				$narrowDownStr = __d('bbses', 'Unread');
 				$this->set('narrowDown', $narrowDownStr);
 				$conditions['and']['status >='] = '1';
-				$conditions['and']['status <='] = '5';
+				$conditions['and']['status <='] = '4';
 				//未読or既読セット中に未読のみ取得する
 				return $conditions;
 		}

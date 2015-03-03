@@ -177,7 +177,7 @@ class BbsesController extends BbsesAppController {
 		$conditions['parent_id'] = null;
 
 		//絞り込み条件をセット
-		$conditions = $this->setNarrowDown($conditions, $this->viewVars['narrowDownParams']);
+		$conditions = $this->setNarrowDown($conditions, $this->viewVars['narrowDownParams'], false);
 
 		if (! $bbsPosts = $this->BbsPost->getPosts(
 				$this->viewVars['userId'],

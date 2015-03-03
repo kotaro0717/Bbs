@@ -153,13 +153,10 @@ class BbsCommentsController extends BbsesAppController {
 		//引用フラグをURLパラメータからセット
 		$this->set('quotFlag', $this->params->query['quotFlag']);
 
-		//掲示板名等をセット
 		$this->setBbs();
 
-		//親記事情報をセット
 		$this->__setPost($postId);
 
-		//記事情報をセット
 		$this->__initComment();
 
 		if ($this->request->isGet()) {
@@ -170,13 +167,14 @@ class BbsCommentsController extends BbsesAppController {
 			return;
 		}
 
-		if (!$status = $this->parseStatus()) {
+		if (! $status = $this->parseStatus()) {
 			return;
 		}
 
 		$data = $this->setAddSaveData($this->data, $status, $parentId);
 
 		if (! $this->BbsPost->saveComment($data)) {
+			debug('通過');
 			if (!$this->handleValidationError($this->BbsPost->validationErrors)) {
 				return;
 			}
@@ -414,11 +412,12 @@ class BbsCommentsController extends BbsesAppController {
 		$conditions = null;
 
 		//コメント一覧取得
-		$conditions['bbs_key'] = $parentPosts['BbsPost']['bbs_key'];
+		$conditions['bbs_key'] = $bbsKey;
 		$conditions['and']['lft >'] = $parentPosts['BbsPost']['lft'];
 		$conditions['and']['rght <'] = $parentPosts['BbsPost']['rght'];
+		//公開されているコメントを取得
 		$bbsComments = $this->BbsPost->getPosts(
-				$this->viewVars['userId'],
+				false,
 				false,
 				false,
 				false,

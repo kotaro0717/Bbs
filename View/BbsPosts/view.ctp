@@ -41,7 +41,7 @@
 			<ul class="dropdown-menu" role="menu">
 				<!-- URL:controller:BbsPostsController action:view -->
 				<!--     argument:frameId, postId(記事), pageNumber(コメント一覧ページ番号), sortParams(ソート), visibleRow(表示件数), narrowDown(絞り込み)-->
-				<li><a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>">
+				<li><a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>">
 						<?php echo __d('bbses', 'Display all posts'); ?>
 					</a></li>
 				<li><a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_PUBLISHED); ?>">
@@ -50,7 +50,7 @@
 				<li><a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_IN_DRAFT); ?>">
 						<?php echo __d('net_commons', 'Temporary'); ?>
 					</a></li>
-				<li><a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>">
+				<li><a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_APPROVED); ?>">
 						<?php echo __d('bbses', 'Disapproval'); ?>
 					</a></li>
 			</ul>
@@ -351,7 +351,7 @@
 										<h4 style="display:inline;"><strong><?php echo $comment['title']; ?></strong></h4></a>
 
 						<!-- ステータス -->
-						<span><?php echo $this->element('Bbses.status_label',
+						<span><?php echo $this->element('Bbses.comment_status_label',
 											array('status' => $comment['status'])); ?></span>
 					</span>
 
@@ -517,8 +517,9 @@
 							<?php echo $this->Form->end(); ?>
 						<?php endif; ?>
 
-						<!-- '5'(非承認) -->
-						<?php if ($comment['status'] === '5' && $contentPublishable) : ?>
+						<!-- 承認ボタン -->
+						<?php if ($comment['status'] === NetCommonsBlockComponent::STATUS_APPROVED &&
+									$contentPublishable) : ?>
 							<!-- 承認するボタン -->
 							<?php echo $this->element('approving_buttons',
 											array('comment' => $comment)); ?>

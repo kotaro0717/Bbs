@@ -15,16 +15,15 @@
 	</button>
 
 	<?php if ($contentPublishable) : ?>
-		<?php if ($contentStatus !== '5') : ?>
 		<!-- 公開中の記事に対しての一時保存を制限 -->
 		<?php echo $this->Form->button(
 				__d('net_commons', 'Save temporally'),
 				array(
 					'class' => 'btn btn-default',
-					'disabled' => ($contentStatus === NetCommonsBlockComponent::STATUS_PUBLISHED)? true : false,
+					'disabled' => ($contentStatus === NetCommonsBlockComponent::STATUS_PUBLISHED ||
+									$contentStatus === NetCommonsBlockComponent::STATUS_APPROVED)? true : false,
 					'name' => 'save_' . NetCommonsBlockComponent::STATUS_IN_DRAFT,
 				)) ?>
-		<?php endif; ?>
 
 	<?php else : ?>
 		<?php echo $this->Form->button(
@@ -47,6 +46,6 @@
 			__d('net_commons', 'OK'),
 			array(
 				'class' => 'btn btn-primary',
-				'name' => 'save_5',
+				'name' => 'save_' . NetCommonsBlockComponent::STATUS_APPROVED,
 			)) ?>
 	<?php endif;

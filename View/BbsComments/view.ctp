@@ -48,7 +48,7 @@
 			<!--     argument:frameId, postId(記事), $bbsCurrentComments(対象コメント) -->
 			<!--     pageNumber(コメント一覧ページ番号), sortParams(ソート), visibleRow(表示件数), narrowDown(絞り込み) -->
 			<li>
-				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 6); ?>">
+				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>">
 					<?php echo __d('bbses', 'Display all posts'); ?>
 				</a>
 			</li>
@@ -63,7 +63,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . 5); ?>">
+				<a href="<?php echo $this->Html->url('/' . $baseUrl . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $bbsCurrentComments['id'] . '/' . 1 . '/' . $sortParams . '/' . $currentVisibleRow . '/' . NetCommonsBlockComponent::STATUS_APPROVED); ?>">
 					<?php echo __d('bbses', 'Disapproval'); ?>
 				</a>
 			</li>
@@ -343,7 +343,7 @@
 				<!-- タイトル※対象記事のためリンクを貼らない -->
 				<h4 style="display:inline;"><strong><?php echo $bbsCurrentComments['title']; ?></strong></h4>
 				<!-- ステータス -->
-				<span><?php echo $this->element('Bbses.status_label',
+				<span><?php echo $this->element('Bbses.comment_status_label',
 									array('status' => $bbsCurrentComments['status'])); ?></span>
 			</span>
 
@@ -502,8 +502,9 @@
 					<?php echo $this->Form->end(); ?>
 				<?php endif; ?>
 
-				<!-- '5'(非承認) -->
-				<?php if ($bbsCurrentComments['status'] === '5' && $contentPublishable) : ?>
+				<!-- 承認ボタン -->
+				<?php if ($bbsCurrentComments['status'] === NetCommonsBlockComponent::STATUS_APPROVED &&
+							$contentPublishable) : ?>
 					<!-- 承認するボタン -->
 					<?php echo $this->element('approving_buttons',
 									array('comment' => $bbsCurrentComments)); ?>
@@ -553,7 +554,7 @@
 										'/bbses/bbsComments/view' . '/' . $frameId . '/' . $bbsPosts['id'] . '/' . $comment['id']); ?>">
 										<h4 style="display:inline;"><strong><?php echo $comment['title']; ?></strong></h4></a>
 						<!-- ステータス -->
-						<span><?php echo $this->element('Bbses.status_label',
+						<span><?php echo $this->element('Bbses.comment_status_label',
 											array('status' => $comment['status'])); ?></span>
 					</span>
 
@@ -715,8 +716,9 @@
 							<?php echo $this->Form->end(); ?>
 						<?php endif; ?>
 
-						<!-- '5'(非承認) -->
-						<?php if ($comment['status'] === '5' && $contentPublishable) : ?>
+						<!-- 承認ボタン -->
+						<?php if ($comment['status'] === NetCommonsBlockComponent::STATUS_APPROVED &&
+									$contentPublishable) : ?>
 							<!-- 承認するボタン -->
 							<?php echo $this->element('approving_buttons',
 											array('comment' => $comment)); ?>

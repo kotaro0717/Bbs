@@ -16,22 +16,22 @@
 
 	<?php if ($contentPublishable) : ?>
 		<?php if ($contentStatus === NetCommonsBlockComponent::STATUS_APPROVED) : ?>
-		<?php echo $this->Form->button(
-			__d('bbses', 'Remand'),
-			array(
-				'class' => 'btn btn-danger',
-				'name' => 'save_' . NetCommonsBlockComponent::STATUS_DISAPPROVED,
-			)) ?>
+			<?php echo $this->Form->button(
+				__d('bbses', 'Remand'),
+				array(
+					'class' => 'btn btn-danger',
+					'name' => 'save_' . NetCommonsBlockComponent::STATUS_DISAPPROVED,
+				)) ?>
 		<?php endif; ?>
 		<?php if ($contentStatus !== NetCommonsBlockComponent::STATUS_APPROVED) : ?>
-		<!-- 公開中の記事に対しての一時保存を制限 -->
-		<?php echo $this->Form->button(
-				__d('net_commons', 'Save temporally'),
-				array(
-					'class' => 'btn btn-default',
-					'disabled' => ($contentStatus === NetCommonsBlockComponent::STATUS_PUBLISHED)? true : false,
-					'name' => 'save_' . NetCommonsBlockComponent::STATUS_IN_DRAFT,
-				)) ?>
+			<!-- 公開中の記事に対しての一時保存を制限 -->
+			<?php echo $this->Form->button(
+					__d('net_commons', 'Save temporally'),
+					array(
+						'class' => 'btn btn-default',
+						'disabled' => ($contentStatus === NetCommonsBlockComponent::STATUS_PUBLISHED)? true : false,
+						'name' => 'save_' . NetCommonsBlockComponent::STATUS_IN_DRAFT,
+					)) ?>
 		<?php endif; ?>
 
 	<?php else : ?>
