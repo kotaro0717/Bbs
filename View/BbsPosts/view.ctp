@@ -1,7 +1,7 @@
 <?php echo $this->Html->script('/net_commons/base/js/workflow.js', false); ?>
 <?php echo $this->Html->script('/net_commons/base/js/wysiwyg.js', false); ?>
 <?php echo $this->Html->script('/bbses/js/bbses.js', false); ?>
-<strong><?php echo 'デバッグ用 : ' . $roomRoleKey; ?></strong>
+
 <div id="nc-bbs-post-view-<?php echo (int)$frameId; ?>"
 		ng-controller="BbsPost"
 		ng-init="initialize(<?php echo h(json_encode($bbsPosts)); ?>)">

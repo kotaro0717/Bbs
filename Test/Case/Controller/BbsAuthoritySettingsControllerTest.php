@@ -1,6 +1,6 @@
 <?php
 /**
- * BbsesController Test Case
+ * BbsAuthoritySettingsController Test Case
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Kotaro Hokada <kotaro.hokada@gmail.com>
@@ -9,12 +9,12 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
-App::uses('BbsesController', 'Bbses.Controller');
+App::uses('BbsAuthoritySettingsController', 'Bbses.Controller');
 
 /**
- * BbsesController Test Case
+ * BbsAuthoritySettingsController Test Case
  */
-class BbsesControllerTest extends ControllerTestCase {
+class BbsAuthoritySettingsControllerTest extends ControllerTestCase {
 
 /**
  * Fixtures

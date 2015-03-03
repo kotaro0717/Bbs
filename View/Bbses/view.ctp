@@ -1,5 +1,3 @@
-<strong><?php echo 'デバッグ用 : ' . $roomRoleKey; ?></strong>
-
 <div id="nc-bbs-index-<?php echo (int)$frameId; ?>">
 
 	<?php if ($contentPublishable) : ?>
